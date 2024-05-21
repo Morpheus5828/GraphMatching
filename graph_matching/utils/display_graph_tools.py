@@ -84,7 +84,7 @@ class Visualisation:
             zeroline=False,
             showgrid=False,
             showticklabels=False,
-            title=self.title
+            title=""
         )
 
         layout = go.Layout(

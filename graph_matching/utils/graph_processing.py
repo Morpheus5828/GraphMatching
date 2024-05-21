@@ -129,17 +129,6 @@ def remove_dummy_nodes(graph):
         data_mask[inds_dummy] = 0
     return data_mask
 
-# def remove_dummy_nodes(graph):
-#     is_dummy = graph_nodes_attribute(graph, 'is_dummy')
-#     data_mask = np.ones_like(is_dummy)
-#     if True in is_dummy:
-#         graph_copy = graph.copy()
-#         inds_dummy = np.where(np.array(is_dummy)==True)[0]
-#         graph_copy.remove_nodes_from(inds_dummy)
-#         data_mask[inds_dummy] = 0
-#         return graph_copy, data_mask
-#     else:
-#         return graph, data_mask
 
 def get_geodesic_distance_sphere(coord_a, coord_b, radius):
     '''

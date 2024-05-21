@@ -21,20 +21,25 @@ def insert_at(
     return result
 
 
-def get_assignment_from_labelling(list_graphs, labelling_attribute_name, excluded_labels=None):
-    """
-    compute the assignment matrix based on the labeling stored in the nodes of the graphs in list_graphs,
-    as the node attribute labelling_attribute_name
+def get_assignment_from_labelling(
+        list_graphs: list,
+        labelling_attribute_name,
+        excluded_labels: bool = False
+):
+    """ Compute the assignment matrix based on the labeling stored in the nodes of the graphs in list_graphs,
+        as the node attribute labelling_attribute_name
+
     :param list_graphs: list of graphs to work on
-    :param labelling_attribute_name: node attribute used to store the labeling for which we compute the assignment
-    matrix
+    :param labelling_attribute_name: node attribute used to store labeling for which we compute the assignment matrix
+    :param excluded_labels:
     :return: assign_mat the assignment matrix and unique_labels the set of labels found across all graphs and ordered
-    according to the rows of the computed assign_mat
+        according to the rows of the computed assign_mat
     """
+
     all_graphs_labels = get_labelling_from_attribute(list_graphs, labelling_attribute_name)
     list_all_graphs_labels = concatenate_labels(all_graphs_labels)
     unique_labels = list(set(list_all_graphs_labels))
-    if excluded_labels is not None:
+    if excluded_labels:
         print('excluded labels ', excluded_labels)
         for ex_lab in excluded_labels:
             unique_labels.remove(ex_lab)

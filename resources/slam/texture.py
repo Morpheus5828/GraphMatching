@@ -1,5 +1,5 @@
 """
-github.com/gauzias/slam
+github.com/gauzias/slame
 ----------------------------
 
 definition of the Texture class
