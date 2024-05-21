@@ -7,13 +7,15 @@ import warnings
 warnings.filterwarnings("ignore")
 import sys
 import os
-sys.path.append("resources/slam")
-sys.path.append("graph_matching/utils")
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
-from graph_matching.utils.graph_tools import *
+sys.path.append("")
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append(os.path.join(os.path.dirname(__file__), 'graph_matching'))
+sys.path.append(os.path.join(os.path.dirname(__file__), 'resources'))
+
+from utils.graph_tools import *
 from resources.slam import topology as stop
-from graph_matching.utils.graph_processing import *
+from utils.graph_processing import *
 
 import pickle
 import os

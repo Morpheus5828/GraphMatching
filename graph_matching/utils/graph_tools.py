@@ -5,11 +5,10 @@
 
 import sys
 
-sys.path.append("utils")
+sys.path.append("graph_matching/utils")
 
 import trimesh
 import random
-import tqdm
 import networkx as nx
 from sphere import *
 import graph_processing

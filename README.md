@@ -11,13 +11,13 @@ pip install -e .
 ## Graph generation
 Graphs generated will be store in graph_generated directory.
 ```shell
-python graph_matching/generation/script_generation_graphs_with_edges_permutation.py
+python graph_matching/script_generation_graphs_with_edges_permutation.py
 ```
 
 ## Display graph
 After generated graphs, you can display them using this command:
 ```shell
-python -m notebook graph_matching/display/display_graph.ipynb
+python -m notebook graph_matching/display_graph.ipynb
 ```
 
 ## Authors
