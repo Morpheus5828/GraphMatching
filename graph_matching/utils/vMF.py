@@ -25,7 +25,7 @@ def sample_vMF(mu, kappa, num_samples):
         w = _sample_weight(kappa, dim)
 
         # sample a point v on the unit sphere that's orthogonal to mu
-        v = _sample_orthonormal_to(mu)
+        v = _sample_orthonormal(mu)
 
         # compute new point
         result[nn, :] = v * np.sqrt(1. - w**2) + w * mu
@@ -50,7 +50,7 @@ def _sample_weight(kappa, dim):
             return w
 
 
-def _sample_orthonormal_to(mu):
+def _sample_orthonormal(mu):
     """Sample point on sphere orthogonal to mu."""
     v = np.random.randn(mu.shape[0])
     proj_mu_v = mu * np.dot(mu, v) / np.linalg.norm(mu)

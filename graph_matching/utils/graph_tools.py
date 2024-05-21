@@ -2,12 +2,14 @@
 
 ..moduleauthor:: Marius Thorre
 """
+
 import sys
 
 sys.path.append("utils")
+
 import trimesh
 import random
-import numpy as np
+import tqdm
 import networkx as nx
 from sphere import *
 import graph_processing
@@ -157,3 +159,62 @@ def get_in_between_perm_matrix(
                 result_perm[i] = j
 
     return result_perm
+
+
+def extract_ground_truth_permutation(
+        noisy_graph: nx.Graph,
+        noisy_coord_all: list,
+        sphere_random_sampling: list
+) -> list:
+    """ Extract ground truth permutation
+    :param noisy_graph:
+    :param noisy_coord_all:
+    :param sphere_random_sampling:
+    :return:
+    """
+    ground_truth_permutation = []
+
+    for i in range(len(noisy_graph.nodes)):
+        for j in range(len(noisy_coord_all)):  # upto the indexes of outliers
+            if np.linalg.norm(noisy_coord_all[j] - noisy_graph.nodes[i]['coord']) == 0.:
+                ground_truth_permutation.append(j)
+                continue
+
+            elif j == len(noisy_coord_all) - 1.:
+                for outlier in sphere_random_sampling:
+                    if np.linalg.norm(outlier - noisy_graph.nodes[i]['coord']) == 0.:
+                        noisy_graph.nodes[i]['is_outlier'] = True
+
+                        ground_truth_permutation.append(-1)
+
+    return ground_truth_permutation
+
+
+def add_integer_id_to_edges(
+        graph: nx.Graph
+):
+    """ Given a graph, add an attribute "id" to each edge that is a unique integer id"""
+
+    dict_attributes = {}
+    id_counter = 0
+    for edge in graph.edges:
+        dict_attributes[edge] = {"id": id_counter}
+        id_counter += 1
+    nx.set_edge_attributes(graph, dict_attributes)
+
+
+def ground_truth_labeling(
+        ground_truth_perm_to_ref: list,
+        nb_graphs: int
+) -> dict:
+    """ Get Ground truth labeling
+    :param ground_truth_perm_to_ref:
+    :return:
+    """
+    ground_truth_perm = {}
+    for i_graph in range(nb_graphs):
+
+        for j_graph in range(nb_graphs):
+            ground_truth_perm[str(i_graph) + ',' + str(j_graph)] = get_in_between_perm_matrix(
+                ground_truth_perm_to_ref[i_graph], ground_truth_perm_to_ref[j_graph])
+    return ground_truth_perm

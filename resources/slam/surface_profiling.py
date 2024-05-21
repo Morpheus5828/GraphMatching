@@ -470,7 +470,7 @@ def get_texture_value_on_profile(
     """
     Calculate the texture values of each points on profiles by barycentric
     interpolation
-    :param texture: slam texture
+    :param texture: slame texture
     :param mesh: trimesh object
     :param profiling_samples: (N, N_p, N_s, 3, 3) float
         N = Number of center vertices for surface profiling.
@@ -546,7 +546,7 @@ def compute_profile_barycentric_para(profile_sample_points, mesh, triangle_id):
 def compute_profile_texture_barycentric(texture, mesh, triangle_id, barycentric_coord):
     """
     Compute the texture values of each points on profiles
-    :param texture: darray of slam texture
+    :param texture: darray of slame texture
     :param mesh: trimesh object
     :param triangle_id: (N, N_p, N_s) int
         Faces id corresponding to the profile sampling points.
