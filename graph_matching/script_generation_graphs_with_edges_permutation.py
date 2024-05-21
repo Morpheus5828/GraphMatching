@@ -2,25 +2,31 @@
 
 ..moduleauthor:: Marius Thorre, Rohit Yadav
 """
+import warnings
 
+warnings.filterwarnings("ignore")
 import sys
-
-sys.path.append("resources")
 import os
-import resources.slam.topology as stop
+sys.path.append("../resources/slam")
+sys.path.append("graph_matching/utils")
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+
+from graph_matching.utils.graph_tools import *
+from resources.slam import topology as stop
+from graph_matching.utils.graph_processing import *
+
 import pickle
-from utils.utils import *
-import utils.graph_processing as graph_processing
-from utils.sphere import *
+import os
+import numpy as np
 from tqdm.auto import tqdm
 from scipy.stats import betabinom
 import random
 
 
 def generate_reference_graph(
-    nb_vertices: int,
-    radius: float
-) -> np.ndarray:
+        nb_vertices: int,
+        radius: float
+) -> nx.Graph:
     """ Generate random sampling
     :param int nb_vertices:
     :param float radius:
@@ -63,8 +69,8 @@ def generate_reference_graph(
 
 
 def generate_sphere_random_sampling(
-    vertex_number: int = 100,
-    radius: float = 1.0
+        vertex_number: int = 100,
+        radius: float = 1.0
 ) -> np.ndarray:
     """ Generate a sphere with random sampling
     :param vertex_number:
@@ -206,46 +212,6 @@ def generate_noisy_graph(
     return gtp, noisy_graph
 
 
-def extract_ground_truth_permutation(
-        noisy_graph: nx.Graph,
-        noisy_coord_all: list,
-        sphere_random_sampling: list
-) -> list:
-    """ Extract ground truth permutation
-    :param noisy_graph:
-    :param noisy_coord_all:
-    :param sphere_random_sampling:
-    :return:
-    """
-    ground_truth_permutation = []
-
-    for i in range(len(noisy_graph.nodes)):
-        for j in range(len(noisy_coord_all)):  # upto the indexes of outliers
-            if np.linalg.norm(noisy_coord_all[j] - noisy_graph.nodes[i]['coord']) == 0.:
-                ground_truth_permutation.append(j)
-                continue
-
-            elif j == len(noisy_coord_all) - 1.:
-                for outlier in sphere_random_sampling:
-                    if np.linalg.norm(outlier - noisy_graph.nodes[i]['coord']) == 0.:
-                        noisy_graph.nodes[i]['is_outlier'] = True
-
-                        ground_truth_permutation.append(-1)
-
-    return ground_truth_permutation
-
-
-def add_integer_id_to_edges(graph: nx.Graph):
-    """ Given a graph, add an attribute "id" to each edge that is a unique integer id"""
-
-    dict_attributes = {}
-    id_counter = 0
-    for edge in graph.edges:
-        dict_attributes[edge] = {"id": id_counter}
-        id_counter += 1
-    nx.set_edge_attributes(graph, dict_attributes)
-
-
 def generate_graph_family(
         nb_sample_graphs: int,
         nb_graphs: int,
@@ -339,55 +305,39 @@ def generate_graph_family(
 
     # We generate the ground_truth permutation between graphs
     print("Groundtruth Labeling..")
-    gtp = ground_truth_labeling(ground_truth_perm_to_ref)
+    gtp = ground_truth_labeling(ground_truth_perm_to_ref, nb_graphs)
 
     return sorted_graphs[:nb_graphs], gtp, ground_truth_perm_to_ref
 
 
-def ground_truth_labeling(
-    ground_truth_perm_to_ref: list
-) -> dict:
-    """ Get Ground truth labeling
-    :param ground_truth_perm_to_ref:
-    :return:
-    """
-    ground_truth_perm = {}
-    for i_graph in tqdm(range(nb_graphs)):
-
-        for j_graph in range(nb_graphs):
-            ground_truth_perm[str(i_graph) + ',' + str(j_graph)] = get_in_between_perm_matrix(
-                ground_truth_perm_to_ref[i_graph], ground_truth_perm_to_ref[j_graph])
-    return ground_truth_perm
-
-# TODO check and clean this method
 def generate_n_graph_family_and_save(
-        path_to_write,
+        path_to_write: str,
         nb_runs: int,
         nb_ref_graph: int,
         nb_sample_graphs: int,
         nb_graphs: int,
         nb_vertices: int,
         radius: float,
-        list_noise: list,
+        list_noise: np.ndarray,
         max_outliers: int,
         nb_neighbors_to_consider: int = 10,
         save_reference=0
 ):
-    """ Generate n family of graphs for each couple (noise, outliers). The graphs are saved
-		in a folder structure at the point path_to_write
-    :param path_to_write: 
-    :param nb_runs: 
-    :param nb_ref_graph: 
-    :param nb_sample_graphs: 
-    :param nb_graphs: 
-    :param nb_vertices: 
-    :param radius: 
-    :param list_noise: 
-    :param max_outliers: 
-    :param nb_neighbors_to_consider: 
-    :param save_reference: 
+    """ Generate n family of graphs for each couple (noise, outliers).
+    The graphs are saved in a folder structure at the point path_to_write
+    :param path_to_write:
+    :param nb_runs:
+    :param nb_ref_graph:
+    :param nb_sample_graphs:
+    :param nb_graphs:
+    :param nb_vertices:
+    :param radius:
+    :param list_noise:
+    :param max_outliers:
+    :param nb_neighbors_to_consider:
+    :param save_reference:
     :return:
-	"""
+    """
 
     # check if the path given is a folder otherwise create one
     if not os.path.isdir(path_to_write):
@@ -396,8 +346,9 @@ def generate_n_graph_family_and_save(
     # generate n families of graphs
     for i_graph in range(nb_runs):
 
-        # Select the ref graph with highest mean geo distance
+        # Select the ref graph with the highest mean geo distance
         print("Generating reference_graph..")
+
         for i in tqdm(range(nb_ref_graph)):
             reference_graph = generate_reference_graph(nb_vertices, radius)
             all_geo = mean_edge_len(reference_graph)
@@ -406,7 +357,6 @@ def generate_n_graph_family_and_save(
                 min_geo = min(all_geo)
 
             else:
-
                 if min(all_geo) > min_geo:
                     min_geo = min(all_geo)
                     reference_graph_max = reference_graph
@@ -419,47 +369,53 @@ def generate_n_graph_family_and_save(
             trial_path = os.path.join(path_to_write, str(i_graph))  # for each trial
             if not os.path.isdir(trial_path):
                 os.mkdir(trial_path)
+        with open(os.path.join(trial_path, "reference_" + str(i_graph) + ".gpickle"), "wb") as f:
+            pickle.dump(reference_graph_max, f, pickle.HIGHEST_PROTOCOL)
 
-            # nx.write_gpickle(reference_graph_max, os.path.join(trial_path, "reference_" + str(i_graph) + ".gpickle"))
+        # nx.write_gpickle(reference_graph_max, os.path.join(trial_path, "reference_" + str(i_graph) + ".gpickle"))
 
-        for noise in list_noise:
-            # for outliers in list_outliers:
+    for noise in list_noise:
+        # for outliers in list_outliers:
 
-            folder_name = "noise_" + str(noise) + ",outliers_varied"  # + str(max_outliers)
-            path_parameters_folder = os.path.join(trial_path, folder_name)
+        folder_name = "noise_" + str(noise) + ",outliers_varied"  # + str(max_outliers)
+        path_parameters_folder = os.path.join(trial_path, folder_name)
 
-            if not os.path.isdir(path_parameters_folder):
-                os.mkdir(path_parameters_folder)
-                os.mkdir(os.path.join(path_parameters_folder, "graphs"))
+        if not os.path.isdir(path_parameters_folder):
+            os.mkdir(path_parameters_folder)
+            os.mkdir(os.path.join(path_parameters_folder, "graphs"))
 
-            list_graphs, ground_truth_perm, ground_truth_perm_to_ref = generate_graph_family(
-                nb_sample_graphs=nb_sample_graphs, nb_graphs=nb_graphs,
-                nb_vertices=nb_vertices,
-                radius=radius,
-                nb_outliers=max_outliers,
-                ref_graph=reference_graph_max,
-                noise_node=noise,
-                noise_edge=noise,
-                nb_neighbors_to_consider=nb_neighbors_to_consider)
+        list_graphs, ground_truth_perm, ground_truth_perm_to_ref = generate_graph_family(
+            nb_sample_graphs=nb_sample_graphs, nb_graphs=nb_graphs,
+            nb_vertices=nb_vertices,
+            radius=radius,
+            nb_outliers=max_outliers,
+            ref_graph=reference_graph_max,
+            noise_node=noise,
+            noise_edge=noise,
+            nb_neighbors_to_consider=nb_neighbors_to_consider)
 
-            for i_family, graph_family in enumerate(list_graphs):
-                sorted_graph = nx.Graph()
-                sorted_graph.add_nodes_from(sorted(graph_family.nodes(data=True)))  # Sort the nodes of the graph by key
-                sorted_graph.add_edges_from(graph_family.edges(data=True))
+        for i_family, graph_family in enumerate(list_graphs):
+            sorted_graph = nx.Graph()
+            sorted_graph.add_nodes_from(sorted(graph_family.nodes(data=True)))  # Sort the nodes of the graph by key
+            sorted_graph.add_edges_from(graph_family.edges(data=True))
 
-                print("Length of noisy graph: ", len(sorted_graph.nodes))
+            print("Length of noisy graph: ", len(sorted_graph.nodes))
 
-                # nx.draw(sorted_graph)
-                pickle.dump(sorted_graph, open('graph_{:05d}".format(i_family).pickle', 'wb'))
-                # nx.write_gpickle(sorted_graph, os.path.join(path_parameters_folder, "graphs","graph_{:05d}".format(i_family) + ".gpickle"))
+            # nx.draw(sorted_graph)
+            # with open("graph_{:05d}.format(i_family)" + "g.pickle", "wb") as f:
+            #     pickle.dump(sorted_graph, f, pickle.HIGHEST_PROTOCOL)
 
-            # np.save(os.path.join(path_parameters_folder, "ground_truth"), ground_truth_perm)
+            with open(os.path.join(path_parameters_folder, "graphs","graph_{:05d}".format(i_family) + ".gpickle"), "wb") as f:
+                pickle.dump(sorted_graph, f, pickle.HIGHEST_PROTOCOL)
 
-            with open(path_parameters_folder + "/permutation_to_ref_graph.gpickle", 'wb') as f:
-                pickle.dump(ground_truth_perm_to_ref, f, pickle.HIGHEST_PROTOCOL)
 
-            with open(path_parameters_folder + "/ground_truth.gpickle", 'wb') as f:
-                pickle.dump(ground_truth_perm, f, pickle.HIGHEST_PROTOCOL)
+        # np.save(os.path.join(path_parameters_folder, "ground_truth"), ground_truth_perm)
+        #
+        # with open(path_parameters_folder + "/permutation_to_ref_graph.gpickle", 'wb') as f:
+        #     pickle.dump(ground_truth_perm_to_ref, f, pickle.HIGHEST_PROTOCOL)
+        #
+        # with open(path_parameters_folder + "/ground_truth.gpickle", 'wb') as f:
+        #     pickle.dump(ground_truth_perm, f, pickle.HIGHEST_PROTOCOL)
 
 
 if __name__ == '__main__':
