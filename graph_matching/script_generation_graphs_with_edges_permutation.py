@@ -4,6 +4,8 @@
 """
 import warnings
 
+import matplotlib.pyplot as plt
+
 warnings.filterwarnings("ignore")
 import sys
 import os
@@ -13,10 +15,10 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(os.path.join(os.path.dirname(__file__), 'graph_matching'))
 sys.path.append(os.path.join(os.path.dirname(__file__), 'resources'))
 
-from utils.graph_tools import *
+from graph_matching.utils.graph.graph_tools import *
+from graph_matching.utils.graph.sphere import *
 from resources.slam import topology as stop
-from utils.graph_processing import *
-
+from graph_matching.utils.graph.graph_processing import *
 import pickle
 import os
 import numpy as np
@@ -66,7 +68,8 @@ def generate_reference_graph(
 
     # add the edge attributes to the graph
     nx.set_edge_attributes(graph, edge_attribute_dict)
-
+    nx.draw(graph)
+    plt.show()
     return graph
 
 
@@ -403,7 +406,8 @@ def generate_n_graph_family_and_save(
 
             print("Length of noisy graph: ", len(sorted_graph.nodes))
 
-            # nx.draw(sorted_graph)
+            nx.draw(sorted_graph)
+            plt.draw()
             # with open("graph_{:05d}.format(i_family)" + "g.pickle", "wb") as f:
             #     pickle.dump(sorted_graph, f, pickle.HIGHEST_PROTOCOL)
 

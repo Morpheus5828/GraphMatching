@@ -4,7 +4,7 @@
 
 import sys
 
-sys.path.append("C:/Users/thorr/PycharmProjects/GraphMatching/graph_matching/utils")
+sys.path.append("/graph_matching/utils")
 import numpy as np
 from matplotlib import pyplot as plt
 import seaborn as sns
