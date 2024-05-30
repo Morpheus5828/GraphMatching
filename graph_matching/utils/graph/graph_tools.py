@@ -5,7 +5,7 @@
 
 import sys
 
-sys.path.append("graph_matching/utils")
+sys.path.append("graph_matching/utils/graph")
 
 import trimesh
 import random

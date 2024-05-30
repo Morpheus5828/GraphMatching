@@ -4,8 +4,6 @@
 """
 
 from unittest import TestCase
-import numpy as np
-import graph_matching.utils.vMF as vmf
 
 
 class vMFTest(TestCase):
