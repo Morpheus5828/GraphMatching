@@ -146,31 +146,15 @@ def _line_search(x, y, z, delta_z, eta, c, r):  # from eq (2)
 
 
 def _sparsify(matrix, threshold):
-    # result = matrix
-    # result[np.abs(result) < threshold] = 0
-    # return result
+    shape = matrix.shape
     matrix = matrix.reshape((-1, 1))
     matrix[::-1].sort()
     k = int((threshold * matrix.shape[0]) / 100)
-    result = matrix[np.abs(matrix) < k] = 0
-    return result
+    matrix[np.abs(matrix) < k] = 0
+    return matrix.reshape(shape)
 
 
 def _conjugate_gradient(A, b):
-    # x = np.zeros((b.shape))
-    # r = A @ x + b
-    # rho = -r
-    # k = 0
-    # while np.linalg.norm(r) != 0 and k < max_iteration:
-    #     alpha = (np.linalg.norm(r)) ** 2 / (rho.T @ A @ rho)
-    #     x = x + (alpha * rho)
-    #     new_r = r + (alpha * (A @ rho))
-    #     beta = ((np.linalg.norm(new_r)) ** 2) / ((np.linalg.norm(r)) ** 2)
-    #     rho = -new_r + beta * rho
-    #     r = new_r
-    #     k += 1
-    # return x
-
     x, exit_code = cg(A, b, atol=1e-3, maxiter=100)
 
     return x.reshape((-1, 1))
