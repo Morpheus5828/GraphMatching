@@ -48,7 +48,7 @@ if __name__ == '__main__':
     graph_coord_s = get_graph_coord(G_source, nb_dimension=3)
     graph_coord_t = get_graph_coord(G_dest, nb_dimension=3)
 
-    distance = fgw.M(graph_coord_s, graph_coord_t)
+    distance = fgw._M(graph_coord_s, graph_coord_t)
 
     transport1 = fgw.conditional_gradient(
         mu_s=mu_s,
@@ -89,6 +89,7 @@ if __name__ == '__main__':
         ot_method="fx_sns",
     )
     end = time.time()
+
     print("Distance euclidienne ", np.linalg.norm(transport1 - transport2))
     print(f"Traning process: {end - start}")
 

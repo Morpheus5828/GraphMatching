@@ -11,75 +11,7 @@ With correction from Thesis of Cédric Vincent-Cuaz
 import numpy as np
 from graph_matching.pairwise.solver import sinkhorn, sns, fx_sns
 import math
-
-
-def conditional_gradient(
-        mu_s,
-        mu_t,
-        C1,
-        C2,
-        distance,
-        gamma: float = None,
-        iteration: int = None,
-        rho: float = None,
-        eta: float = None,
-        N1: int = None,
-        N2: int = None,
-        tolerance: float = None,
-        ot_method="sinkhorn",
-
-):
-    """Compute Condition Gradient for FGW
-    :param np.ndarray mu_s: starting probabilities of the sources nodes
-    :param np.ndarray mu_t: starting probabilities of the target nodes
-    :param np.ndarray C1: cost matrix of the source graph
-    :param np.ndarray C2: cost matrix of the target graph
-    :param np.ndarray distance: euclidian distance matrix between both graphs
-    :param float gamma: the strength of the regularization for the OT solver
-    :return: transport map
-    """
-    mu_s = mu_s.reshape((-1, 1))
-    mu_t = mu_t.reshape((-1, 1))
-
-    transport = mu_s @ mu_t.T
-    last_transport = []
-    last_diff = 0
-    n = mu_s.shape[0]
-    for index in range(n):
-        # 1 Gradient
-        c_C1_C2 = get_constant(C1=C1, C2=C2, distance=distance, transport=transport)
-        gradient = _get_gradient(c_C1_C2=c_C1_C2, C1=C1, C2=C2, distance=distance, transport=transport)
-        # 2 OT
-        new_transport = _solve_OT(
-            mu_s=mu_s,
-            mu_t=mu_t,
-            gradient=gradient / np.max(gradient),
-            gamma=gamma,
-            rho=rho,
-            eta=eta,
-            method=ot_method,
-            N1=N1,
-            N2=N2,
-            tolerance=tolerance
-        )
-
-        # 3 Line Search
-        tau = line_search(c_C1_C2, C1, C2, distance, transport, new_transport)
-        # 4 Update
-        transport = (1 - tau) * transport + tau * new_transport
-
-        # 5 Check tolerance
-        if index == 0:
-            last_transport = transport
-            last_diff = np.linalg.norm(transport - last_transport)
-        elif index > 1:
-            diff = np.linalg.norm(transport - last_transport)
-            if np.linalg.norm(last_diff - diff) < tolerance:
-                return transport
-
-        print(f"FGW Iteration: {index}/{n}")
-
-    return transport
+from tqdm import tqdm
 
 
 def _get_gradient(c_C1_C2, C1, C2, distance, transport, alpha=0.5, q=2.0):
@@ -117,10 +49,11 @@ def _solve_OT(
     """
     if method == "sinkhorn":
         transport, _ = sinkhorn.sinkhorn_method(
-            gradient,
+            x=gradient,
             mu_s=np.squeeze(mu_s),
             mu_t=np.squeeze(mu_t),
             gamma=gamma,
+            iterations=1000,
             tolerance=tolerance
         )
         return transport
@@ -152,7 +85,7 @@ def _solve_OT(
         print("Algo not recognized")
 
 
-def get_constant(
+def _get_constant(
         C1: np.ndarray,
         C2: np.ndarray,
         distance: np.ndarray,
@@ -174,7 +107,7 @@ def get_constant(
     return np.argmin(result)
 
 
-def M(adj_s, adj_t):
+def _M(adj_s, adj_t):
     """Compute euclidian distance between A and B adjacency matrix.
     :param np.ndarray A: adjacency matrix from source_graph
     :param np.ndarray B: adjacency matrix from target_graph
@@ -187,7 +120,7 @@ def M(adj_s, adj_t):
     return dist
 
 
-def line_search(c_C1_C2, C1, C2, distance, transport, new_transport, alpha=0.5):
+def _line_search(c_C1_C2, C1, C2, distance, transport, new_transport, alpha=0.5):
     """Compute tau variable
     :param np.ndarray c_C1_C2: constant from eq (6)
     :param np.ndarray C1: cost matrix of the source graph
@@ -215,3 +148,70 @@ def line_search(c_C1_C2, C1, C2, distance, transport, new_transport, alpha=0.5):
         if a + b < 0:
             tau = 1
     return tau
+
+
+def conditional_gradient(
+        mu_s,
+        mu_t,
+        C1,
+        C2,
+        distance,
+        gamma: float = None,
+        rho: float = None,
+        eta: float = None,
+        N1: int = None,
+        N2: int = None,
+        tolerance: float = None,
+        ot_method="sinkhorn",
+
+):
+    """Compute Condition Gradient for FGW
+    :param np.ndarray mu_s: starting probabilities of the sources nodes
+    :param np.ndarray mu_t: starting probabilities of the target nodes
+    :param np.ndarray C1: cost matrix of the source graph
+    :param np.ndarray C2: cost matrix of the target graph
+    :param np.ndarray distance: euclidian distance matrix between both graphs
+    :param float gamma: the strength of the regularization for the OT solver
+    :return: transport map
+    """
+    mu_s = mu_s.reshape((-1, 1))
+    mu_t = mu_t.reshape((-1, 1))
+
+    transport = mu_s @ mu_t.T
+    last_transport = []
+    last_diff = 0
+    n = mu_s.shape[0]
+    for index in tqdm(range(n)):
+        # 1 Gradient
+        c_C1_C2 = _get_constant(C1=C1, C2=C2, distance=distance, transport=transport)
+        gradient = _get_gradient(c_C1_C2=c_C1_C2, C1=C1, C2=C2, distance=distance, transport=transport)
+        # 2 OT
+        new_transport = _solve_OT(
+            mu_s=mu_s,
+            mu_t=mu_t,
+            gradient=gradient / np.max(gradient),
+            gamma=gamma,
+            rho=rho,
+            eta=eta,
+            method=ot_method,
+            N1=N1,
+            N2=N2,
+            tolerance=tolerance
+        )
+
+        # 3 Line Search
+        tau = _line_search(c_C1_C2, C1, C2, distance, transport, new_transport)
+        # 4 Update
+        transport = (1 - tau) * transport + tau * new_transport
+
+        # 5 Check tolerance
+        if index == 0:
+            last_transport = transport
+            last_diff = np.linalg.norm(transport - last_transport)
+        elif index > 1:
+            diff = np.linalg.norm(transport - last_transport)
+            if np.linalg.norm(last_diff - diff) < tolerance:
+                return transport
+
+
+    return transport

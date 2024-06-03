@@ -23,6 +23,18 @@ def _sinkhorn_stage(
         mu_t: np.ndarray,
         tolerance: float
 ):
+    """
+    Sinkhorn stage part
+    :param cost: nost matrix
+    :param x: 
+    :param y: 
+    :param N1: 
+    :param eta: 
+    :param mu_s: 
+    :param mu_t: 
+    :param tolerance: 
+    :return: 
+    """
     i = 0
     P = 0
     previous_diff = 0
@@ -170,6 +182,17 @@ def sinkhorn_newton_sparse(
         N2: int,
         tolerance=0.01
 ) -> (np.array, int):
+    """ Sinkhorn Newton Stage algorithms
+    :param cost: cost matrix
+    :param mu_s:
+    :param mu_t:
+    :param rho:
+    :param eta: regular parameter
+    :param N1:
+    :param N2:
+    :param tolerance:
+    :return:
+    """
     x = np.zeros((cost.shape[0], 1))
     y = np.zeros((cost.shape[1], 1))
     x, y, P, i = _sinkhorn_stage(cost, x, y, N1, eta, mu_s, mu_t, tolerance)
