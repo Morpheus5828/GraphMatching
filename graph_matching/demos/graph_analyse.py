@@ -34,8 +34,8 @@ def get_graph_coord(
 if __name__ == '__main__':
     start = time.time()
 
-    G_source = get_graph_from_pickle("../graph_generated/0/reference_0.gpickle",)
-    G_dest = get_graph_from_pickle("../graph_generated/1/reference_1.gpickle")
+    G_source = get_graph_from_pickle("../graph_generation/graph_generated/0/reference_0.gpickle", )
+    G_dest = get_graph_from_pickle("../graph_generation/graph_generated/1/reference_1.gpickle")
 
     mu_s = np.ones(nx.number_of_nodes(G_source)) / nx.number_of_nodes(G_source)
     mu_s = mu_s.reshape((-1, 1))
