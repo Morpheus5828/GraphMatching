@@ -20,6 +20,7 @@ class Visualisation:
             self,
             graph: nx.Graph,
             title: str = "",
+            path_to_save: str = "graph_matching/demos/graph/",
             window_width: int = 1000,
             window_height: int = 1000
     ):
@@ -32,7 +33,14 @@ class Visualisation:
         self.Ze = 0
         self.title = title
         self.window_width = window_width,
-        self.window_height = window_height
+        self.window_height = window_height,
+        self.fig = None
+        self.path_to_save = path_to_save
+
+        self.configure_layout_param()
+        data = self.configure_trace()
+        layout = self.configure_layout()
+        self.fig = go.Figure(data=data, layout=layout)
 
     def get_graph_coord(
             self,
@@ -106,8 +114,8 @@ class Visualisation:
         return layout
 
     def display(self):
-        self.configure_layout_param()
-        data = self.configure_trace()
-        layout = self.configure_layout()
-        fig = go.Figure(data=data, layout=layout)
-        iplot(fig)
+        iplot(self.fig)
+
+    def save_as_html(self):
+        self.fig.write_html("C:/Users/thorr/PycharmProjects/GraphMatching/graph_matching/demos/" + self.title + ".html")
+

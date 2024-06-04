@@ -4,17 +4,17 @@
 """
 
 import sys
-
-sys.path.append("graph_matching/utils/graph")
+from graph_matching.utils.graph.sphere import Sphere
+import graph_matching.utils.graph.graph_processing as graph_processing
 
 import trimesh
 import random
 import networkx as nx
-from sphere import *
-import graph_processing
+import numpy as np
 
 
-def tri_from_hull(vertices: int):
+
+def tri_from_hull(vertices: np.ndarray):
     """ Compute faces from vertices using trimesh convex hul
     :param vertices:
     :return:

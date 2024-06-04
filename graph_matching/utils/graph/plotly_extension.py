@@ -32,3 +32,4 @@ def error_plot(x, y, y_lower, y_upper, line_label='Measurement', color='rgb(180,
         )
     ]
     return fig_content
+
