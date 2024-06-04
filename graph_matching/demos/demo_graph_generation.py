@@ -2,7 +2,9 @@
 .. moduleauthor:: Marius Thorre
 """
 
-
+import os
+import sys
+sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 from graph_matching.graph_generation.generation_graph_edge_permutation import EdgePermutation
 
 

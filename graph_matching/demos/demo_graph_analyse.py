@@ -3,14 +3,12 @@
 """
 
 import os
+import sys
+sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 import numpy as np
 import networkx as nx
 import pickle
 import time
-from sklearn.datasets import load_digits
-from sklearn.preprocessing import StandardScaler
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.model_selection import train_test_split
 import graph_matching.pairwise.fgw as fgw
 
 
@@ -34,8 +32,8 @@ def get_graph_coord(
 if __name__ == '__main__':
     start = time.time()
 
-    G_source = get_graph_from_pickle("../graph_generation/graph_generated/0/reference_0.gpickle", )
-    G_dest = get_graph_from_pickle("../graph_generation/graph_generated/1/reference_1.gpickle")
+    G_source = get_graph_from_pickle("graph_matching/demos/graph_generated/0/reference_0.gpickle", )
+    G_dest = get_graph_from_pickle("graph_matching/demos/graph_generated/1/reference_1.gpickle")
 
     mu_s = np.ones(nx.number_of_nodes(G_source)) / nx.number_of_nodes(G_source)
     mu_s = mu_s.reshape((-1, 1))

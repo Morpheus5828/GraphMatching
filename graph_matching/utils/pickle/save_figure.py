@@ -6,5 +6,5 @@ import pickle
 
 
 def _as_gpickle(path: str, graph):
-    with open(path + ".gpickle", "wb") as f:
+    with open(path, "wb") as f:
         pickle.dump(graph, f, pickle.HIGHEST_PROTOCOL)
