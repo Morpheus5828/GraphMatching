@@ -1,9 +1,13 @@
+"""This module contains code to generate sphere random sampling
+.. moduleauthor:: Marius Thorre, Rohit Yadav
+"""
+
 import numpy as np
 
 
 def run(
-        vertex_number: int = 100,
-        radius: float = 1.0
+    vertex_number: int = 100,
+    radius: float = 1.0
 ) -> np.ndarray:
     """ Generate a sphere with random sampling
     :param vertex_number:

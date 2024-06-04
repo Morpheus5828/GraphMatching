@@ -1,10 +1,15 @@
+"""This module contains code to generate graph family
+.. moduleauthor:: Marius Thorre, Rohit Yadav
+"""
+
+
 from tqdm.auto import tqdm
-from graph_matching.graph_generation.generate_noisy_graph import generate_noisy_graph
+import graph_matching.graph_generation.generate_noisy_graph as generate_noisy_graph
 from graph_matching.utils.graph.graph_tools import *
 import networkx as nx
 
 
-def generate_graph_family(
+def run(
         nb_sample_graphs: int,
         nb_graphs: int,
         nb_vertices: int,
@@ -41,7 +46,7 @@ def generate_graph_family(
 
     for _ in tqdm(range(nb_sample_graphs)):
 
-        ground_truth, noisy_graph = generate_noisy_graph(
+        ground_truth, noisy_graph = generate_noisy_graph.run(
             reference_graph,
             nb_vertices,
             noise_node,

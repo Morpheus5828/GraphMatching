@@ -1,3 +1,7 @@
+"""This module contains code to generate reference graph
+.. moduleauthor:: Marius Thorre, Rohit Yadav
+"""
+
 import numpy as np
 from resources.slam import topology as stop
 from graph_matching.utils.graph.graph_tools import *

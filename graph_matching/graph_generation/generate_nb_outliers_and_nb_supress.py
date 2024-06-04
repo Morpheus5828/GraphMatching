@@ -1,7 +1,7 @@
 from graph_matching.utils.graph.graph_tools import *
 from scipy.stats import betabinom
 
-def _generate_nb_outliers_and_nb_supress(
+def run(
         nb_vertices: int
 ) -> tuple:
     """ Sample nb_outliers and nb_supress from a Normal distance following the std of real data

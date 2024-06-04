@@ -1,3 +1,7 @@
+"""Example of displaying graph in 3 dimensions, using HTML file
+.. moduleauthor:: Marius Thorre
+"""
+
 import sys
 import os
 
