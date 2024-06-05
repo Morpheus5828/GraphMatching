@@ -41,11 +41,9 @@ def run(
     list_noisy_graphs = []
     list_ground_truth = []
 
-    # We generate the n noisy graphs
-    print("Generating graphs..")
+    graph_index = 0
+    while graph_index <= nb_sample_graphs:
 
-    # Todo replace by while loop
-    for _ in tqdm(range(nb_sample_graphs)):
         ground_truth, noisy_graph = generate_noisy_graph.run(
             reference_graph,
             nb_vertices,
@@ -54,17 +52,15 @@ def run(
         )
 
         if not nx.is_connected(noisy_graph):
-            print("Found disconnected components..!!")
             continue
 
         # Add id to edge
         add_integer_id_to_edges(noisy_graph)
-
         # Save the graph
         list_noisy_graphs.append(noisy_graph)
-
         # Save all ground-truth for later selecting the selected graphs
         list_ground_truth.append(ground_truth)
+        graph_index+=1
 
     min_geo = []
     selected_graphs = []
@@ -88,16 +84,16 @@ def run(
         sorted_graphs.append(m)
         sorted_ground_truth.append(n)
 
-    print("Verifying len of sorted_graphs,sorted_ground_truth,min_geo(should be equal):",
-          len(sorted_graphs),
-          len(sorted_ground_truth),
-          len(min_geo)
-          )
+    # print("Verifying len of sorted_graphs,sorted_ground_truth,min_geo(should be equal):",
+    #       len(sorted_graphs),
+    #       len(sorted_ground_truth),
+    #       len(min_geo)
+    #       )
 
     ground_truth_perm_to_ref = sorted_ground_truth[:nb_graphs]
 
     # We generate the ground_truth permutation between graphs
-    print("Groundtruth Labeling..")
+    #print("Groundtruth Labeling..")
     gtp = ground_truth_labeling(ground_truth_perm_to_ref, nb_graphs)
 
     return sorted_graphs[:nb_graphs], gtp, ground_truth_perm_to_ref
