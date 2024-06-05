@@ -39,5 +39,4 @@ if __name__ == '__main__':
         radius=radius,
         nb_neighbors_to_consider_outliers=nb_neighbors_to_consider_outliers,
         generation_folder_path=generation_folder_path
-
     )

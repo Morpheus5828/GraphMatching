@@ -7,6 +7,7 @@ import numpy as np
 import networkx as nx
 from tqdm.auto import tqdm
 from graph_matching.utils.pickle import save_figure
+#from graph_matching.utils.graph.display_graph_tools import Visualisation
 import graph_matching.graph_generation.generate_reference_graph as generate_reference_graph
 import graph_matching.graph_generation.generate_graph_family as generate_graph_family
 from graph_matching.utils.graph.graph_tools import mean_edge_len
@@ -92,9 +93,15 @@ class EdgePermutation:
                 if not os.path.isdir(trial_path):
                     os.mkdir(trial_path)
             save_figure._as_gpickle(
-                path=os.path.join(trial_path, "reference_" + str(index) + ".gpickle"),
+                path=os.path.join(trial_path, "reference_" + str(index)),
                 graph=reference_graph_max
             )
+            # Visualisation(
+            #     graph=reference_graph_max,
+            #     title=str(index),
+            #     path_to_save=os.path.join(trial_path, "reference_" + str(index))
+            # ).save_as_html()
+
         return trial_path, reference_graph_max
 
     def _generate_noise_graph(
@@ -130,6 +137,11 @@ class EdgePermutation:
                 sorted_graph.add_edges_from(graph_family.edges(data=True))
 
                 save_figure._as_gpickle(
-                    path=os.path.join(path_parameters_folder, "graphs", f"graph_{i_family:05d}.gpickle"),
+                    path=os.path.join(path_parameters_folder, "graphs", f"graph_{i_family:05d}"),
                     graph=sorted_graph
                 )
+                # Visualisation(
+                #     graph=sorted_graph,
+                #     title=f"graph_{i_family:05d}",
+                #     path_to_save=os.path.join(path_parameters_folder, "graphs", f"graph_{i_family:05d}")
+                # ).save_as_html()

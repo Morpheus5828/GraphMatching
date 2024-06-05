@@ -3,8 +3,10 @@
 """
 
 import pickle
+import networkx as nx
 
-
-def _as_gpickle(path: str, graph):
-    with open(path, "wb") as f:
+def _as_gpickle(path: str, graph: nx.Graph):
+    with open(path + ".gpickle", "wb") as f:
         pickle.dump(graph, f, pickle.HIGHEST_PROTOCOL)
+
+

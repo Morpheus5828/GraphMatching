@@ -44,8 +44,8 @@ def run(
     # We generate the n noisy graphs
     print("Generating graphs..")
 
+    # Todo replace by while loop
     for _ in tqdm(range(nb_sample_graphs)):
-
         ground_truth, noisy_graph = generate_noisy_graph.run(
             reference_graph,
             nb_vertices,
@@ -53,11 +53,10 @@ def run(
             noise_edge
         )
 
-        if nx.is_connected(noisy_graph) == False:
+        if not nx.is_connected(noisy_graph):
             print("Found disconnected components..!!")
-
-        if nx.is_connected(noisy_graph) == False:
             continue
+
         # Add id to edge
         add_integer_id_to_edges(noisy_graph)
 

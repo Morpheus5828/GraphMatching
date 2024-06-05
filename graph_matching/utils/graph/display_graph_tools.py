@@ -117,5 +117,6 @@ class Visualisation:
         iplot(self.fig)
 
     def save_as_html(self):
-        self.fig.write_html("C:/Users/thorr/PycharmProjects/GraphMatching/graph_matching/demos/" + self.title + ".html")
+        #print(self.path_to_save + "/" + self.title + ".html")
+        self.fig.write_html(self.path_to_save + ".html")
 
