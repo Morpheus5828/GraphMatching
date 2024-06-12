@@ -5,12 +5,11 @@
 import os
 import sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
-from graph_matching.graph_generation.generation_graph_edge_permutation import EdgePermutation
+from graph_matching.algorithms.graph_generation.generation_graph_edge_permutation import EdgePermutation
 
 
 if __name__ == '__main__':
     generation_folder_path = "graph_generated"
-    nb_runs = 4
     nb_sample_graphs = 10
     nb_graphs = 4
     nb_vertices = 30
@@ -25,7 +24,8 @@ if __name__ == '__main__':
     nb_neighbors_to_consider_outliers = 10
 
     ep = EdgePermutation(
-        title="test",
+        pickle_folder_title="pickle",
+        html_folder_title="html",
         nb_sample_graphs=nb_sample_graphs,
         nb_graphs=nb_graphs,
         nb_vertices=nb_vertices,

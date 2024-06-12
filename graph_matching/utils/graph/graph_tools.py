@@ -13,7 +13,6 @@ import networkx as nx
 import numpy as np
 
 
-
 def tri_from_hull(vertices: np.ndarray):
     """ Compute faces from vertices using trimesh convex hul
     :param vertices:
