@@ -121,8 +121,6 @@ class Visualisation:
         colors = []
         for _ in range(len(self.graph.nodes)):
             colors.append(color_generation.generate_new_color(colors))
-        nx.draw(self.graph, with_labels=True, node_color=colors)
-        plt.show()
         self.fig.update_layout(title_text=f"Nodes: {len(self.graph.nodes)}, Edges: {len(self.graph.edges)}")
         iplot(self.fig)
 

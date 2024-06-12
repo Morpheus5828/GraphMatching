@@ -54,7 +54,6 @@ class Barycenter:
         C[C != 0] = 1
         return C
 
-
     def graph_colors(self, nx_graph):
         cnorm = mcol.Normalize(vmin=self.graph_vmin, vmax=self.graph_vmax)
         cpick = cm.ScalarMappable(norm=cnorm, cmap='viridis')
