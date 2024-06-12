@@ -49,6 +49,7 @@ def load_texture(gifti_file):
     :return: the corresponding TextureND object
     """
     # read the gifti usinng nibabel
+
     nb_texture = nb.gifti.read(gifti_file)
     # concatenate all the data arrays in a single numpy array
     cat_darrays = [nb_texture.darrays[i].data for i in range(len(nb_texture.darrays))]

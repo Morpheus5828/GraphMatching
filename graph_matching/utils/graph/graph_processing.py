@@ -70,7 +70,7 @@ def load_graphs_in_list(path_to_graphs_folder, suffix=".gpickle"):
 
     g_files.sort()  # sort according to filenames
 
-    list_graphs = [nx.read_gpickle(os.path.join(path_to_graphs_folder,graph)) for graph in g_files]
+    list_graphs = [get_graph_from_pickle(os.path.join(path_to_graphs_folder,graph)) for graph in g_files]
 
     return list_graphs
 
@@ -88,7 +88,7 @@ def load_labelled_graphs_in_list(path_to_graphs_folder, hemi='lh'):
     list_graphs = []
     for file_graph in files_to_load:
         path_graph = os.path.join(path_to_graphs_folder, file_graph)
-        graph = nx.read_gpickle(path_graph)
+        graph = get_graph_from_pickle(path_graph)
         list_graphs.append(graph)
 
     return list_graphs
@@ -253,7 +253,7 @@ def read_modify_and_write_graphs(path_to_folder):
     for graph_i, graph_file in enumerate([file_name for file_name in os.listdir(path_to_folder) if
                                           not os.path.isdir(os.path.join(path_to_folder, file_name))]):
         # load this graph
-        graph = nx.read_gpickle(os.path.join(path_to_folder, graph_file))
+        graph = get_graph_from_pickle(os.path.join(path_to_folder, graph_file))
         preprocess_graph(graph)
         graph_list.append(graph)  # add it to the list of graph
         correspondence_dict[graph_i] = {"name": graph_file}  # add the information about the name.
