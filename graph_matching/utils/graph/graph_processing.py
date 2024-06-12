@@ -3,6 +3,21 @@ import numpy as np
 import networkx as nx
 import pickle
 
+def get_graph_from_pickle(path: str) -> nx.Graph:
+    with open(path, "rb") as f:
+        graph = pickle.load(f)
+    return graph
+
+
+def get_graph_coord(
+        graph: nx.Graph,
+        nb_dimension: int
+) -> np.ndarray:
+    graph_coord = np.zeros(shape=(nx.number_of_nodes(graph), nb_dimension))
+    for node in graph.nodes(data=True):
+        graph_coord[node[0]] = node[1]["coord"]
+
+    return graph_coord
 
 def list_to_dict(list_in):
     """

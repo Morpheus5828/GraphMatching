@@ -5,15 +5,14 @@
 import os
 import sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
-from graph_matching.graph_generation.generation_graph_edge_permutation import EdgePermutation
+from graph_matching.algorithms.graph_generation.generation_graph_edge_permutation import EdgePermutation
 
 
 if __name__ == '__main__':
     generation_folder_path = "graph_generated"
-    nb_runs = 4
-    nb_sample_graphs = 1000  # # of graphs to generate before selecting the NN graphs with highest geodesic distance.
-    nb_graphs = 20  # 134 # nb of graphs to generate
-    nb_vertices = 30  # 88 as per real data mean  #72 based on Kaltenmark, MEDIA, 2020 // 88 based on the avg number of nodes in the real data.
+    nb_sample_graphs = 10
+    nb_graphs = 4
+    nb_vertices = 30
     min_noise = 100
     max_noise = 1400
     step_noise = 300
@@ -25,7 +24,8 @@ if __name__ == '__main__':
     nb_neighbors_to_consider_outliers = 10
 
     ep = EdgePermutation(
-        nb_runs=nb_runs,
+        pickle_folder_title="pickle",
+        html_folder_title="html",
         nb_sample_graphs=nb_sample_graphs,
         nb_graphs=nb_graphs,
         nb_vertices=nb_vertices,
@@ -39,5 +39,4 @@ if __name__ == '__main__':
         radius=radius,
         nb_neighbors_to_consider_outliers=nb_neighbors_to_consider_outliers,
         generation_folder_path=generation_folder_path
-
     )
