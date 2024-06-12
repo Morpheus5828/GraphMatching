@@ -2,7 +2,7 @@ import numpy as np
 import nibabel as nb
 import trimesh
 
-from slam import texture
+from resources.slam import texture
 
 
 def load_mesh(gifti_file):

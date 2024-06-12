@@ -17,6 +17,12 @@ Graphs generated will be store in graph_generated directory.
 python graph_matching/demos/demo_graph_generation.py
 ```
 
+## Compute graph barycenter
+From list of graphs, compute barycenter graph.
+```shell
+python graph_matching/demos/demos_barycenter.py
+```
+
 ## Display graph
 After generated graphs, you can display them using this command:
 ```shell
