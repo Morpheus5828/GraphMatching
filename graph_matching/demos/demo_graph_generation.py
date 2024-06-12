@@ -9,7 +9,7 @@ from graph_matching.algorithms.graph_generation.generation_graph_edge_permutatio
 
 
 if __name__ == '__main__':
-    generation_folder_path = "graph_generated"
+    generation_folder_path = "graph_matching/demos/graph_generated"
     nb_sample_graphs = 10
     nb_graphs = 4
     nb_vertices = 30

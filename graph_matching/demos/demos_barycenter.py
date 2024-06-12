@@ -40,7 +40,11 @@ barycenter = mean.Barycenter(
     )
 
 bary_graph = barycenter.get_graph()
-Visualisation(
+v = Visualisation(
     graph=bary_graph,
     title="Barycenter"
-).display()
+)
+v.save_as_html(os.path.join(script_dir, "graph_generated"))
+#v.save_as_pickle()
+v.display()
+
