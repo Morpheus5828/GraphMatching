@@ -97,7 +97,7 @@ def graph_nodes_to_sources(nodes_coords, node_data=None, nodes_size=None, nodes_
 
     # apply the mask if provided
     if nodes_mask is None:
-        nodes_mask = np.ones((nodes_coords.shape[0],), dtype=np.bool)
+        nodes_mask = np.ones((nodes_coords.shape[0],), dtype=bool)
 
     s_obj = SourceObj('nodes', nodes_coords[nodes_mask], color='black',
                         edge_color='black', symbol=symbol, edge_width=2.,
