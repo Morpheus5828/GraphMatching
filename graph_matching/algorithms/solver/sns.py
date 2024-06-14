@@ -180,7 +180,6 @@ def sinkhorn_newton_sparse(
         eta: float,
         N1: int,
         N2: int,
-        tolerance=0.01
 ) -> (np.array, int):
     """ Sinkhorn Newton Stage algorithms
     :param cost: cost matrix
@@ -190,11 +189,12 @@ def sinkhorn_newton_sparse(
     :param eta: regular parameter
     :param N1:
     :param N2:
-    :param tolerance:
     :return:
     """
+    mu_s = mu_s.reshape((-1, 1))
+    mu_t = mu_t.reshape((-1, 1))
     x = np.zeros((cost.shape[0], 1))
     y = np.zeros((cost.shape[1], 1))
-    x, y, P, i = _sinkhorn_stage(cost, x, y, N1, eta, mu_s, mu_t, tolerance)
-    result, i = _newton_stage(cost, mu_s, mu_t, rho, eta, i, x, y, P, N1, N2, tolerance)
+    x, y, P, i = _sinkhorn_stage(cost, x, y, N1, eta, mu_s, mu_t, tolerance=1e-4)
+    result, i = _newton_stage(cost, mu_s, mu_t, rho, eta, i, x, y, P, N1, N2, tolerance=1e-4)
     return result, i

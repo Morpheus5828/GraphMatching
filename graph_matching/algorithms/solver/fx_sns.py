@@ -127,7 +127,7 @@ def sinkhorn_newton_sparse_method(
     x_init: np.ndarray = None,
     y_init: np.ndarray = None,
     alpha: float = 1.0,
-    tolerance: float = 1e-6,
+    tolerance: float = 1e-1,
 ) -> np.ndarray:
     """Sinkhorn with a sparse Newton steps (best for some hard constrained optimal transport).
 

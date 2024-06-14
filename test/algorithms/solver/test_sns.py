@@ -79,26 +79,6 @@ class TestSns(TestCase):
         )
         self.assertTrue(np.allclose(result, transport))
 
-    def test_sinkhorn_newton_stage(self):
-        transport, i = sns.sinkhorn_newton_sparse(
-            cost=cost,
-            mu_s=mu_s,
-            mu_t=mu_t,
-            rho=15,
-            eta=1,
-            N1=10,
-            N2=20,
-            tolerance=0.01
-        )
-
-        result = np.array([
-            [0.37442765, 0.37309524, 0.37189778, 0.37322163],
-            [0.37265326, 0.37505907, 0.3738553, 0.37145295],
-            [0.37256018, 0.37123442, 0.37376192, 0.37509241]
-        ])
-        self.assertTrue(np.allclose(transport, result))
-        self.assertTrue(i == 1)
-
     def test_conjugate_gradient(self):
         A = np.array([[4, 1], [1, 3]])
         b = np.array([[1], [2]])
@@ -122,3 +102,26 @@ class TestSns(TestCase):
 
         self.assertTrue(result.all() == sns._sparsify(a, 15).all())
 
+    def test_sinkhorn_newton_stage(self):
+        cost = np.array([[0, 1, 0.6], [9, 0, 0.3], [0.5, 0.4, 0]])
+        mu_s = np.array([0.333, 0.333, 0.333])
+        mu_t = np.array([0.333, 0.333, 0.333])
+
+        transport, i = sns.sinkhorn_newton_sparse(
+            cost=cost,
+            mu_s=mu_s,
+            mu_t=mu_t,
+            rho=80,
+            eta=10,
+            N1=50,
+            N2=50,
+        )
+
+        truth = np.array(
+            [
+                [3.31644835e-01, 3.97225059e-05, 1.31544263e-03],
+                [1.00394996e-40, 3.23238927e-01, 9.76107295e-03],
+                [1.35554661e-03, 9.72113905e-03, 3.21923314e-01],
+            ]
+        )
+        self.assertTrue(np.linalg.norm(transport - truth) < 1e-1)

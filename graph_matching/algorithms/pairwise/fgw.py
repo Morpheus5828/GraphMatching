@@ -31,7 +31,6 @@ def _solve_OT(
         mu_s,
         mu_t,
         gradient,
-        tolerance,
         gamma=None,
         rho=None,
         eta: float = None,
@@ -52,8 +51,7 @@ def _solve_OT(
             mu_s=np.squeeze(mu_s),
             mu_t=np.squeeze(mu_t),
             gamma=gamma,
-            iterations=1000,
-            tolerance=tolerance
+            iterations=1000
         )
         return transport
     elif method == "sns":
@@ -65,7 +63,6 @@ def _solve_OT(
             eta=eta,
             N1=N1,
             N2=N2,
-            tolerance=tolerance
         )
         return transport
     elif method == "fx_sns":
@@ -77,7 +74,6 @@ def _solve_OT(
             eta=eta,
             n1_iterations=N1,
             n2_iterations=N2,
-            tolerance=tolerance
         )
         return transport
     else:
@@ -160,7 +156,7 @@ def conditional_gradient(
         eta: float = None,
         N1: int = None,
         N2: int = None,
-        tolerance: float = None,
+        tolerance: float = 1e-4,
         ot_method="sinkhorn",
 
 ):
@@ -171,6 +167,12 @@ def conditional_gradient(
     :param np.ndarray C2: cost matrix of the target graph
     :param np.ndarray distance: euclidian distance matrix between both graphs
     :param float gamma: the strength of the regularization for the OT solver
+    :param rho: Sinkhorn Newton Stage sparsify parametter
+    :param eta: Sinkhorn Newton Stage regularization parametter
+    :param N1: Sinkhorn part iteration in Sinkhron Newton Stage algorithm
+    :param N2: Newton part iteration in Sinkhron Newton Stage algorithm
+    :param tolerance: convergence parameter
+    :param ot_method: optimal transport method used, sinkhorn or sns
     :return: transport map
     """
     mu_s = mu_s.reshape((-1, 1))
@@ -184,7 +186,7 @@ def conditional_gradient(
         # 1 Gradient
         c_C1_C2 = _get_constant(C1=C1, C2=C2, distance=distance, transport=transport)
         gradient = _get_gradient(c_C1_C2=c_C1_C2, C1=C1, C2=C2, distance=distance, transport=transport)
-        if np.all(gradient) != 0: gradient = gradient / np.max(gradient)
+        #if np.all(gradient) != 0: gradient = gradient / np.max(gradient)
         # 2 OT
         new_transport = _solve_OT(
             mu_s=mu_s,
@@ -196,7 +198,6 @@ def conditional_gradient(
             method=ot_method,
             N1=N1,
             N2=N2,
-            tolerance=tolerance
         )
 
         # 3 Line Search
