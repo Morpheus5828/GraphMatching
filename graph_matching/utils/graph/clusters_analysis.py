@@ -7,6 +7,11 @@ from graph_matching.utils.graph import graph_processing as gp
 import numpy as np
 import networkx as nx
 import pickle as p
+import os, sys
+current_dir = os.path.dirname(os.path.abspath(__file__))
+project_path = os.path.abspath(os.path.join(current_dir, '../../..'))
+if project_path not in sys.path:
+    sys.path.append(project_path)
 
 
 def insert_at(
@@ -108,7 +113,8 @@ def label_nodes_according_to_coord(graph_no_dummy, template_mesh, coord_dim=1):
     nodes_attributes = {}
     # Fill the dictionnary with the nd_array attribute
     for ind, node in enumerate(graph_no_dummy.nodes):
-        nodes_attributes[node] = {"label_color": one_nodes_coords_scaled[ind]}
+        if ind < len(one_nodes_coords_scaled):
+            nodes_attributes[node] = {"label_color": one_nodes_coords_scaled[ind]}
 
     nx.set_node_attributes(graph_no_dummy, nodes_attributes)
     return one_nodes_coords_scaled
@@ -127,7 +133,7 @@ def get_labelling_from_assignment(list_graphs, matching_matrix, largest_ind, mes
     nb_graphs = len(list_graphs)
     g_l = list_graphs[largest_ind]
     color_label_ordered = label_nodes_according_to_coord(g_l, mesh, coord_dim=0)
-    r_perm = p.load(open("../data/r_perm_22.gpickle","rb"))
+    r_perm = p.load(open(os.path.join(project_path, "graph_matching/data/r_perm_22.gpickle"),"rb"))
     color_label = color_label_ordered[r_perm]
     gp.add_nodes_attribute(g_l, color_label, labelling_attribute_name)
     default_value = default_label_value

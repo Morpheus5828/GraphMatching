@@ -2,16 +2,20 @@
 .. moduleauthor:: Marius Thorre, Rohit Yadav
 """
 
-import os
+import os, sys
 import numpy as np
 import networkx as nx
 from tqdm.auto import tqdm
 
 from graph_matching.utils.graph.display_graph_tools import Visualisation
-#from graph_matching.utils.graph.display_graph_tools import Visualisation
 import graph_matching.algorithms.graph_generation.generate_reference_graph as generate_reference_graph
 import graph_matching.algorithms.graph_generation.generate_graph_family as generate_graph_family
 from graph_matching.utils.graph.graph_tools import mean_edge_len
+
+current_dir = os.path.dirname(os.path.abspath(__file__))
+project_path = os.path.abspath(os.path.join(current_dir, '../../..'))
+if project_path not in sys.path:
+    sys.path.append(project_path)
 
 
 class EdgePermutation:
@@ -103,8 +107,43 @@ class EdgePermutation:
             title="reference"
         )
 
+        #v.save_as_pickle(path_to_save=trial_path)
+        #v.save_as_html(path_to_save=os.path.join(html_path))
+        return trial_path, reference_graph_max
+
+    def _generate_families_graph(self):
+        if not os.path.isdir(self.path_to_write):
+            os.mkdir(self.path_to_write)
+
+        print("Generating reference_graph..")
+        for i in tqdm(range(self.nb_ref_graph)):
+            reference_graph = generate_reference_graph.run(self.nb_vertices, self.radius)
+            all_geo = mean_edge_len(reference_graph)
+            if i == 0:
+                min_geo = min(all_geo)
+            else:
+                if min(all_geo) > min_geo:
+                    min_geo = min(all_geo)
+                    reference_graph_max = reference_graph
+                else:
+                    pass
+        if self.save_reference:
+            print("Selected reference graph with min_geo: ", min_geo)
+            trial_path = os.path.join(self.path_to_write, self.pickle_folder_title)
+            html_path = os.path.join(self.path_to_write, self.html_folder_title)
+            if not os.path.isdir(trial_path):
+                os.mkdir(trial_path)
+            if not os.path.isdir(html_path):
+                os.mkdir(html_path)
+
+        v = Visualisation(
+            graph=reference_graph,
+            title="reference",
+            sphere_radius=self.radius
+        )
+
         v.save_as_pickle(path_to_save=trial_path)
-        v.save_as_html(path_to_save=os.path.join(html_path))
+        v.save_as_html(path_to_save=os.path.join(os.path.join(project_path, self.path_to_write, self.html_folder_title)))
         return trial_path, reference_graph_max
 
     def _generate_noise_graph(
@@ -112,7 +151,6 @@ class EdgePermutation:
             trial_path: str,
             reference_graph_max: nx.Graph,
     ):
-
         list_noise = np.arange(self.min_noise, self.max_noise, self.step_noise)
 
         for noise in list_noise:
@@ -138,26 +176,14 @@ class EdgePermutation:
                 sorted_graph = nx.Graph()
                 sorted_graph.add_nodes_from(sorted(graph_family.nodes(data=True)))
                 sorted_graph.add_edges_from(graph_family.edges(data=True))
-
-
                 if not os.path.exists(os.path.join(
-                    f"C:/Users/thorr/PycharmProjects/GraphMatching/graph_matching/demos/graph_generated/{self.html_folder_title}", folder_name)):
+                        project_path + self.html_folder_title,
+                        folder_name)):
                     os.makedirs(os.path.join(
-                    f"C:/Users/thorr/PycharmProjects/GraphMatching/graph_matching/demos/graph_generated/{self.html_folder_title}", folder_name))
-
-                # save_figure._as_gpickle(
-                #     path=os.path.join(
-                #         f"C:/Users/thorr/PycharmProjects/GraphMatching/graph_matching/demos/graph_generated/{self.pickle_folder_title}"
-                #         , f"graph_{i_family:05d}"
-                #     ),
-                #     graph=sorted_graph
-                # )
-
-                v = Visualisation(
-                     graph=sorted_graph,
-                     title=f"graph_{i_family:05d}"
-                )
-                v.save_as_html(f"C:/Users/thorr/PycharmProjects/GraphMatching/graph_matching/demos/graph_generated/{self.html_folder_title}/{folder_name}")
-                v.save_as_pickle(path_parameters_folder)
+                        project_path + self.html_folder_title,
+                        folder_name))
+                v = Visualisation(graph=sorted_graph, sphere_radius=self.radius, title=f"graph_{i_family:05d}")
+                v.save_as_html(os.path.join(project_path, self.path_to_write,self.html_folder_title, folder_name))
+                v.save_as_pickle(os.path.join(project_path, self.path_to_write,self.pickle_folder_title, folder_name))
 
 

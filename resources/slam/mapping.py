@@ -8,9 +8,9 @@ import trimesh
 from scipy.sparse.linalg import lgmres
 
 
-import slam.differential_geometry as sdg
-import slam.distortion as sdst
-import slam.topology as stop
+import resources.slam.differential_geometry as sdg
+import resources.slam.distortion as sdst
+import resources.slam.topology as stop
 
 
 # error tolerance for the lgmres solver
