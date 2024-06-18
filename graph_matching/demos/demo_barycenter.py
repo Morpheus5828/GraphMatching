@@ -44,8 +44,7 @@ barycenter = mean.Barycenter(
     )
 
 bary_graph = barycenter.get_graph()
-nx.draw(bary_graph)
-plt.show()
+
 
 #print(bary_graph.edges)
 # v = Visualisation(
@@ -54,5 +53,6 @@ plt.show()
 #     sphere_radius=100
 # )
 # v.save_as_html(os.path.join(script_dir, "graph_generated"))
+
 
 
