@@ -37,8 +37,7 @@ if __name__ == '__main__':
         C1=adj_matrix_s,
         C2=adj_matrix_t,
         distance=distance,
-        gamma=1/2,
-        tolerance=0.1,
+        gamma=0.15,
         ot_method="sinkhorn"
     )
 
@@ -48,14 +47,12 @@ if __name__ == '__main__':
         C1=adj_matrix_s,
         C2=adj_matrix_t,
         distance=distance,
-        rho=2,
-        eta=15,
+        rho=80,
+        eta=150,
         N1=50,
         N2=50,
-        tolerance=0.1,
         ot_method="sns",
     )
-
     end = time.time()
 
     print("Distance euclidienne ", np.linalg.norm(transport1 - transport2))

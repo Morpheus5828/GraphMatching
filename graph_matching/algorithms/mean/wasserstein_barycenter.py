@@ -82,6 +82,9 @@ class Barycenter:
         return A, C
 
     def get_graph(self):
+        print(self.sp_to_adjacency(
+                threshinf=0,
+                threshsup=self.find_thresh()[0]))
         bary = nx.from_numpy_array(
             self.sp_to_adjacency(
                 threshinf=0,

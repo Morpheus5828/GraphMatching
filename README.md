@@ -20,7 +20,7 @@ python graph_matching/demos/demo_graph_generation.py
 ## Compute graph barycenter
 From list of graphs, compute barycenter graph.
 ```shell
-python graph_matching/demos/demos_barycenter.py
+python graph_matching/demos/demo_barycenter.py
 ```
 
 ## Display graph

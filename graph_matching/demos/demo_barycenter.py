@@ -3,6 +3,9 @@
 """
 import os
 import sys
+
+import matplotlib.pyplot as plt
+
 project_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 if project_path not in sys.path:
     sys.path.append(project_path)
@@ -21,12 +24,13 @@ for file in os.listdir(graph_folder):
         for graph in os.listdir(os.path.join(graph_folder, file)):
             g = get_graph_from_pickle(os.path.join(graph_folder, file, graph))
             tmp = nx.Graph()
+
             tmp.add_nodes_from(list(range(len(g.nodes))))
             for node in g.nodes:
                 tmp.add_node(node, attr_name=node)
-
             for edge in g.edges:
                 tmp.add_edge(edge[0], edge[1])
+            #print(g.nodes[0])
             graphs.append(tmp)
 
 barycenter = mean.Barycenter(
@@ -40,11 +44,15 @@ barycenter = mean.Barycenter(
     )
 
 bary_graph = barycenter.get_graph()
-v = Visualisation(
-    graph=bary_graph,
-    title="Barycenter"
-)
-v.save_as_html(os.path.join(script_dir, "graph_generated"))
-#v.save_as_pickle()
-v.display()
+nx.draw(bary_graph)
+plt.show()
+
+#print(bary_graph.edges)
+# v = Visualisation(
+#     graph=bary_graph,
+#     title="Barycenter",
+#     sphere_radius=100
+# )
+# v.save_as_html(os.path.join(script_dir, "graph_generated"))
+
 

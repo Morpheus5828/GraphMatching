@@ -1,5 +1,5 @@
 """Example of graph generation
-.. moduleauthor:: Marius Thorre
+..moduleauthor:: Marius Thorre
 """
 
 import os
