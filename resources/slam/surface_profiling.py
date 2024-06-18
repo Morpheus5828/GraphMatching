@@ -4,8 +4,8 @@ import trimesh
 import trimesh.intersections
 import trimesh.triangles
 
-import slam.geodesics
-import slam.utils as utils
+import resources.slam.geodesics
+import resources.slam.utils as utils
 
 
 def cortical_surface_profiling(mesh, rot_angle, r_step, max_samples):

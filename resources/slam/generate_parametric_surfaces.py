@@ -3,7 +3,7 @@ from scipy.spatial import Delaunay
 from scipy.optimize import newton
 import trimesh
 from trimesh import creation as tcr
-import slam.topology as stop
+import resources.slam.topology as stop
 
 
 def generate_hinge(

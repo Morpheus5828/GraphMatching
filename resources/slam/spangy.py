@@ -30,7 +30,7 @@ References
 import numpy as np
 from scipy.sparse.linalg import eigsh
 
-import slam.differential_geometry as sdg
+import resources.slam.differential_geometry as sdg
 
 
 def eigenpairs(mesh, nb_eig):

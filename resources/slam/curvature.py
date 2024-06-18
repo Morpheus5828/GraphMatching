@@ -2,7 +2,7 @@ import numpy as np
 from trimesh import util as tut
 
 # from trimesh.geometry import mean_vertex_normals
-import slam.topology as stop
+import resources.slam.topology as stop
 
 
 def norm(vector):
