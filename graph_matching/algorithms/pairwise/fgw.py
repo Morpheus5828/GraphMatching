@@ -56,7 +56,7 @@ def _solve_OT(
         return transport
     elif method == "sns":
         transport, _ = sns.sinkhorn_newton_sparse(
-            cost=gradient,
+            cost=gradient/np.max(gradient),
             mu_s=mu_s,
             mu_t=mu_t,
             rho=rho,

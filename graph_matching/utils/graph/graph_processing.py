@@ -3,6 +3,7 @@ import numpy as np
 import networkx as nx
 import pickle
 
+
 def get_graph_from_pickle(path: str) -> nx.Graph:
     with open(path, "rb") as f:
         graph = pickle.load(f)

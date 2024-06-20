@@ -1,11 +1,20 @@
-import graph_matching.algorithms.mean.wasserstein_barycenter as wasserstein_barycenter
+import os, sys
+
 from unittest import TestCase
 import math
 import networkx as nx
-import matplotlib.pyplot as plt
 from matplotlib import cm
 import matplotlib.colors as mcol
 import numpy as np
+
+from graph_matching.algorithms.mean import wasserstein_barycenter
+from graph_matching.utils.graph.display_graph_tools import get_graph_from_pickle
+
+current_dir = os.path.dirname(os.path.abspath(__file__))
+project_path = os.path.abspath(os.path.join(current_dir, '../../..'))
+if project_path not in sys.path:
+    sys.path.append(project_path)
+
 
 def graph_colors(nx_graph, vmin=0, vmax=7):
     cnorm = mcol.Normalize(vmin=vmin, vmax=vmax)
@@ -52,9 +61,9 @@ def build_noisy_circular_graph(N=20, mu=0, sigma=0.3, with_noise=False, structur
 
 class TestWassersteinBarycenter(TestCase):
     def testCompute(self):
-        X0 = []
-        for k in range(9):
-            X0.append(build_noisy_circular_graph(np.random.randint(15, 25), with_noise=True, structure_noise=True, p=3))
+        graphs = []
+        #for k in range(9):
+        #    X0.append(build_noisy_circular_graph(np.random.randint(15, 25), with_noise=True, structure_noise=True, p=3))
         # plt.figure(figsize=(8, 10))
         # for i in range(len(X0)):
         #     plt.subplot(3, 3, i + 1)
@@ -63,17 +72,27 @@ class TestWassersteinBarycenter(TestCase):
         #     nx.draw(g, pos=pos, node_color=graph_colors(g, vmin=-1, vmax=1), with_labels=False, node_size=100)
         # plt.suptitle('Dataset of noisy graphs. Color indicates the label', fontsize=20)
         # plt.show()
+        pickle_path = os.path.join(project_path, "graph_matching/demos/graph_generated/pickle")
+
+        for item in os.listdir(pickle_path):
+            item_path = os.path.join(pickle_path, item)
+            if os.path.isdir(item_path):
+                for graph_file in os.listdir(item_path):
+                    graph_path = os.path.join(item_path, graph_file)
+                    graph = get_graph_from_pickle(graph_path)
+                    graphs.append(graph)
 
         w = wasserstein_barycenter.Barycenter(
-            graphs=X0,
-            size_bary=15,
+            graphs=graphs,
+            size_bary=20,
             find_tresh_inf=0.5,
             find_tresh_step=10,
             find_tresh_sup=10,
             graph_vmax=1,
-            graph_vmin=-1
+            graph_vmin=-1,
         )
-
+        # print(w.log.keys())
+        # print(w.log["Ms"][0].shape)
         w.plot_middle_graph()
 
 

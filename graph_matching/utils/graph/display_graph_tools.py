@@ -46,6 +46,7 @@ class Visualisation:
 
     def verify_points_on_sphere(self, points: np.ndarray, radius: float) -> bool:
         distances = np.linalg.norm(points, axis=1)
+
         return np.allclose(distances, radius)
 
     def construct_sphere(self):

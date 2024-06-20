@@ -4,14 +4,14 @@ https://pythonot.github.io/auto_examples/gromov/plot_barycenter_fgw.html#
 .. moduleauthor:: Marius THORRE
 """
 
-from typing import List
 import numpy as np
 import networkx as nx
+import ot.gromov
 from scipy.sparse.csgraph import shortest_path
 from matplotlib import cm
 from ot.gromov._gw import fused_gromov_wasserstein
 import matplotlib.colors as mcol
-from scipy.spatial.distance import cdist
+from graph_matching.utils.graph.display_graph_tools import Visualisation
 import matplotlib.pyplot as plt
 from ot.utils import list_to_array, unif, check_random_state, UndefinedParameter, dist
 from ot.backend import get_backend
@@ -40,7 +40,7 @@ class Barycenter:
         self.find_tresh_step = find_tresh_step
         self.graph_vmin = graph_vmin
         self.graph_vmax = graph_vmax
-        self.A, self.C = self.compute()
+        self.C, self.A = self.compute()
 
     def find_thresh(self):
         dist = []
@@ -74,19 +74,30 @@ class Barycenter:
         return colors
 
     def get_attributes(self):
-        Cs = [shortest_path(nx.adjacency_matrix(x).todense()) for x in self.graphs]
-        ps = [np.ones(len(x.nodes())) / len(x.nodes()) for x in self.graphs]
-        Ys = [
-            np.array([v for (k, v) in nx.get_node_attributes(x, 'attr_name').items()]).reshape(-1, 1)
-            for x in self.graphs
-        ]
-        return Cs, ps, Ys
+        # Cs = [shortest_path(nx.adjacency_matrix(x).todense()) for x in self.graphs]
+        # ps = [np.ones(len(x.nodes())) / len(x.nodes()) for x in self.graphs]
+        # Ys = [
+        #     np.array([v for (k, v) in nx.get_node_attributes(x, 'attr_name').items()]).reshape(-1, 1)
+        #     for x in self.graphs
+        # ]
+        Ys = []
+        Cs = []
+
+
+        for graph in self.graphs:
+            coord = []
+            for n in range(len(graph.nodes)):
+                coord.append(np.array(graph.nodes[n]["coord"]))
+            Ys.append(coord)
+            Cs.append(nx.adjacency_matrix(graph).todense())
+
+        return Cs, Ys
 
     def compute(self):
-        Cs, ps, Ys = self.get_attributes()
-        lambdas = np.array([np.ones(len(Ys)) / len(Ys)]).ravel()
-        A, C, _ = self.fgw_barycenters(self.size_bary, Ys, Cs, ps, lambdas, alpha=0.95, log=True)
-        return A, C
+        Cs, Ys = self.get_attributes()
+        C, A = ot.gromov.fgw_barycenters(N=self.size_bary, Ys=Ys, Cs=Cs, alpha=0.5)
+        #C, A = self.fgw_barycenters(self.size_bary, Ys, Cs, alpha=0.5)
+        return C, A
 
     def fgw_barycenters(self,
             N, Ys, Cs, ps=None, lambdas=None, alpha=0.5, fixed_structure=False,
@@ -116,7 +127,7 @@ class Barycenter:
         if lambdas is None:
             lambdas = [1. / S] * S
 
-        d = Ys[0].shape[1]  # dimension on the node features
+        d = Ys[0].shape[1]
 
         if fixed_structure:
             if init_C is None:
@@ -195,7 +206,7 @@ class Barycenter:
                     mu_t=ps[s],
                     distance=Ms[s],
                     gamma=0.3,
-                    eta=30,
+                    eta=600,
                     rho=80,
                     N1=50,
                     N2=50,
@@ -269,9 +280,6 @@ class Barycenter:
             return X, C
 
     def get_graph(self):
-        print(self.sp_to_adjacency(
-                threshinf=0,
-                threshsup=self.find_thresh()[0]))
         bary = nx.from_numpy_array(
             self.sp_to_adjacency(
                 threshinf=0,
@@ -280,15 +288,27 @@ class Barycenter:
         return bary
 
     def plot_middle_graph(self):
-        bary = self.get_graph()
-        for i, v in enumerate(self.A.ravel()):
-            bary.add_node(i, attr_name=v)
-        pos = nx.kamada_kawai_layout(bary)
-        nx.draw(
-            bary,
-            pos=pos,
-            with_labels=True,
-            node_color=self.graph_colors(bary)
-        )
-        plt.suptitle(self.graph_title, fontsize=20)
-        plt.show()
+        #plt.figure(figsize=(10, 10))
+        #ax = plt.gca()
+
+        G = nx.from_numpy_array(self.A)
+        tmp = nx.Graph()
+        for node, i in enumerate(G.nodes):
+            tmp.add_node(node, coord=self.C[i])
+        print(tmp.nodes[0])
+        nx.draw(tmp)
+        #plt.show()
+        Visualisation(graph=tmp, sphere_radius=90).save_as_html(path_to_save="C:/Users/thorr/PycharmProjects/GraphMatching/test/algorithms/mean")
+
+        # bary = self.get_graph()
+        # for i, v in enumerate(self.A.ravel()):
+        #     bary.add_node(i, attr_name=v)
+        # pos = nx.kamada_kawai_layout(bary)
+        # nx.draw(
+        #     bary,
+        #     pos=pos,
+        #     with_labels=True,
+        #     node_color=self.graph_colors(bary)
+        # )
+        # plt.suptitle(self.graph_title, fontsize=20)
+        # plt.show()

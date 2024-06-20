@@ -43,7 +43,7 @@ barycenter = mean.Barycenter(
     graph_vmax=1
     )
 
-bary_graph = barycenter.get_graph()
+barycenter.plot_middle_graph()
 
 
 #print(bary_graph.edges)
