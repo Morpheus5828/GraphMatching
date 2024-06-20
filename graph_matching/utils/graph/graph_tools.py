@@ -209,9 +209,9 @@ def ground_truth_labeling(
     :param ground_truth_perm_to_ref:
     :return:
     """
+
     ground_truth_perm = {}
     for i_graph in range(nb_graphs):
-
         for j_graph in range(nb_graphs):
             ground_truth_perm[str(i_graph) + ',' + str(j_graph)] = get_in_between_perm_matrix(
                 ground_truth_perm_to_ref[i_graph], ground_truth_perm_to_ref[j_graph])

@@ -14,7 +14,6 @@ import graph_matching.utils.graph.graph_visu as gv
 import graph_matching.utils.graph.graph_processing as gp
 import matplotlib.pyplot as plt
 import random
-import plotly.express as px
 import plotly.figure_factory as ff
 
 current_dir = os.path.dirname(os.path.abspath(__file__))

@@ -23,7 +23,6 @@ class EdgePermutation:
             self,
             pickle_folder_title: str,
             nb_sample_graphs: int,
-            nb_graphs: int,
             nb_vertices: int,
             min_noise: int,
             max_noise: int,
@@ -41,7 +40,6 @@ class EdgePermutation:
         Compute edge permutation graphs
         :param pickle_folder_title:
         :param nb_sample_graphs:
-        :param nb_graphs:
         :param nb_vertices:
         :param min_noise:
         :param max_noise:
@@ -56,7 +54,6 @@ class EdgePermutation:
         """
         self.pickle_folder_title = pickle_folder_title
         self.nb_sample_graphs = nb_sample_graphs
-        self.nb_graphs = nb_graphs
         self.nb_vertices = nb_vertices
         self.min_noise = min_noise
         self.max_noise = max_noise
@@ -107,8 +104,8 @@ class EdgePermutation:
             title="reference"
         )
 
-        #v.save_as_pickle(path_to_save=trial_path)
-        #v.save_as_html(path_to_save=os.path.join(html_path))
+        v.save_as_pickle(path_to_save=trial_path)
+        v.save_as_html(path_to_save=os.path.join(html_path))
         return trial_path, reference_graph_max
 
     def _generate_families_graph(self):
@@ -162,14 +159,10 @@ class EdgePermutation:
 
             list_graphs, ground_truth_perm, ground_truth_perm_to_ref = generate_graph_family.run(
                 nb_sample_graphs=self.nb_sample_graphs,
-                nb_graphs=self.nb_graphs,
                 nb_vertices=self.nb_vertices,
-                radius=self.radius,
-                nb_outliers=self.max_outliers,
                 ref_graph=reference_graph_max,
                 noise_node=noise,
                 noise_edge=noise,
-                nb_neighbors_to_consider=self.nb_neighbors_to_consider_outliers
             )
 
             for i_family, graph_family in enumerate(list_graphs):

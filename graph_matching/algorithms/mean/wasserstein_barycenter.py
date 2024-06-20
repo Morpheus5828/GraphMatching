@@ -12,12 +12,12 @@ from matplotlib import cm
 from ot.gromov._gw import fused_gromov_wasserstein
 import matplotlib.colors as mcol
 from graph_matching.utils.graph.display_graph_tools import Visualisation
-import matplotlib.pyplot as plt
 from ot.utils import list_to_array, unif, check_random_state, UndefinedParameter, dist
 from ot.backend import get_backend
 from ot.gromov._utils import update_feature_matrix, update_square_loss, update_kl_loss
 
 import graph_matching.algorithms.pairwise.fgw as fgw
+from graph_matching.utils.graph.graph_processing import get_graph_from_pickle
 
 
 class Barycenter:
@@ -298,7 +298,10 @@ class Barycenter:
         print(tmp.nodes[0])
         nx.draw(tmp)
         #plt.show()
-        Visualisation(graph=tmp, sphere_radius=90).save_as_html(path_to_save="C:/Users/thorr/PycharmProjects/GraphMatching/test/algorithms/mean")
+        print(get_graph_from_pickle("C:/Users/thorr/PycharmProjects/GraphMatching/graph_matching/demos/graph_generated/pickle/reference.gpickle").nodes)
+        v = Visualisation(graph=tmp, graph2=get_graph_from_pickle("C:/Users/thorr/PycharmProjects/GraphMatching/graph_matching/demos/graph_generated/pickle/reference.gpickle"),
+                      sphere_radius=90)
+        v.save_as_html(path_to_save="C:/Users/thorr/PycharmProjects/GraphMatching/test/algorithms/mean")
 
         # bary = self.get_graph()
         # for i, v in enumerate(self.A.ravel()):

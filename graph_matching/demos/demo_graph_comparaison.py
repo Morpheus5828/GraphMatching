@@ -29,7 +29,7 @@ with select_col1:
     if st.session_state.file_name1:
         st.write(f"Selected file: {st.session_state.file_name1}")
     if st.session_state.html_content1:
-        components.html(st.session_state.html_content1, width=700, height=700)
+        components.html(st.session_state.html_content1, width=1000, height=1500)
 
 with select_col2:
     uploaded_file2 = st.file_uploader("Choose a HTML file", type="html", key="file_uploader2")
@@ -40,4 +40,4 @@ with select_col2:
     if st.session_state.file_name2:
         st.write(f"Selected file: {st.session_state.file_name2}")
     if st.session_state.html_content2:
-        components.html(st.session_state.html_content2, width=700, height=700)
+        components.html(st.session_state.html_content2, width=1500, height=1500)

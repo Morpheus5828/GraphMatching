@@ -7,11 +7,14 @@ import sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 from graph_matching.algorithms.graph_generation.generation_graph_edge_permutation import EdgePermutation
 
+current_dir = os.path.dirname(os.path.abspath(__file__))
+project_path = os.path.abspath(os.path.join(current_dir, '../../..'))
+if project_path not in sys.path:
+    sys.path.append(project_path)
 
 if __name__ == '__main__':
-    generation_folder_path = "graph_matching/demos/graph_generated"
-    nb_sample_graphs = 10
-    nb_graphs = 4
+    generation_folder_path = os.path.join(current_dir, "graph_generated")
+    nb_sample_graphs = 20
     nb_vertices = 30
     min_noise = 100
     max_noise = 1400
@@ -27,7 +30,6 @@ if __name__ == '__main__':
         pickle_folder_title="pickle",
         html_folder_title="html",
         nb_sample_graphs=nb_sample_graphs,
-        nb_graphs=nb_graphs,
         nb_vertices=nb_vertices,
         min_noise=min_noise,
         max_noise=max_noise,
