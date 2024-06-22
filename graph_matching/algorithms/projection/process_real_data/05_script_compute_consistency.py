@@ -2,8 +2,8 @@ import os
 import sys
 import pickle
 import scipy.io as sco
-import graph_matching.utils.graph.graph_processing as gp
-import graph_matching.utils.graph.clusters_analysis as gca
+import graph_matching.utils.graph_processing as gp
+import graph_matching.utils.clusters_analysis as gca
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 project_path = os.path.abspath(os.path.join(current_dir, '../../..'))

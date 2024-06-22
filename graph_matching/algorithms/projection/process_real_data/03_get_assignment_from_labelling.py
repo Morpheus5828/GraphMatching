@@ -7,8 +7,8 @@ project_path = os.path.abspath(os.path.join(current_dir, '../../..'))
 if project_path not in sys.path:
     sys.path.append(project_path)
 
-import graph_matching.utils.graph.graph_processing as gp
-import graph_matching.utils.graph.clusters_analysis as gca
+import graph_matching.utils.graph_processing as gp
+import graph_matching.utils.clusters_analysis as gca
 
 def create_perm_from_labels(labels):
     U = np.zeros((len(labels), len(set(labels))))

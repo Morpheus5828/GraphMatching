@@ -4,34 +4,24 @@
 import os
 import sys
 
-import matplotlib.pyplot as plt
-
-project_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
+current_dir = os.path.dirname(os.path.abspath(__file__))
+project_path = os.path.abspath(os.path.join(current_dir, '../../'))
 if project_path not in sys.path:
     sys.path.append(project_path)
-import networkx as nx
+
 import graph_matching.algorithms.mean.wasserstein_barycenter as mean
-from graph_matching.utils.graph.display_graph_tools import Visualisation
-from graph_matching.utils.graph.graph_processing import get_graph_from_pickle
+from graph_matching.utils.display_graph_tools import Visualisation
+from graph_matching.utils.graph_processing import get_graph_from_pickle
 
 script_dir = os.path.dirname(os.path.abspath(__file__))
 graph_folder = os.path.join(script_dir, "graph_generated", "pickle")
-graphs = []
 
-# update attr_name graph
+graphs = []
 for file in os.listdir(graph_folder):
     if os.path.isdir(os.path.join(graph_folder, file)):
         for graph in os.listdir(os.path.join(graph_folder, file)):
             g = get_graph_from_pickle(os.path.join(graph_folder, file, graph))
-            tmp = nx.Graph()
-
-            tmp.add_nodes_from(list(range(len(g.nodes))))
-            for node in g.nodes:
-                tmp.add_node(node, attr_name=node)
-            for edge in g.edges:
-                tmp.add_edge(edge[0], edge[1])
-            #print(g.nodes[0])
-            graphs.append(tmp)
+            graphs.append(g)
 
 barycenter = mean.Barycenter(
     graphs=graphs,
@@ -43,16 +33,29 @@ barycenter = mean.Barycenter(
     graph_vmax=1
     )
 
-barycenter.plot_middle_graph()
 
+v = Visualisation(
+    graph=barycenter.get_graph(),
+    sphere_radius=100,
+    title="barycenter"
+)
 
-#print(bary_graph.edges)
-# v = Visualisation(
-#     graph=bary_graph,
-#     title="Barycenter",
-#     sphere_radius=100
+#v.save_as_html(os.path.join(current_dir, "graph_generated"))
+v.save_as_pickle(os.path.join(current_dir, "graph_generated"))
+
+# v.compareAndSave(
+#     secondGraph=get_graph_from_pickle(os.path.join(project_path, "graph_matching/demos/graph_generated/pickle/reference.gpickle")),
+#     path_to_save=current_dir
 # )
-# v.save_as_html(os.path.join(script_dir, "graph_generated"))
+
+# reference = get_graph_from_pickle(os.path.join(project_path, "graph_matching/demos/graph_generated/pickle/reference.gpickle"))
+# a = np.array([data["coord"] for node, data in barycenter.get_graph().nodes(data=True)])
+#
+# c = np.array([data["coord"] for node, data in reference.nodes(data=True)])
+#
+# print(np.linalg.norm(a-c))
+
+
 
 
 

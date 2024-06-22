@@ -1,4 +1,4 @@
-from graph_matching.utils.graph.graph_tools import *
+from graph_matching.utils.graph_tools import *
 from scipy.stats import betabinom
 
 def run(

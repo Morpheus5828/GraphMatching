@@ -6,7 +6,7 @@
 from unittest import TestCase
 import numpy as np
 import matplotlib.pyplot as plt
-import graph_matching.utils.graph.sphere as sphere
+import graph_matching.utils.sphere as sphere
 
 sphere_test = sphere.Sphere()
 

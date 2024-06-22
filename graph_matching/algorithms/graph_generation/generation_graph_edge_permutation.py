@@ -7,10 +7,10 @@ import numpy as np
 import networkx as nx
 from tqdm.auto import tqdm
 
-from graph_matching.utils.graph.display_graph_tools import Visualisation
+from graph_matching.utils.display_graph_tools import Visualisation
 import graph_matching.algorithms.graph_generation.generate_reference_graph as generate_reference_graph
 import graph_matching.algorithms.graph_generation.generate_graph_family as generate_graph_family
-from graph_matching.utils.graph.graph_tools import mean_edge_len
+from graph_matching.utils.graph_tools import mean_edge_len
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 project_path = os.path.abspath(os.path.join(current_dir, '../../..'))

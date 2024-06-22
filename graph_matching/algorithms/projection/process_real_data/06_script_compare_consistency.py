@@ -2,7 +2,7 @@ import os
 import sys
 import numpy as np
 import pickle
-import graph_matching.utils.graph.graph_processing as gp
+import graph_matching.utils.graph_processing as gp
 import matplotlib.pyplot as plt
 
 current_dir = os.path.dirname(os.path.abspath(__file__))

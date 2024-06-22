@@ -1,8 +1,8 @@
 import sys
 import os
 import resources.slam.io as sio
-import graph_matching.utils.graph.graph_visu as gv
-import graph_matching.utils.graph.graph_processing as gp
+import graph_matching.utils.graph_visu as gv
+import graph_matching.utils.graph_processing as gp
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 project_path = os.path.abspath(os.path.join(current_dir, '../../..'))

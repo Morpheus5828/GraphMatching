@@ -1,18 +1,8 @@
 import numpy as np
 import os
 import pickle as p
-import matplotlib.pyplot as plt
-import pandas as pd
-import seaborn as sns
-import plotly.express as px
-import plotly.graph_objects as go
-import networkx as nx
 import sys
-import resources.slam.io as sio
 import networkx as nx
-import graph_matching.utils.graph.graph_visu as gv
-import graph_matching.utils.graph.graph_processing as gp
-import matplotlib.pyplot as plt
 import random
 import plotly.figure_factory as ff
 

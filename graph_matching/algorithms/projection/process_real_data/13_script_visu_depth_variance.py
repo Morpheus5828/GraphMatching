@@ -1,8 +1,8 @@
 import sys, os
 import resources.slam.io as sio
-import graph_matching.utils.graph.graph_visu as gv
-import graph_matching.utils.graph.graph_processing as gp
-import graph_matching.utils.graph.clusters_analysis as gca
+import graph_matching.utils.graph_visu as gv
+import graph_matching.utils.graph_processing as gp
+import graph_matching.utils.clusters_analysis as gca
 import numpy as np
 
 current_dir = os.path.dirname(os.path.abspath(__file__))

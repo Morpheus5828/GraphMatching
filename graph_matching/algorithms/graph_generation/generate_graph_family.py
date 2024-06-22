@@ -3,7 +3,7 @@
 """
 
 import graph_matching.algorithms.graph_generation.generate_noisy_graph as generate_noisy_graph
-from graph_matching.utils.graph.graph_tools import *
+from graph_matching.utils.graph_tools import *
 import networkx as nx
 
 

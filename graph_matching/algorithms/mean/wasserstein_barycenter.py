@@ -9,15 +9,12 @@ import networkx as nx
 import ot.gromov
 from scipy.sparse.csgraph import shortest_path
 from matplotlib import cm
-from ot.gromov._gw import fused_gromov_wasserstein
 import matplotlib.colors as mcol
-from graph_matching.utils.graph.display_graph_tools import Visualisation
+from ot.gromov._gw import fused_gromov_wasserstein
 from ot.utils import list_to_array, unif, check_random_state, UndefinedParameter, dist
 from ot.backend import get_backend
 from ot.gromov._utils import update_feature_matrix, update_square_loss, update_kl_loss
-
 import graph_matching.algorithms.pairwise.fgw as fgw
-from graph_matching.utils.graph.graph_processing import get_graph_from_pickle
 
 
 class Barycenter:
@@ -74,15 +71,8 @@ class Barycenter:
         return colors
 
     def get_attributes(self):
-        # Cs = [shortest_path(nx.adjacency_matrix(x).todense()) for x in self.graphs]
-        # ps = [np.ones(len(x.nodes())) / len(x.nodes()) for x in self.graphs]
-        # Ys = [
-        #     np.array([v for (k, v) in nx.get_node_attributes(x, 'attr_name').items()]).reshape(-1, 1)
-        #     for x in self.graphs
-        # ]
         Ys = []
         Cs = []
-
 
         for graph in self.graphs:
             coord = []
@@ -100,11 +90,11 @@ class Barycenter:
         return C, A
 
     def fgw_barycenters(self,
-            N, Ys, Cs, ps=None, lambdas=None, alpha=0.5, fixed_structure=False,
-            fixed_features=False, p=None, loss_fun='square_loss', armijo=False,
-            symmetric=True, max_iter=100, tol=1e-9, stop_criterion='barycenter',
-            warmstartT=False, verbose=False, log=False, init_C=None, init_X=None,
-            random_state=None, **kwargs):
+                        N, Ys, Cs, ps=None, lambdas=None, alpha=0.5, fixed_structure=False,
+                        fixed_features=False, p=None, loss_fun='square_loss', armijo=False,
+                        symmetric=True, max_iter=100, tol=1e-9, stop_criterion='barycenter',
+                        warmstartT=False, verbose=False, log=False, init_C=None, init_X=None,
+                        random_state=None, **kwargs):
 
         if stop_criterion not in ['barycenter', 'loss']:
             raise ValueError(f"Unknown `stop_criterion='{stop_criterion}'`. Use one of: {'barycenter', 'loss'}.")
@@ -280,38 +270,9 @@ class Barycenter:
             return X, C
 
     def get_graph(self):
-        bary = nx.from_numpy_array(
-            self.sp_to_adjacency(
-                threshinf=0,
-                threshsup=self.find_thresh()[0])
-        )
-        return bary
-
-    def plot_middle_graph(self):
-        #plt.figure(figsize=(10, 10))
-        #ax = plt.gca()
-
         G = nx.from_numpy_array(self.A)
         tmp = nx.Graph()
         for node, i in enumerate(G.nodes):
-            tmp.add_node(node, coord=self.C[i])
-        print(tmp.nodes[0])
-        nx.draw(tmp)
-        #plt.show()
-        print(get_graph_from_pickle("C:/Users/thorr/PycharmProjects/GraphMatching/graph_matching/demos/graph_generated/pickle/reference.gpickle").nodes)
-        v = Visualisation(graph=tmp, graph2=get_graph_from_pickle("C:/Users/thorr/PycharmProjects/GraphMatching/graph_matching/demos/graph_generated/pickle/reference.gpickle"),
-                      sphere_radius=90)
-        v.save_as_html(path_to_save="C:/Users/thorr/PycharmProjects/GraphMatching/test/algorithms/mean")
+            tmp.add_node(node, sphere_3dcoords=self.C[i], vertex_index=node)
+        return tmp
 
-        # bary = self.get_graph()
-        # for i, v in enumerate(self.A.ravel()):
-        #     bary.add_node(i, attr_name=v)
-        # pos = nx.kamada_kawai_layout(bary)
-        # nx.draw(
-        #     bary,
-        #     pos=pos,
-        #     with_labels=True,
-        #     node_color=self.graph_colors(bary)
-        # )
-        # plt.suptitle(self.graph_title, fontsize=20)
-        # plt.show()

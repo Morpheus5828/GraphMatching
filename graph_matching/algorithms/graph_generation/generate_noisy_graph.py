@@ -2,7 +2,7 @@
 .. moduleauthor:: Marius Thorre, Rohit Yadav
 """
 
-from graph_matching.utils.graph.graph_tools import *
+from graph_matching.utils.graph_tools import *
 import graph_matching.algorithms.graph_generation.generate_nb_outliers_and_nb_supress as generate_nb_outliers_and_nb_supress
 import graph_matching.algorithms.graph_generation.generate_sphere_random_sampling as generate_sphere_random_sampling
 from resources.slam import topology

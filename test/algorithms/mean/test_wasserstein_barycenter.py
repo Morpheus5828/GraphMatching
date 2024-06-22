@@ -3,12 +3,10 @@ import os, sys
 from unittest import TestCase
 import math
 import networkx as nx
-from matplotlib import cm
-import matplotlib.colors as mcol
 import numpy as np
 
 from graph_matching.algorithms.mean import wasserstein_barycenter
-from graph_matching.utils.graph.display_graph_tools import get_graph_from_pickle
+from graph_matching.utils.display_graph_tools import get_graph_from_pickle
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 project_path = os.path.abspath(os.path.join(current_dir, '../../..'))
@@ -16,17 +14,6 @@ if project_path not in sys.path:
     sys.path.append(project_path)
 
 
-def graph_colors(nx_graph, vmin=0, vmax=7):
-    cnorm = mcol.Normalize(vmin=vmin, vmax=vmax)
-    cpick = cm.ScalarMappable(norm=cnorm, cmap='viridis')
-    cpick.set_array([])
-    val_map = {}
-    for k, v in nx.get_node_attributes(nx_graph, 'attr_name').items():
-        val_map[k] = cpick.to_rgba(v)
-    colors = []
-    for node in nx_graph.nodes():
-        colors.append(val_map[node])
-    return colors
 
 
 def build_noisy_circular_graph(N=20, mu=0, sigma=0.3, with_noise=False, structure_noise=False, p=None):
@@ -84,7 +71,7 @@ class TestWassersteinBarycenter(TestCase):
 
         w = wasserstein_barycenter.Barycenter(
             graphs=graphs,
-            size_bary=20,
+            size_bary=30,
             find_tresh_inf=0.5,
             find_tresh_step=10,
             find_tresh_sup=10,

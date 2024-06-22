@@ -1,8 +1,8 @@
 import sys, os
 import resources.slam.io as sio
 import resources.slamviz.plot as splt
-import graph_matching.utils.graph.graph_visu as gv
-import graph_matching.utils.graph.graph_processing as gp
+import graph_matching.utils.graph_visu as gv
+import graph_matching.utils.graph_processing as gp
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -16,9 +16,10 @@ if __name__ == "__main__":
     #path_to_graphs = '../data/OASIS_full_batch/modified_graphs'
     #path_to_graphs = '../data/simu_graph/' #simulated graphs
     #path_to_graphs = '../data/Oasis_original_new/'  # non registered graphs
-    path_to_graphs = '../data/HCP/modified_graphs_left/'
+    path_to_graphs = os.path.join(project_path, "data/HCP/modified_graphs_left")
 
-    file_sphere_mesh = '../data/HCP/Q1-Q6_RelatedValidation210.L.sphere.32k_fs_LR.surf.gii'
+    file_sphere_mesh = os.path.join(project_path, "data/lh.OASIS_testGrp_average_inflated.gii")
+    print(file_sphere_mesh)
     sphere_mesh = sio.load_mesh(file_sphere_mesh)
 
 
@@ -37,9 +38,8 @@ if __name__ == "__main__":
     print('sum across subjects=', np.sum(graphs_nodes_number))
 
     # using an average mesh as template
-    template_mesh = '../data/HCP/Q1-Q6_RelatedValidation210.L.inflated_MSMAll_2_d41_WRN_DeDrift.32k_fs_LR.surf.gii'
+    template_mesh = '../data/template_mesh/ico100_7.gii'
     mesh = gv.reg_mesh(sio.load_mesh(template_mesh))
-
 
     density_map = gv.nodes_density_map(list_graphs, mesh, nb_iter=3, dt=0.5)
 
@@ -54,10 +54,12 @@ if __name__ == "__main__":
     #                         #clim=(0, 0.03),
     #                         cblabel='mean curvature')
 
-    visb_sc = splt.visbrain_plot(mesh=mesh, tex=density_map,
-                             caption='Template mesh',
-                             cblabel='density',
-                             cmap = 'jet')
+    visb_sc = splt.visbrain_plot(
+        mesh=mesh, tex=density_map,
+        caption='Template mesh',
+        cblabel='density',
+        cmap = 'jet'
+    )
 
     #visb_sc.preview()
 
@@ -66,9 +68,11 @@ if __name__ == "__main__":
     #                         caption='density map',
     #                         cmap="jet")
 
-    visb_sc = splt.visbrain_plot(mesh=sphere_mesh, tex=density_map,
-                             caption='Sphere mesh',
-                             cblabel='density',cmap ='jet', visb_sc=visb_sc)
+    visb_sc = splt.visbrain_plot(
+        mesh=sphere_mesh, tex=density_map,
+        caption='Sphere mesh',
+        cblabel='density',cmap ='jet', visb_sc=visb_sc
+    )
 
     visb_sc.preview()
 

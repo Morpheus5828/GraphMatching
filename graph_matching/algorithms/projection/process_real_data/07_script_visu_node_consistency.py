@@ -10,9 +10,9 @@ if project_path not in sys.path:
     sys.path.append(project_path)
 
 import resources.slam.io as sio
-import graph_matching.utils.graph.graph_visu as gv
-import graph_matching.utils.graph.graph_processing as gp
-import graph_matching.utils.graph.clusters_analysis as gca
+import graph_matching.utils.graph_visu as gv
+import graph_matching.utils.graph_processing as gp
+import graph_matching.utils.clusters_analysis as gca
 
 if __name__ == "__main__":
     template_mesh = os.path.join(project_path, 'data/template_mesh/OASIS_avg.lh.white.talairach.reg.ico7.inflated.gii')

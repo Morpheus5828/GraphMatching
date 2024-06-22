@@ -3,7 +3,7 @@ import sys
 import numpy as np
 import networkx as nx
 import matplotlib.pyplot as plt
-import graph_matching.utils.graph.graph_processing as gp
+import graph_matching.utils.graph_processing as gp
 from visbrain.objects import SourceObj, ColorbarObj
 
 current_dir = os.path.dirname(os.path.abspath(__file__))

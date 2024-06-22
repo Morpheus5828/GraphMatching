@@ -4,9 +4,9 @@
 
 import numpy as np
 from resources.slam import topology as stop
-from graph_matching.utils.graph.graph_tools import *
+from graph_matching.utils.graph_tools import *
 import graph_matching.algorithms.graph_generation.generate_sphere_random_sampling as generate_sphere_random_sampling
-import graph_matching.utils.graph.graph_processing as graph_processing
+import graph_matching.utils.graph_processing as graph_processing
 
 
 def run(
