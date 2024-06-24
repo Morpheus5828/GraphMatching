@@ -13,4 +13,4 @@ scikit-learn >= 1.0
 streamlit >= 1.35.0
 slam >=0.6.1
 gdist >= 2.1.0
-nibabbel = 3.2.2
+nibabel >= 3.2.2
