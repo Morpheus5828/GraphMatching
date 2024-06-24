@@ -4,7 +4,7 @@ import trimesh
 import trimesh.intersections
 import trimesh.triangles
 
-import resources.slam.geodesics
+import resources.slam.geodesics as geodesics
 import resources.slam.utils as utils
 
 
@@ -34,7 +34,7 @@ def cortical_surface_profiling(mesh, rot_angle, r_step, max_samples):
     # compute the geodesic map of cortical surface within the specified radius
     # NOTE: This needs some time
     area_radius = r_step * max_samples * 2
-    area_geodist = slam.geodesics.local_gdist_matrix(mesh, area_radius)
+    area_geodist = geodesics.local_gdist_matrix(mesh, area_radius)
 
     #
     profile_samples_x = []
