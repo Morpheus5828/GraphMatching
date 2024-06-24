@@ -3,7 +3,10 @@ from unittest import TestCase
 import networkx as nx
 
 import graph_matching.algorithms.kernels.linear as linear
-
+import sys, os
+project_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
+if project_path not in sys.path:
+    sys.path.append(project_path)
 
 class TestLinear(TestCase):
     def test_create_linear_node_kernel(self):

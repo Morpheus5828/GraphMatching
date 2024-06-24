@@ -1,4 +1,11 @@
 import numpy as np
+
+
+import sys, os
+project_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
+if project_path not in sys.path:
+    sys.path.insert(0, project_path)
+
 import graph_matching.algorithms.solver.sns as sns
 from unittest import TestCase
 
