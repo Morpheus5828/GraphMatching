@@ -1,6 +1,6 @@
 from unittest import TestCase
 import numpy as np
-import graph_matching_tools.utils.concatenation as concatenation
+import graph_matching.utils.fgw.concatenation as concatenation
 
 
 class TestManOpt(TestCase):

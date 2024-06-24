@@ -1,7 +1,6 @@
 from unittest import TestCase
 
 import networkx as nx
-
 import graph_matching.algorithms.kernels.gaussian as gaussian
 
 
