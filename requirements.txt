@@ -14,3 +14,4 @@ streamlit >= 1.35.0
 slam >=0.6.1
 gdist >= 2.1.0
 nibabel >= 3.2.2
+pytest >= 8.2.2
