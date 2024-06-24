@@ -48,7 +48,7 @@ def rand_cmap(nlabels, type='bright', first_color_black=True, last_color_black=F
         high = 0.95
         randRGBcolors = [(np.random.uniform(low=low, high=high),
                           np.random.uniform(low=low, high=high),
-                          np.random.uniform(low=low, high=high)) for i in xrange(nlabels)]
+                          np.random.uniform(low=low, high=high)) for i in range(nlabels)]
 
         if first_color_black:
             randRGBcolors[0] = [0, 0, 0]
