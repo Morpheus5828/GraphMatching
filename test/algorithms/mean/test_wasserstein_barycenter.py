@@ -1,3 +1,5 @@
+import os, sys
+project_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
 import graph_matching.algorithms.mean.wasserstein_barycenter as wasserstein_barycenter
 from unittest import TestCase
 import math
