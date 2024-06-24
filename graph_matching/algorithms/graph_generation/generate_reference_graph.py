@@ -26,9 +26,9 @@ def run(
     graph = nx.from_numpy_array(adja.todense())
     # Create dictionnary that will hold the attributes of each node
     node_attribute_dict = {}
-    for node in graph.nodes():
-        node_attribute_dict[node] = {"coord": np.array(sphere_random_sampling.vertices[node])}
-
+    for node, label in enumerate(graph.nodes()):
+        # we set the label of nodes in the same order as in graph
+        node_attribute_dict[node] = {"coord": np.array(sphere_random_sampling.vertices[node]), "label": label}
     # add the node attributes to the graph
     nx.set_node_attributes(graph, node_attribute_dict)
 

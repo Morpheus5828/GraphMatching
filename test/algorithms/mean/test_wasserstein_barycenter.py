@@ -71,7 +71,7 @@ class TestWassersteinBarycenter(TestCase):
 
         w = wasserstein_barycenter.Barycenter(
             graphs=graphs,
-            size_bary=30,
+            nb_node=30,
             find_tresh_inf=0.5,
             find_tresh_step=10,
             find_tresh_sup=10,

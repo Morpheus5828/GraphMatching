@@ -1,5 +1,5 @@
 """This module contains a computation of the Wasserstein barycenter
-https://pythonot.github.io/auto_examples/gromov/plot_barycenter_fgw.html#
+https://pythonot.github.io/auto_examples/gromov/plot_barycenter_fgw.html
 
 .. moduleauthor:: Marius THORRE
 """
@@ -20,8 +20,8 @@ import graph_matching.algorithms.pairwise.fgw as fgw
 class Barycenter:
     def __init__(
             self,
-            graphs,
-            size_bary: int,
+            graphs: list,
+            nb_node: int,
             find_tresh_inf: float,
             find_tresh_sup: float,
             find_tresh_step: int,
@@ -29,8 +29,19 @@ class Barycenter:
             graph_vmax: float,
             graph_title: str = "Barycenter"
     ):
+        """
+        Compute graphs barycenter
+        :param graphs: list of graphs
+        :param nb_node: barycenter node number that we want
+        :param find_tresh_inf: param for window
+        :param find_tresh_sup: param for window
+        :param find_tresh_step: param for window
+        :param graph_vmin: param for window
+        :param graph_vmax: param for window
+        :param graph_title: graph title
+        """
         self.graphs = graphs
-        self.size_bary = size_bary
+        self.size_bary = nb_node
         self.graph_title = graph_title
         self.find_tresh_inf = find_tresh_inf
         self.find_tresh_sup = find_tresh_sup
@@ -39,7 +50,7 @@ class Barycenter:
         self.graph_vmax = graph_vmax
         self.C, self.A = self.compute()
 
-    def find_thresh(self):
+    def find_thresh(self) -> tuple:
         dist = []
         search = np.linspace(self.find_tresh_inf, self.find_tresh_sup, self.find_tresh_step)
         for thresh in search:
@@ -49,7 +60,11 @@ class Barycenter:
             dist.append(np.linalg.norm(SC - self.C))
         return search[np.argmin(dist)], dist
 
-    def sp_to_adjacency(self, threshinf=0.2, threshsup=1.8):
+    def sp_to_adjacency(
+            self,
+            threshinf: float = 0.2,
+            threshsup: float = 1.8
+    ) -> np.ndarray:
         H = np.zeros_like(self.C)
         np.fill_diagonal(H, np.diagonal(self.C))
         C = self.C - H
@@ -58,7 +73,7 @@ class Barycenter:
         C[C != 0] = 1
         return C
 
-    def graph_colors(self, nx_graph):
+    def graph_colors(self, nx_graph) -> list:
         cnorm = mcol.Normalize(vmin=self.graph_vmin, vmax=self.graph_vmax)
         cpick = cm.ScalarMappable(norm=cnorm, cmap='viridis')
         cpick.set_array([])
@@ -70,7 +85,7 @@ class Barycenter:
             colors.append(val_map[node])
         return colors
 
-    def get_attributes(self):
+    def get_attributes(self) -> tuple:
         Ys = []
         Cs = []
 
@@ -83,19 +98,46 @@ class Barycenter:
 
         return Cs, Ys
 
-    def compute(self):
+    def compute(self) -> tuple:
         Cs, Ys = self.get_attributes()
-        C, A = ot.gromov.fgw_barycenters(N=self.size_bary, Ys=Ys, Cs=Cs, alpha=0.5)
+        C, A = ot.gromov.fgw_barycenters(N=self.size_bary, Ys=Ys, Cs=Cs, alpha=1)
         #C, A = self.fgw_barycenters(self.size_bary, Ys, Cs, alpha=0.5)
         return C, A
 
-    def fgw_barycenters(self,
-                        N, Ys, Cs, ps=None, lambdas=None, alpha=0.5, fixed_structure=False,
-                        fixed_features=False, p=None, loss_fun='square_loss', armijo=False,
-                        symmetric=True, max_iter=100, tol=1e-9, stop_criterion='barycenter',
-                        warmstartT=False, verbose=False, log=False, init_C=None, init_X=None,
-                        random_state=None, **kwargs):
-
+    def fgw_barycenters(
+            self,
+            N, Ys, Cs, ps=None, lambdas=None, alpha=0.5, fixed_structure=False,
+            fixed_features=False, p=None, loss_fun='square_loss', armijo=False,
+            symmetric=True, max_iter=100, tol=1e-9, stop_criterion='barycenter',
+            warmstartT=False, verbose=False, log=False, init_C=None, init_X=None,
+            random_state=None, **kwargs
+    ) -> tuple:
+        """
+        Function extracted from ot.gromov from POT python package
+        :param N:
+        :param Ys:
+        :param Cs:
+        :param ps:
+        :param lambdas:
+        :param alpha:
+        :param fixed_structure:
+        :param fixed_features:
+        :param p:
+        :param loss_fun:
+        :param armijo:
+        :param symmetric:
+        :param max_iter:
+        :param tol:
+        :param stop_criterion:
+        :param warmstartT:
+        :param verbose:
+        :param log:
+        :param init_C:
+        :param init_X:
+        :param random_state:
+        :param kwargs:
+        :return:
+        """
         if stop_criterion not in ['barycenter', 'loss']:
             raise ValueError(f"Unknown `stop_criterion='{stop_criterion}'`. Use one of: {'barycenter', 'loss'}.")
 
@@ -196,13 +238,14 @@ class Barycenter:
                     mu_t=ps[s],
                     distance=Ms[s],
                     gamma=0.3,
-                    eta=600,
+                    eta=10,
                     rho=80,
                     N1=50,
                     N2=50,
-                    ot_method="sinkhorn",
+                    ot_method="sns",
                     tolerance=1e-5
                 ) for s in range(S)]
+                #print(res)
 
                 # sinkhorn 0.3, tolerance 1e-5
                 # res = [fused_gromov_wasserstein(
@@ -275,4 +318,5 @@ class Barycenter:
         for node, i in enumerate(G.nodes):
             tmp.add_node(node, sphere_3dcoords=self.C[i], vertex_index=node)
         return tmp
+
 

@@ -10,7 +10,7 @@ from tqdm.auto import tqdm
 from graph_matching.utils.display_graph_tools import Visualisation
 import graph_matching.algorithms.graph_generation.generate_reference_graph as generate_reference_graph
 import graph_matching.algorithms.graph_generation.generate_graph_family as generate_graph_family
-from graph_matching.utils.graph_tools import mean_edge_len
+from graph_matching.utils.graph_tools import edge_len
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 project_path = os.path.abspath(os.path.join(current_dir, '../../..'))
@@ -73,40 +73,7 @@ class EdgePermutation:
             reference_graph_max=reference_graph_max,
         )
 
-    def _generate_families_graph(self):
-        if not os.path.isdir(self.path_to_write):
-            os.mkdir(self.path_to_write)
 
-
-        print("Generating reference_graph..")
-        for i in tqdm(range(self.nb_ref_graph)):
-            reference_graph = generate_reference_graph.run(self.nb_vertices, self.radius)
-            all_geo = mean_edge_len(reference_graph)
-            if i == 0:
-                min_geo = min(all_geo)
-            else:
-                if min(all_geo) > min_geo:
-                    min_geo = min(all_geo)
-                    reference_graph_max = reference_graph
-                else:
-                    pass
-        if self.save_reference:
-            print("Selected reference graph with min_geo: ", min_geo)
-            trial_path = os.path.join(self.path_to_write, self.pickle_folder_title)
-            html_path = os.path.join(self.path_to_write, self.html_folder_title)
-            if not os.path.isdir(trial_path):
-                os.mkdir(trial_path)
-            if not os.path.isdir(html_path):
-                os.mkdir(html_path)
-
-        v = Visualisation(
-            graph=reference_graph,
-            title="reference"
-        )
-
-        v.save_as_pickle(path_to_save=trial_path)
-        v.save_as_html(path_to_save=os.path.join(html_path))
-        return trial_path, reference_graph_max
 
     def _generate_families_graph(self):
         if not os.path.isdir(self.path_to_write):
@@ -115,7 +82,7 @@ class EdgePermutation:
         print("Generating reference_graph..")
         for i in tqdm(range(self.nb_ref_graph)):
             reference_graph = generate_reference_graph.run(self.nb_vertices, self.radius)
-            all_geo = mean_edge_len(reference_graph)
+            all_geo = edge_len(reference_graph)
             if i == 0:
                 min_geo = min(all_geo)
             else:
@@ -138,7 +105,7 @@ class EdgePermutation:
             title="reference",
             sphere_radius=self.radius
         )
-
+        v.construct_sphere()
         v.save_as_pickle(path_to_save=trial_path)
         v.save_as_html(path_to_save=os.path.join(os.path.join(project_path, self.path_to_write, self.html_folder_title)))
         return trial_path, reference_graph_max
@@ -157,7 +124,15 @@ class EdgePermutation:
             if not os.path.exists(path_parameters_folder):
                 os.makedirs(path_parameters_folder)
 
-            list_graphs, ground_truth_perm, ground_truth_perm_to_ref = generate_graph_family.run(
+            # list_graphs, ground_truth_perm, ground_truth_perm_to_ref = generate_graph_family.run(
+            #     nb_sample_graphs=self.nb_sample_graphs,
+            #     nb_vertices=self.nb_vertices,
+            #     ref_graph=reference_graph_max,
+            #     noise_node=noise,
+            #     noise_edge=noise,
+            # )
+
+            list_graphs = generate_graph_family.run(
                 nb_sample_graphs=self.nb_sample_graphs,
                 nb_vertices=self.nb_vertices,
                 ref_graph=reference_graph_max,
@@ -176,6 +151,7 @@ class EdgePermutation:
                         project_path + self.html_folder_title,
                         folder_name))
                 v = Visualisation(graph=sorted_graph, sphere_radius=self.radius, title=f"graph_{i_family:05d}")
+                v.construct_sphere()
                 v.save_as_html(os.path.join(project_path, self.path_to_write,self.html_folder_title, folder_name))
                 v.save_as_pickle(os.path.join(project_path, self.path_to_write,self.pickle_folder_title, folder_name))
 

@@ -40,4 +40,4 @@ with select_col2:
     if st.session_state.file_name2:
         st.write(f"Selected file: {st.session_state.file_name2}")
     if st.session_state.html_content2:
-        components.html(st.session_state.html_content2, width=1500, height=1500)
+        components.html(st.session_state.html_content2, width=1000, height=1500)

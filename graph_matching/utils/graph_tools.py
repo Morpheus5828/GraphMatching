@@ -79,24 +79,24 @@ def von_mises_sampling(
         nb_vertices: int,
         original_graph: nx.Graph,
         sigma_noise_nodes: int
-) -> list:
+) -> dict:
     """ Perturbed the coordinates
     :param nb_vertices:
     :param original_graph:
     :param sigma_noise_nodes:
     :return Noisy coord:
-    :rtype: list
+    :rtype: dict
     """
-    noisy_coord = []
+    noisy_coord = {}
     for index in range(nb_vertices):
         # Sampling from Von Mises - Fisher distribution
         original_coord = original_graph.nodes[index]["coord"]
-        mean_original = original_coord / np.linalg.norm(original_coord)  # convert to mean unit vector
+        mean_original = original_coord / np.linalg.norm(original_coord)  # convert to unit vector
         noisy_coordinate = Sphere().sample(1, distribution='vMF', mu=mean_original,
                                            kappa=sigma_noise_nodes).sample[0]
 
         noisy_coordinate = noisy_coordinate * np.linalg.norm(original_coord)  # rescale to original size
-        noisy_coord.append(noisy_coordinate)
+        noisy_coord[index] = {"coord": noisy_coordinate, "label": index, "is_outlier": False}
     return noisy_coord
 
 
@@ -123,7 +123,7 @@ def get_nearest_neighbors(
     return distances[:nb_to_take]
 
 
-def mean_edge_len(
+def edge_len(
         graph: nx.Graph
 ):
     """

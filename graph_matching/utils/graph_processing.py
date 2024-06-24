@@ -236,9 +236,6 @@ def preprocess_graph(graph):
     nx.set_node_attributes(graph, values=False, name="is_dummy")
 
 
-###################################################################
-# main function coded by Nathan to preprocess all real data graphs
-###################################################################
 def read_modify_and_write_graphs(path_to_folder):
     """
     Read a list of graph in a folder, add dummy nodes where it's

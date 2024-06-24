@@ -25,7 +25,7 @@ for file in os.listdir(graph_folder):
 
 barycenter = mean.Barycenter(
     graphs=graphs,
-    size_bary=30,
+    nb_node=30,
     find_tresh_inf=0.5,
     find_tresh_sup=100,
     find_tresh_step=100,
@@ -40,12 +40,17 @@ v = Visualisation(
     title="barycenter"
 )
 
-#v.save_as_html(os.path.join(current_dir, "graph_generated"))
-v.save_as_pickle(os.path.join(current_dir, "graph_generated"))
 
-# v.compareAndSave(
+v.save_as_html(os.path.join(current_dir, "graph_generated"))
+#v.save_as_pickle(os.path.join(current_dir, "graph_generated"))
+
+# v.compare_and_save(
 #     secondGraph=get_graph_from_pickle(os.path.join(project_path, "graph_matching/demos/graph_generated/pickle/reference.gpickle")),
-#     path_to_save=current_dir
+#     path_to_save=current_dir,
+#     comparaison_title="Comparaison between graph reference and barycenter",
+#     first_graph_name="Reference",
+#     second_graph_name="Barycenter",
+#
 # )
 
 # reference = get_graph_from_pickle(os.path.join(project_path, "graph_matching/demos/graph_generated/pickle/reference.gpickle"))

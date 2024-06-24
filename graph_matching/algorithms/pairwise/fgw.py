@@ -191,7 +191,7 @@ def conditional_gradient(
         new_transport = _solve_OT(
             mu_s=mu_s,
             mu_t=mu_t,
-            gradient=gradient,
+            gradient=gradient/np.max(gradient),
             gamma=gamma,
             rho=rho,
             eta=eta,

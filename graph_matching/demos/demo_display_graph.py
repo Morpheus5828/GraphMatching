@@ -4,17 +4,25 @@
 
 import os
 import sys
+import webbrowser
+from graph_matching.utils.display_graph_tools import Visualisation
+from graph_matching.utils.graph_processing import get_graph_from_pickle
 
 script_dir = os.path.dirname(os.path.abspath(__file__))
 project_root = os.path.abspath(os.path.join(script_dir, '..', '..'))
 if project_root not in sys.path:
     sys.path.append(project_root)
 
-import graph_matching.utils.display_graph_tools as display
-
+# 1. Extract gpickle graph file
+#pickle_path = os.path.join(script_dir, "graph_generated", "pickle", "noise_100_outliers_varied/graph_00000.gpickle")
 pickle_path = os.path.join(script_dir, "graph_generated", "pickle", "reference.gpickle")
+graph = get_graph_from_pickle(pickle_path)
 
-graph = display.get_graph_from_pickle(pickle_path)
-window = display.Visualisation(graph, title="Graph reference 0", sphere_radius=100)
-window.save_as_html(os.path.join(script_dir, "graph_generated"))
+window = Visualisation(graph, title="reference", sphere_radius=100)
+window.construct_sphere()
+
+graph_path = os.path.join(script_dir, "graph_generated", "html")
+window.save_as_html(graph_path)
+# print(os.path.join(graph_path, window.title +".html"))
+webbrowser.open(os.path.join(graph_path, window.title +".html"))
 
