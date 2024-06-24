@@ -190,7 +190,7 @@ def second_round_profiling_vert(
     for i in range(int(round_angle / rot_angle)):
         # set the rotation directions
         rot_angle_alpha = (i * rot_angle) * 1.0 / 360 * 2 * np.pi
-        rot_mat_alpha = slam.utils.get_rotate_matrix(vert_norm, rot_angle_alpha)
+        rot_mat_alpha = utils.get_rotate_matrix(vert_norm, rot_angle_alpha)
         rot_vec_alpha = np.dot(rot_vec0, rot_mat_alpha)
         p_norm = np.cross(vert_norm, rot_vec_alpha)
 
