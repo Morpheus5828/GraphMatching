@@ -1,4 +1,4 @@
-"""Concatenation.py file Test
+"""Concatenation.py file Tests
 ..moduleauthor:: Marius THORRE
 """
 
