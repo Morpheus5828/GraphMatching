@@ -1,9 +1,9 @@
+"""Concatenation.py file Tests
+..moduleauthor:: Marius THORRE
+"""
+
 from unittest import TestCase
 import numpy as np
-import sys, os
-project_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
-if project_path not in sys.path:
-    sys.path.append(project_path)
 import graph_matching.utils.concatenation as concatenation
 
 
@@ -33,12 +33,5 @@ class TestManOpt(TestCase):
         ])
         self.assertTrue(np.allclose(concatenation.fusion(np.ones((3, 2))), result))
 
-        p = np.array([
-             [5.70840367e-08, 5.51822917e-08, 5.34031741e-08, 5.51822917e-08],
-             [5.42774045e-08, 5.79873919e-08, 5.61178358e-08, 5.24691620e-08],
-             [5.42774045e-08, 5.24691620e-08, 5.61178358e-08, 5.79873919e-08]
-        ])
-
-        print(concatenation.fusion(p))
 
 
