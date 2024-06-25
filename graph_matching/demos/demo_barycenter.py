@@ -26,17 +26,12 @@ for graph in os.listdir(path):
 
 barycenter = Barycenter(
     graphs=graphs,
-    nb_node=25,
-    find_tresh_inf=0.5,
-    find_tresh_sup=100,
-    find_tresh_step=100,
-    graph_vmin=-1,
-    graph_vmax=1
+    nb_node=25
 )
+barycenter.compute()
 
-bary_graph = barycenter.get_graph()
 v = Visualisation(
-    graph=bary_graph,
+    graph= barycenter.get_graph(),
     sphere_radius=100,
     title="barycenter"
 )
