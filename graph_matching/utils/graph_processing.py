@@ -62,7 +62,7 @@ def sphere_nearest_neighbor_interpolation(graph, sphere_mesh, coord_attribute='c
     #nx.set_node_attributes(graph, list_to_dict(nn), 'ico100_7_vertex_index_noreg')
     nx.set_node_attributes(graph, list_to_dict(nn), 'ico100_7_vertex_index')  # Non Registered Vertex
 
-    #return graph
+    return graph
 
 
 def load_graphs_in_list(path_to_graphs_folder, suffix=".gpickle"):

@@ -73,8 +73,6 @@ class EdgePermutation:
             reference_graph_max=reference_graph_max,
         )
 
-
-
     def _generate_families_graph(self):
         if not os.path.isdir(self.path_to_write):
             os.mkdir(self.path_to_write)
@@ -105,6 +103,7 @@ class EdgePermutation:
             title="reference",
             sphere_radius=self.radius
         )
+
         v.construct_sphere()
         v.save_as_pickle(path_to_save=trial_path)
         v.save_as_html(path_to_save=os.path.join(os.path.join(project_path, self.path_to_write, self.html_folder_title)))
@@ -142,6 +141,7 @@ class EdgePermutation:
 
             for i_family, graph_family in enumerate(list_graphs):
                 sorted_graph = nx.Graph()
+
                 sorted_graph.add_nodes_from(sorted(graph_family.nodes(data=True)))
                 sorted_graph.add_edges_from(graph_family.edges(data=True))
                 if not os.path.exists(os.path.join(
@@ -150,8 +150,12 @@ class EdgePermutation:
                     os.makedirs(os.path.join(
                         project_path + self.html_folder_title,
                         folder_name))
+                # for i in range(len(graph_family.nodes)):
+                #     print(graph_family.nodes[i])
+
                 v = Visualisation(graph=sorted_graph, sphere_radius=self.radius, title=f"graph_{i_family:05d}")
                 v.construct_sphere()
+
                 v.save_as_html(os.path.join(project_path, self.path_to_write,self.html_folder_title, folder_name))
                 v.save_as_pickle(os.path.join(project_path, self.path_to_write,self.pickle_folder_title, folder_name))
 

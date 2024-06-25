@@ -33,7 +33,10 @@ class Visualisation:
         self.radius = sphere_radius
         self.fig = None
         self.points = None
-        #self.construct_sphere()
+        self.all_color =  ['Red', 'Blue', 'Green', 'Yellow', 'Orange', 'Purple', 'Pink', 'Brown', 'Black', 'White',
+                     'Gray', 'Violet', 'Cyan', 'Magenta', 'Lime', 'Maroon', 'Olive', 'Navy', 'Teal', 'Aqua',
+                     'Coral', 'Turquoise', 'Beige', 'Lavender', 'Salmon', 'Gold', 'Silver', 'aliceblue', 'Khaki',
+                     'Indigo']
 
     def transform(self) -> None:
         """
@@ -41,6 +44,9 @@ class Visualisation:
         Some graph has to have the correct name to define structure
         """
         points = []
+
+
+
         for i in range(len(self.graph.nodes)):
             if "coord" in self.graph.nodes[i].keys():
                 points.append(self.graph.nodes[i]["coord"])
@@ -64,13 +70,11 @@ class Visualisation:
         Construct sphere using all information in inputs
         """
         self.transform()
+
         x, y, z = self.points[:, 0], self.points[:, 1], self.points[:, 2]
+
         self.fig = go.Figure(data=[go.Scatter3d(
-            x=x, y=y, z=z, mode='markers', marker=dict(size=5, color = [
-    'Red', 'Blue', 'Green', 'Yellow', 'Orange', 'Purple', 'Pink', 'Brown', 'Black', 'White',
-    'Gray', 'Violet', 'Cyan', 'Magenta', 'Lime', 'Maroon', 'Olive', 'Navy', 'Teal', 'Aqua',
-    'Coral', 'Turquoise', 'Beige', 'Lavender', 'Salmon', 'Gold', 'Silver', 'aliceblue', 'Khaki', 'Indigo'
-], opacity=0.8)
+            x=x, y=y, z=z, mode='markers', marker=dict(size=5, color=self.all_color, opacity=0.8)
         )])
 
         u, v = np.mgrid[0:2 * np.pi:20j, 0:np.pi:10j]
@@ -121,12 +125,12 @@ class Visualisation:
         save_as_gpickle(os.path.join(path_to_save, self.title), self.graph)
 
     def compare_and_save(
-        self,
-        secondGraph: nx.Graph,
-        path_to_save: str,
-        comparaison_title: str = "Comparaison",
-        first_graph_name: str = "First graph",
-        second_graph_name: str = "Second graph",
+            self,
+            secondGraph: nx.Graph,
+            path_to_save: str,
+            comparaison_title: str = "Comparaison",
+            first_graph_name: str = "First graph",
+            second_graph_name: str = "Second graph",
     ) -> None:
         """
         Compare two different graph and plot their coordinates on the sphere.
@@ -156,10 +160,10 @@ class Visualisation:
             z=z1,
             mode='markers',
             marker=dict(size=5, color=[
-    'Red', 'Blue', 'Green', 'Yellow', 'Orange', 'Purple', 'Pink', 'Brown', 'Black', 'White',
-    'Gray', 'Violet', 'Cyan', 'Magenta', 'Lime', 'Maroon', 'Olive', 'Navy', 'Teal', 'Aqua',
-    'Coral', 'Turquoise', 'Beige', 'Lavender', 'Salmon', 'Gold', 'Silver', 'Khaki', 'Indigo'
-], opacity=0.8),
+                'Red', 'Blue', 'Green', 'Yellow', 'Orange', 'Purple', 'Pink', 'Brown', 'Black', 'White',
+                'Gray', 'Violet', 'Cyan', 'Magenta', 'Lime', 'Maroon', 'Olive', 'Navy', 'Teal', 'Aqua',
+                'Coral', 'Turquoise', 'Beige', 'Lavender', 'Salmon', 'Gold', 'Silver', 'Khaki', 'Indigo'
+            ], opacity=0.8),
             name=first_graph_name,
             showlegend=True
         ))
@@ -202,39 +206,36 @@ class Visualisation:
         self.save_as_html(path_to_save)
 
     def plot_graphs(
-        self,
-        folder_path: str,
-        path_to_save: str,
-        radius = 100
+            self,
+            folder_path: str,
+            path_to_save: str,
+            radius=100
     ) -> None:
-        graph_nodes_coord = []
-        for graph in os.listdir(folder_path):
-            graph = get_graph_from_pickle(os.path.join(folder_path, graph))
-            nodes_graph = []
-            for index in range(len(graph.nodes)):
-                nodes_graph.append(graph.nodes[index])
-            graph_nodes_coord.append(np.array(nodes_graph))
 
 
         self.fig = go.Figure()
-        for graph_nodes in graph_nodes_coord:
+
+        for graph in os.listdir(folder_path):
+            graph = get_graph_from_pickle(os.path.join(folder_path, graph))
             coord = []
-            labels = set()
-            for i in range(len(graph_nodes)):
-                if len(graph_nodes[i]) != 0:
-                    coord.append(graph_nodes[i]["coord"])
-                    labels.add(graph_nodes[i]["label"])
+            label = []
+            for i in range(len(graph.nodes)):
+                if len(graph.nodes[i]) != 0:
+                    coord.append(graph.nodes[i]["coord"])
+                    label.append(graph.nodes[i]["label"])
+                    if graph.nodes[i]["label"] == -1:
+                        print("outliers")
+            current_color = [self.all_color[i] if i != -1 else "Crimson" for i in label]
             coord = np.array(coord)
             x1, y1, z1 = coord[:, 0], coord[:, 1], coord[:, 2]
-            print(sum(labels)/len(labels))
+
             self.fig.add_trace(go.Scatter3d(
                 x=x1,
                 y=y1,
                 z=z1,
                 mode='markers',
-                marker=dict(size=5, color = [
-            'Red', 'Blue', 'Green', 'Yellow'
-            ], opacity=0.8),
+                marker=dict(size=5, color = current_color
+                , opacity=0.8),
                 showlegend=True
             ))
 
@@ -263,4 +264,3 @@ class Visualisation:
         )
 
         self.save_as_html(path_to_save)
-

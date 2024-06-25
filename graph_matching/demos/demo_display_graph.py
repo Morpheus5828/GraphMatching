@@ -14,10 +14,11 @@ if project_root not in sys.path:
     sys.path.append(project_root)
 
 # 1. Extract gpickle graph file
-#pickle_path = os.path.join(script_dir, "graph_generated", "pickle", "noise_100_outliers_varied/graph_00000.gpickle")
-pickle_path = os.path.join(script_dir, "graph_generated", "pickle", "reference.gpickle")
+pickle_path = os.path.join(script_dir, "graph_generated", "pickle", "noise_100_outliers_varied/graph_00000.gpickle")
+#pickle_path = os.path.join(script_dir, "graph_generated", "pickle", "reference.gpickle")
 graph = get_graph_from_pickle(pickle_path)
-
+for node in range(len(graph.nodes)):
+    print(graph.nodes[node])
 window = Visualisation(graph, title="reference", sphere_radius=100)
 window.construct_sphere()
 

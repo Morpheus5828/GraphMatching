@@ -17,10 +17,10 @@ if __name__ == '__main__':
     generation_folder_path = os.path.join(current_dir, "graph_generated")
     nb_sample_graphs = 50
     nb_vertices = 30
-    min_noise = 100
+    min_noise = 10
     max_noise = 2000
     step_noise = 300
-    max_outliers = 1
+    max_outliers = 10
     step_outliers = 10
     save_reference = 1
     nb_ref_graph = 1000
@@ -44,6 +44,10 @@ if __name__ == '__main__':
     #     generation_folder_path=generation_folder_path
     # )
 
-    v = Visualisation(title="noise1300").plot_graphs(
-        folder_path="graph_generated/pickle/noise_1300_outliers_varied",
+    v = Visualisation(title="noise10").plot_graphs(
+        folder_path="graph_generated/pickle/noise_10_outliers_varied",
+        path_to_save=os.curdir)
+
+    v = Visualisation(title="noise1810").plot_graphs(
+        folder_path="graph_generated/pickle/noise_1810_outliers_varied",
         path_to_save=os.curdir)
