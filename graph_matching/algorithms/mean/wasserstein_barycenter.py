@@ -31,11 +31,11 @@ class Barycenter:
         :param graph_title: graph title
         """
         self.graphs = graphs
-        self.size_bary = nb_node
+        self.nb_node = nb_node
         self.graph_title = title
         self.F, self.A = None, None
 
-    def compute(self) -> None:
+    def compute(self, fixed_structure=False) -> None:
         adj_matrices = []
         nodes_positions = []
         for graph in self.graphs:
@@ -45,14 +45,23 @@ class Barycenter:
                 nodes.append(graph.nodes[index]["coord"])
 
             nodes_positions.append(np.array(nodes))
-        self.F, self.A = ot.gromov.fgw_barycenters(
-            N=3,
-            Ys=nodes_positions,
-            Cs=adj_matrices,
-            alpha=0.5,
-            fixed_structure=True,
-            init_C=adj_matrices[0]
-        )
+        if fixed_structure:
+            self.F, self.A = ot.gromov.fgw_barycenters(
+                N=self.nb_node,
+                Ys=nodes_positions,
+                Cs=adj_matrices,
+                alpha=0.5,
+                fixed_structure=True,
+                init_C=adj_matrices[0]
+            )
+        else:
+            self.F, self.A = ot.gromov.fgw_barycenters(
+                N=self.nb_node,
+                Ys=nodes_positions,
+                Cs=adj_matrices,
+                alpha=0.5
+            )
+
 
     def get_graph(self) -> nx.Graph:
         G = nx.from_numpy_array(self.A)
@@ -61,16 +70,16 @@ class Barycenter:
             tmp.add_node(node, coord=self.F[i], label=node)
         return tmp
 
-    def fwg_barycenter(self, N, Ys, Cs, alpha):
-        Cs = list_to_array(*Cs)
-        Ys = list_to_array(*Ys)
-        arr = [*Cs, *Ys]
-        ps = [unif(C.shape[0], type_as=C) for C in Cs]
-        p = unif(N, type_as=Cs[0])
-
-        n = get_backend(*arr)
-        S = len(Cs)
-        lambdas = [1. / S] * S
-        d = Ys[0].shape[1]
-        C = None
+    # def fwg_barycenter(self, N, Ys, Cs, alpha):
+    #     Cs = list_to_array(*Cs)
+    #     Ys = list_to_array(*Ys)
+    #     arr = [*Cs, *Ys]
+    #     ps = [unif(C.shape[0], type_as=C) for C in Cs]
+    #     p = unif(N, type_as=Cs[0])
+    #
+    #     n = get_backend(*arr)
+    #     S = len(Cs)
+    #     lambdas = [1. / S] * S
+    #     d = Ys[0].shape[1]
+    #     C = None
 
