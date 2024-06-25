@@ -22,5 +22,6 @@ setup(
         'gdist>=2.1.0',
         'nibabel>=3.2.2',
         'pytest>=8.2.2',
+        'plotly>=5.22.0'
     ],
 )
