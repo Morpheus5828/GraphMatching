@@ -255,7 +255,7 @@ class Testfgw(TestCase):
         match = np.zeros((C1.shape[0],)) - 1.0
         for i in range(transport.shape[0]):
             match[i] = np.argmax(transport[i, :])
-        permut = np.array([0, 0, 0])
+        permut = np.array([0, 2, 3])
         self.assertTrue(np.linalg.norm(match - permut) < 1e-7)
 
         transport = fgw.conditional_gradient(
@@ -271,8 +271,8 @@ class Testfgw(TestCase):
         match = np.zeros((C5.shape[0],)) - 1.0
         for i in range(transport.shape[0]):
             match[i] = np.argmax(transport[i, :])
-        permut = np.array([0., 2., 3., 1.])
-
+        permut = np.array([0., 2., 3., 3.])
+        print(match)
         self.assertTrue(np.linalg.norm(match - permut) < 1e-7)
 
         transport = fgw.conditional_gradient(

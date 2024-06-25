@@ -32,7 +32,7 @@ barycenter.compute()
 
 v = Visualisation(
     graph= barycenter.get_graph(),
-    sphere_radius=100,
+    sphere_radius=90,
     title="barycenter"
 )
 
