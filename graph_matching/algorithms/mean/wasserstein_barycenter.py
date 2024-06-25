@@ -100,8 +100,8 @@ class Barycenter:
 
     def compute(self) -> tuple:
         Cs, Ys = self.get_attributes()
-        C, A = ot.gromov.fgw_barycenters(N=self.size_bary, Ys=Ys, Cs=Cs, alpha=1)
-        #C, A = self.fgw_barycenters(self.size_bary, Ys, Cs, alpha=0.5)
+        #C, A = ot.gromov.fgw_barycenters(N=self.size_bary, Ys=Ys, Cs=Cs, alpha=1)
+        C, A = self.fgw_barycenters(self.size_bary, Ys, Cs, alpha=0.5)
         return C, A
 
     def fgw_barycenters(
@@ -237,12 +237,12 @@ class Barycenter:
                     mu_s=p,
                     mu_t=ps[s],
                     distance=Ms[s],
-                    gamma=0.3,
-                    eta=10,
-                    rho=80,
-                    N1=50,
+                    gamma=0.005,
+                    eta=20,
+                    rho=0.1,
+                    N1=100,
                     N2=50,
-                    ot_method="sns",
+                    ot_method="sinkhorn",
                     tolerance=1e-5
                 ) for s in range(S)]
                 #print(res)
@@ -316,7 +316,5 @@ class Barycenter:
         G = nx.from_numpy_array(self.A)
         tmp = nx.Graph()
         for node, i in enumerate(G.nodes):
-            tmp.add_node(node, sphere_3dcoords=self.C[i], vertex_index=node)
+            tmp.add_node(node, coord=self.C[i], label=node)
         return tmp
-
-

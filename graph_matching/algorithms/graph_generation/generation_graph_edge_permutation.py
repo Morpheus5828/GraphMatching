@@ -6,7 +6,6 @@ import os, sys
 import numpy as np
 import networkx as nx
 from tqdm.auto import tqdm
-
 from graph_matching.utils.display_graph_tools import Visualisation
 import graph_matching.algorithms.graph_generation.generate_reference_graph as generate_reference_graph
 import graph_matching.algorithms.graph_generation.generate_graph_family as generate_graph_family
@@ -150,8 +149,6 @@ class EdgePermutation:
                     os.makedirs(os.path.join(
                         project_path + self.html_folder_title,
                         folder_name))
-                # for i in range(len(graph_family.nodes)):
-                #     print(graph_family.nodes[i])
 
                 v = Visualisation(graph=sorted_graph, sphere_radius=self.radius, title=f"graph_{i_family:05d}")
                 v.construct_sphere()

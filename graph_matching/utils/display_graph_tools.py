@@ -31,7 +31,7 @@ class Visualisation:
         self.window_width = window_width,
         self.window_height = window_height,
         self.radius = sphere_radius
-        self.fig = None
+        self.fig = go.Figure()
         self.points = None
         self.all_color =  ['Red', 'Blue', 'Green', 'Yellow', 'Orange', 'Purple', 'Pink', 'Brown', 'Black', 'White',
                      'Gray', 'Violet', 'Cyan', 'Magenta', 'Lime', 'Maroon', 'Olive', 'Navy', 'Teal', 'Aqua',
@@ -40,14 +40,13 @@ class Visualisation:
 
     def transform(self) -> None:
         """
-        Transform network graph to an other one.
+        Transform network graph to another one.
         Some graph has to have the correct name to define structure
         """
         points = []
 
-
-
         for i in range(len(self.graph.nodes)):
+            print(self.graph.nodes[i])
             if "coord" in self.graph.nodes[i].keys():
                 points.append(self.graph.nodes[i]["coord"])
             elif "sphere_3dcoords" in self.graph.nodes[i].keys():
@@ -205,15 +204,14 @@ class Visualisation:
 
         self.save_as_html(path_to_save)
 
+
+
     def plot_graphs(
             self,
             folder_path: str,
-            path_to_save: str,
+
             radius=100
     ) -> None:
-
-
-        self.fig = go.Figure()
 
         for graph in os.listdir(folder_path):
             graph = get_graph_from_pickle(os.path.join(folder_path, graph))
@@ -223,8 +221,7 @@ class Visualisation:
                 if len(graph.nodes[i]) != 0:
                     coord.append(graph.nodes[i]["coord"])
                     label.append(graph.nodes[i]["label"])
-                    if graph.nodes[i]["label"] == -1:
-                        print("outliers")
+
             current_color = [self.all_color[i] if i != -1 else "Crimson" for i in label]
             coord = np.array(coord)
             x1, y1, z1 = coord[:, 0], coord[:, 1], coord[:, 2]
@@ -263,4 +260,3 @@ class Visualisation:
             showlegend=True
         )
 
-        self.save_as_html(path_to_save)

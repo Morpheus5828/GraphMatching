@@ -27,22 +27,22 @@ if __name__ == '__main__':
     radius = 100
     nb_neighbors_to_consider_outliers = 10
 
-    # ep = EdgePermutation(
-    #     pickle_folder_title="pickle",
-    #     html_folder_title="html",
-    #     nb_sample_graphs=nb_sample_graphs,
-    #     nb_vertices=nb_vertices,
-    #     min_noise=min_noise,
-    #     max_noise=max_noise,
-    #     step_noise=step_noise,
-    #     max_outliers=max_outliers,
-    #     step_outliers=step_outliers,
-    #     save_reference=save_reference,
-    #     nb_ref_graph=nb_ref_graph,
-    #     radius=radius,
-    #     nb_neighbors_to_consider_outliers=nb_neighbors_to_consider_outliers,
-    #     generation_folder_path=generation_folder_path
-    # )
+    ep = EdgePermutation(
+        pickle_folder_title="pickle",
+        html_folder_title="html",
+        nb_sample_graphs=nb_sample_graphs,
+        nb_vertices=nb_vertices,
+        min_noise=min_noise,
+        max_noise=max_noise,
+        step_noise=step_noise,
+        max_outliers=max_outliers,
+        step_outliers=step_outliers,
+        save_reference=save_reference,
+        nb_ref_graph=nb_ref_graph,
+        radius=radius,
+        nb_neighbors_to_consider_outliers=nb_neighbors_to_consider_outliers,
+        generation_folder_path=generation_folder_path
+    )
 
     v = Visualisation(title="noise10").plot_graphs(
         folder_path="graph_generated/pickle/noise_10_outliers_varied",

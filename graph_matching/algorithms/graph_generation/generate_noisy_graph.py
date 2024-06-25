@@ -34,27 +34,29 @@ def run(
 
     nb_outliers, nb_supress = generate_nb_outliers_and_nb_supress.run(nb_vertices)
 
-    random_keys = []
-    for i in range(nb_supress):
-        random_key = random.choice(list(sample_nodes.items()))[0]
-        random_keys.append(random_key)
-        del sample_nodes[random_key]
-
-    #create nb_outliers
-    outliers = generate_sphere_random_sampling.run(vertex_number=nb_outliers, radius=radius)
-    for outlier in outliers:
-        random_key = random.choice(list(sample_nodes.items()))[0]
-        sample_nodes[random_key] = {"coord": outlier, 'is_outlier': True, "label": -1}
+    # random_keys = []
+    # for i in range(nb_supress):
+    #     random_key = random.choice(list(sample_nodes.items()))[0]
+    #     random_keys.append(random_key)
+    #     del sample_nodes[random_key]
+    #
+    # #create nb_outliers
+    # outliers = generate_sphere_random_sampling.run(vertex_number=nb_outliers, radius=radius)
+    # for outlier in outliers:
+    #     random_key = random.choice(list(sample_nodes.items()))[0]
+    #     sample_nodes[random_key] = {"coord": outlier, 'is_outlier': True, "label": -1}
 
 
     sample_nodes = dict(sorted(sample_nodes.items(), key=lambda item: (item[1]['label'] >= 0, item[1]['label'])))
-    print(sample_nodes)
+
     all_coord = np.array([node["coord"] for node in sample_nodes.values()])
     compute_noisy_edges = tri_from_hull(all_coord)  # take all peturbated coord and comp conv hull.
     adj_matrix = topology.adjacency_matrix(compute_noisy_edges)  # compute the new adjacency mat.
 
     noisy_graph = nx.from_numpy_array(adj_matrix.todense())
     #noisy_graph = nx.path_graph(len(sample_nodes))
+    # for i in range(len(noisy_graph.nodes)):
+    #     print(noisy_graph.nodes[i])
     nx.set_node_attributes(noisy_graph, sample_nodes)
     nx.set_edge_attributes(noisy_graph, 1.0, name="weight")
 
@@ -62,7 +64,6 @@ def run(
     noisy_graph.remove_edges_from(edge_to_remove)
 
     noisy_graph.remove_edges_from(nx.selfloop_edges(noisy_graph))
-
 
 
     return noisy_graph
