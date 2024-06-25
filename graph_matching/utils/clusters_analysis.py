@@ -3,7 +3,7 @@
 ..moduleauthor:: Marius Thorre, Rohit Yadav
 """
 
-from graph_matching.utils.graph import graph_processing as gp
+from graph_matching.utils import graph_processing as gp
 import numpy as np
 import networkx as nx
 import pickle as p

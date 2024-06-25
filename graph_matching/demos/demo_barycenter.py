@@ -4,55 +4,43 @@
 import os
 import sys
 
-import matplotlib.pyplot as plt
-
-project_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
+current_dir = os.path.dirname(os.path.abspath(__file__))
+project_path = os.path.abspath(os.path.join(current_dir, '../../'))
 if project_path not in sys.path:
     sys.path.append(project_path)
-import networkx as nx
-import graph_matching.algorithms.mean.wasserstein_barycenter as mean
-from graph_matching.utils.graph.display_graph_tools import Visualisation
-from graph_matching.utils.graph.graph_processing import get_graph_from_pickle
+
+from graph_matching.utils.display_graph_tools import Visualisation
+from graph_matching.algorithms.mean.wasserstein_barycenter import Barycenter
+from graph_matching.utils.graph_processing import get_graph_from_pickle
 
 script_dir = os.path.dirname(os.path.abspath(__file__))
 graph_folder = os.path.join(script_dir, "graph_generated", "pickle")
+
 graphs = []
+path = "graph_generated/pickle/noise_1810_outliers_varied"
 
-# update attr_name graph
-for file in os.listdir(graph_folder):
-    if os.path.isdir(os.path.join(graph_folder, file)):
-        for graph in os.listdir(os.path.join(graph_folder, file)):
-            g = get_graph_from_pickle(os.path.join(graph_folder, file, graph))
-            tmp = nx.Graph()
+for graph in os.listdir(path):
+    g = get_graph_from_pickle(os.path.join(path, graph))
+    graphs.append(g)
 
-            tmp.add_nodes_from(list(range(len(g.nodes))))
-            for node in g.nodes:
-                tmp.add_node(node, attr_name=node)
-            for edge in g.edges:
-                tmp.add_edge(edge[0], edge[1])
-            #print(g.nodes[0])
-            graphs.append(tmp)
 
-barycenter = mean.Barycenter(
+barycenter = Barycenter(
     graphs=graphs,
-    size_bary=30,
-    find_tresh_inf=0.5,
-    find_tresh_sup=100,
-    find_tresh_step=100,
-    graph_vmin=-1,
-    graph_vmax=1
-    )
+    nb_node=25
+)
+barycenter.compute()
 
-bary_graph = barycenter.get_graph()
+v = Visualisation(
+    graph= barycenter.get_graph(),
+    sphere_radius=100,
+    title="barycenter"
+)
+
+v.construct_sphere()
+v.plot_graphs(folder_path=path)
+v.save_as_html("graph_generated")
 
 
-#print(bary_graph.edges)
-# v = Visualisation(
-#     graph=bary_graph,
-#     title="Barycenter",
-#     sphere_radius=100
-# )
-# v.save_as_html(os.path.join(script_dir, "graph_generated"))
 
 
 

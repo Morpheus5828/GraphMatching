@@ -10,7 +10,7 @@ import numpy as np
 import networkx as nx
 import time
 import graph_matching.algorithms.pairwise.fgw as fgw
-from graph_matching.utils.graph.graph_processing import get_graph_coord, get_graph_from_pickle
+from graph_matching.utils.graph_processing import get_graph_coord, get_graph_from_pickle
 
 if __name__ == '__main__':
     start = time.time()

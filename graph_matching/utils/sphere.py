@@ -8,7 +8,7 @@ sys.path.append("/graph_matching/utils")
 import numpy as np
 from matplotlib import pyplot as plt
 import seaborn as sns
-from graph_matching.utils.graph.vMF import sample_vMF
+from graph_matching.utils.vMF import sample_vMF
 
 
 class Sphere:

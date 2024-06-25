@@ -1,6 +1,5 @@
 import sys
 import os
-import pickle as p
 import numpy as np
 import networkx as nx
 import scipy.io as sco
@@ -12,8 +11,8 @@ if project_path not in sys.path:
     sys.path.append(project_path)
 
 import resources.slam.io as sio
-import graph_matching.utils.graph.graph_visu as gv
-import graph_matching.utils.graph.graph_processing as gp
+import graph_matching.utils.graph_visu as gv
+import graph_matching.utils.graph_processing as gp
 
 if __name__ == "__main__":
     template_mesh_path = os.path.join(project_path, 'data/template_mesh/lh.OASIS_testGrp_average_inflated.gii')

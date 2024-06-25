@@ -5,7 +5,7 @@ import matplotlib
 
 matplotlib.use('tkagg')
 import matplotlib.pyplot as plt
-import graph_matching.utils.graph.graph_processing as pg
+import graph_matching.utils.graph_processing as pg
 import networkx as nx
 
 current_dir = os.path.dirname(os.path.abspath(__file__))

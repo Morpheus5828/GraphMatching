@@ -9,7 +9,7 @@ X.Tang, M.Shavlovsky, H.Rahmanian, E.Tardini, K.Koshy, T.Xiao, L.Ying
 """
 
 import numpy as np
-import graph_matching.utils.fgw.concatenation as concatenation
+import graph_matching.utils.concatenation as concatenation
 from scipy.sparse.linalg import cg
 
 

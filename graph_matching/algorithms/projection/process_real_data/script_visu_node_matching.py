@@ -1,8 +1,8 @@
 import sys, os
 from visbrain.objects import SourceObj, ColorbarObj
 import resources.slam.io as sio
-import graph_matching.utils.graph.graph_visu as gv
-import graph_matching.utils.graph.graph_processing as gp
+import graph_matching.utils.graph_visu as gv
+import graph_matching.utils.graph_processing as gp
 import numpy as np
 import networkx as nx
 import scipy.io as sco

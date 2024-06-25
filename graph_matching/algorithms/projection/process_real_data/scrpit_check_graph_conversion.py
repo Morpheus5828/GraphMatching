@@ -4,10 +4,10 @@ import networkx as nx
 import numpy as np
 import os
 import sys
-import graph_matching.utils.graph.clusters_analysis as gca
+import graph_matching.utils.clusters_analysis as gca
 import pickle as p
 
-from graph_matching.utils.graph.display_graph_tools import Visualisation
+from graph_matching.utils.display_graph_tools import Visualisation
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 project_path = os.path.abspath(os.path.join(current_dir, '../../..'))

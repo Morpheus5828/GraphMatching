@@ -1,14 +1,14 @@
 import sys
 import os
 import resources.slam.io as sio
-import graph_matching.utils.graph.graph_visu as gv
-import graph_matching.utils.graph.graph_processing as gp
-import graph_matching.utils.graph.clusters_analysis as gca
+import graph_matching.utils.graph_visu as gv
+import graph_matching.utils.graph_processing as gp
+import graph_matching.utils.clusters_analysis as gca
 import numpy as np
 import scipy.io as sco
 import matplotlib.pyplot as plt
 
-from graph_matching.utils.graph.display_graph_tools import Visualisation
+from graph_matching.utils.display_graph_tools import Visualisation
 
 
 def save_labelled_graphs(list_graphs, path_to_save):

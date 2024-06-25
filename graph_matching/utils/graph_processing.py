@@ -3,10 +3,16 @@ import numpy as np
 import networkx as nx
 import pickle
 
+
 def get_graph_from_pickle(path: str) -> nx.Graph:
     with open(path, "rb") as f:
         graph = pickle.load(f)
     return graph
+
+
+def save_as_gpickle(path: str, graph: nx.Graph):
+    with open(path + ".gpickle", "wb") as f:
+        pickle.dump(graph, f, pickle.HIGHEST_PROTOCOL)
 
 
 def get_graph_coord(
@@ -18,6 +24,7 @@ def get_graph_coord(
         graph_coord[node[0]] = node[1]["coord"]
 
     return graph_coord
+
 
 def list_to_dict(list_in):
     """
@@ -53,9 +60,9 @@ def sphere_nearest_neighbor_interpolation(graph, sphere_mesh, coord_attribute='c
     #print(nodes_coords.shape)
     #print(len(nn))
     #nx.set_node_attributes(graph, list_to_dict(nn), 'ico100_7_vertex_index_noreg')
-    nx.set_node_attributes(graph, list_to_dict(nn), 'ico100_7_vertex_index') # Non Registered Vertex
+    nx.set_node_attributes(graph, list_to_dict(nn), 'ico100_7_vertex_index')  # Non Registered Vertex
 
-    #return graph
+    return graph
 
 
 def load_graphs_in_list(path_to_graphs_folder, suffix=".gpickle"):
@@ -70,7 +77,7 @@ def load_graphs_in_list(path_to_graphs_folder, suffix=".gpickle"):
 
     g_files.sort()  # sort according to filenames
 
-    list_graphs = [get_graph_from_pickle(os.path.join(path_to_graphs_folder,graph)) for graph in g_files]
+    list_graphs = [get_graph_from_pickle(os.path.join(path_to_graphs_folder, graph)) for graph in g_files]
 
     return list_graphs
 
@@ -107,7 +114,7 @@ def add_nodes_attribute(graph, list_attribute, attribute_name):
 
     attribute_dict = {}
     for node in graph.nodes:
-        attribute_dict[node] = {attribute_name:list_attribute[node]}
+        attribute_dict[node] = {attribute_name: list_attribute[node]}
     nx.set_node_attributes(graph, attribute_dict)
 
 
@@ -140,7 +147,7 @@ def remove_dummy_nodes(graph):
     data_mask = np.ones_like(is_dummy)
     if True in is_dummy:
         graph.remove_nodes_from(np.where(np.array(is_dummy) == True)[0])
-        inds_dummy = np.where(np.array(is_dummy)==True)[0]
+        inds_dummy = np.where(np.array(is_dummy) == True)[0]
         data_mask[inds_dummy] = 0
     return data_mask
 
@@ -229,12 +236,6 @@ def preprocess_graph(graph):
     nx.set_node_attributes(graph, values=False, name="is_dummy")
 
 
-
-
-
-###################################################################
-# main function coded by Nathan to preprocess all real data graphs
-###################################################################
 def read_modify_and_write_graphs(path_to_folder):
     """
     Read a list of graph in a folder, add dummy nodes where it's
@@ -257,7 +258,6 @@ def read_modify_and_write_graphs(path_to_folder):
         preprocess_graph(graph)
         graph_list.append(graph)  # add it to the list of graph
         correspondence_dict[graph_i] = {"name": graph_file}  # add the information about the name.
-
 
     # add the number of nodes information to the dict and find the max number of nodes
     max_nb_nodes = 0
@@ -284,5 +284,3 @@ def read_modify_and_write_graphs(path_to_folder):
     pickle_out = open(os.path.join(path_to_folder, "correspondence_dict.pickle"), "wb")
     pickle.dump(correspondence_dict, pickle_out)
     pickle_out.close()
-
-

@@ -1,4 +1,4 @@
-import graph_matching.utils.graph.graph_processing as gp
+import graph_matching.utils.graph_processing as gp
 import resources.slam.differential_geometry as sdg
 import networkx as nx
 import numpy as np

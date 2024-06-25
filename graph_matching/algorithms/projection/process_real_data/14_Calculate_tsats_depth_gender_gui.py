@@ -1,11 +1,10 @@
 import sys, os
-import networkx as nx
 import numpy as np
 import resources.slam.io as sio
-import graph_matching.utils.graph.graph_processing as gp
+import graph_matching.utils.graph_processing as gp
 import scipy.stats as stats
-import graph_matching.utils.graph.graph_visu as gv
-import graph_matching.utils.graph.clusters_analysis as gca
+import graph_matching.utils.graph_visu as gv
+import graph_matching.utils.clusters_analysis as gca
 import math
 import pickle as p
 
