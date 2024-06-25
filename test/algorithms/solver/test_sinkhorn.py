@@ -1,11 +1,13 @@
 import sys, os
-project_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
-if project_path not in sys.path:
-    sys.path.append(project_path)
 
 import graph_matching.algorithms.solver.sinkhorn as sinkhorn
 from unittest import TestCase
 import numpy as np
+
+current_dir = os.path.dirname(os.path.abspath(__file__))
+project_path = os.path.abspath(os.path.join(current_dir, '../../..'))
+if project_path not in sys.path:
+    sys.path.append(project_path)
 
 class TestSinkhorn(TestCase):
     def test_sinkhorn_method(self):

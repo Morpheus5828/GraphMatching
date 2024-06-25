@@ -1,13 +1,14 @@
 import numpy as np
-
-
 import sys, os
-project_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
-if project_path not in sys.path:
-    sys.path.insert(0, project_path)
-
-import graph_matching.algorithms.solver.sns as sns
 from unittest import TestCase
+import graph_matching.algorithms.solver.sns as sns
+
+current_dir = os.path.dirname(os.path.abspath(__file__))
+project_path = os.path.abspath(os.path.join(current_dir, '../../..'))
+if project_path not in sys.path:
+    sys.path.append(project_path)
+
+
 
 cost = np.array([
     [.48, .585, .59, .485],
