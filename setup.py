@@ -23,10 +23,7 @@ setup(
         "nibabel>=3.2.2",
         "pytest>=8.2.2",
         "plotly>=5.22.0",
-        "POT>=0.4.0"
-        "setuptools>=65.5.1"
-        "vispy>=0.14.2"
-        "xlrd>=2.0.1"
+        "POT>=0.9.3"
     ],
     python_requires=">=3.12",
 )
