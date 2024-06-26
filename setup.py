@@ -5,7 +5,7 @@ setup(
     version="0.1.0",
     packages=find_packages(),
     install_requires=[
-        "numpy>=1.26.4",
+        "numpy<2",
         "matplotlib>=3.8.4",
         "networkx>=3.3",
         "pandas>=2.2.2",
