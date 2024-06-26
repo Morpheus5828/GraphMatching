@@ -4,6 +4,20 @@ import networkx as nx
 import pickle
 
 
+def get_distance_between_graphs(first_graph: nx.Graph, graphs: list):
+    node_distances = {}
+    for node_bary in range(len(first_graph.nodes)):
+        node_coord = first_graph.nodes[node_bary]["coord"]
+        node_label = first_graph.nodes[node_bary]["label"]
+        distance = []
+        for graph in graphs:
+            for node_graph in range(len(graph.nodes)):
+                if graph.nodes[node_graph]["label"] == node_label:
+                    distance.append(np.linalg.norm(node_coord - graph.nodes[node_graph]["coord"]))
+        node_distances[node_label] = np.mean(distance)
+    return node_distances
+
+
 def get_graph_from_pickle(path: str) -> nx.Graph:
     with open(path, "rb") as f:
         graph = pickle.load(f)

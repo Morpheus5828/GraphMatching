@@ -1,43 +1,51 @@
-"""This module is a StreamlitApp to compare graph pickle file generated
+"""This module plot bars to compare node distance between graphs
 ..moduleauthor:: Marius Thorre
 
 """
+import os, sys
+import numpy as np
+import matplotlib.pyplot as plt
+from graph_matching.utils.graph_processing import get_graph_from_pickle, get_distance_between_graphs
+from graph_matching.algorithms.mean.wasserstein_barycenter import Barycenter
 
-import streamlit as st
-import streamlit.components.v1 as components
+current_dir = os.path.dirname(os.path.abspath(__file__))
+project_path = os.path.abspath(os.path.join(current_dir, '../../..'))
+if project_path not in sys.path:
+    sys.path.append(project_path)
 
-st.set_page_config(layout="wide")
+gref = get_graph_from_pickle(os.path.join(project_path, "GraphMatching/resources/graph_for_test/reference.gpickle"))
 
-st.title("File Selector Example")
+graph_test_path = os.path.join(project_path, "GraphMatching/resources/graph_for_test")
+graphs = []
+for g in os.listdir(os.path.join(graph_test_path, "generation")):
+    graphs.append(get_graph_from_pickle(os.path.join(graph_test_path, "generation", g)))
 
-if 'html_content1' not in st.session_state:
-    st.session_state.html_content1 = ""
-    st.session_state.file_name1 = ""
+b = Barycenter(
+    graphs=graphs,
+    nb_node=30  # because graphs has 30 nodes
+)
 
-if 'html_content2' not in st.session_state:
-    st.session_state.html_content2 = ""
-    st.session_state.file_name2 = ""
+b.compute(fixed_structure=True)
+bary = b.get_graph()
 
-select_col1, select_col2 = st.columns(2)
+distances = get_distance_between_graphs(first_graph=bary, graphs=graphs)
+distances = dict(sorted(distances.items()))
 
-with select_col1:
-    uploaded_file1 = st.file_uploader("Choose a HTML file", type="html", key="file_uploader1")
-    if uploaded_file1 is not None:
-        st.session_state.file_name1 = uploaded_file1.name
-        st.session_state.html_content1 = uploaded_file1.getvalue().decode('utf-8')
+plt.bar(list(distances.keys()), list(distances.values()))
+plt.ylim(0, 8)
+plt.xlabel("Node label")
+plt.ylabel("Distance")
+plt.title("Distance between \n Barycenter and graph generation")
+plt.savefig("C:/Users/thorr/OneDrive/Bureau/Stage/bary_all_graph")
 
-    if st.session_state.file_name1:
-        st.write(f"Selected file: {st.session_state.file_name1}")
-    if st.session_state.html_content1:
-        components.html(st.session_state.html_content1, width=1000, height=1500)
+plt.clf()
 
-with select_col2:
-    uploaded_file2 = st.file_uploader("Choose a HTML file", type="html", key="file_uploader2")
-    if uploaded_file2 is not None:
-        st.session_state.file_name2 = uploaded_file2.name
-        st.session_state.html_content2 = uploaded_file2.getvalue().decode('utf-8')
+distances = get_distance_between_graphs(first_graph=gref, graphs=graphs)
+distances = dict(sorted(distances.items()))
 
-    if st.session_state.file_name2:
-        st.write(f"Selected file: {st.session_state.file_name2}")
-    if st.session_state.html_content2:
-        components.html(st.session_state.html_content2, width=1000, height=1500)
+plt.bar(list(distances.keys()), list(distances.values()))
+plt.xlabel("Node label")
+plt.ylabel("Distance")
+plt.title("Distance between \n Reference and graph generation")
+plt.savefig("C:/Users/thorr/OneDrive/Bureau/Stage/gref_all_graph")
+

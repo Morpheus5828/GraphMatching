@@ -5,7 +5,7 @@ from unittest import TestCase
 import numpy as np
 from graph_matching.utils.display_graph_tools import Visualisation
 from graph_matching.algorithms.mean.wasserstein_barycenter import Barycenter
-from graph_matching.utils.graph_processing import get_graph_from_pickle
+from graph_matching.utils.graph_processing import get_graph_from_pickle, get_distance_between_graphs
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 project_path = os.path.abspath(os.path.join(current_dir, '../../..'))
@@ -14,44 +14,47 @@ if project_path not in sys.path:
 
 
 g1 = nx.Graph()
-g1.add_node(0, coord=np.array([0, 0]))
-g1.add_node(1, coord=np.array([0, 1]))
-g1.add_node(2, coord=np.array([0, 2]))
+g1.add_node(0, coord=np.array([0, 0]), label=0)
+g1.add_node(1, coord=np.array([0, 1]), label=1)
+g1.add_node(2, coord=np.array([0, 2]), label=2)
 g1.add_edge(0, 1)
 g1.add_edge(1, 2)
 
 g2 = nx.Graph()
-g2.add_node(0, coord=np.array([1, 0]))
-g2.add_node(1, coord=np.array([1, 1]))
-g2.add_node(2, coord=np.array([1, 2]))
+g2.add_node(0, coord=np.array([1, 0]), label=0)
+g2.add_node(1, coord=np.array([1, 1]), label=1)
+g2.add_node(2, coord=np.array([1, 2]), label=2)
 g2.add_edge(0, 1)
 g2.add_edge(1, 2)
 
 g3 = nx.Graph()
-g3.add_node(0, coord=np.array([1, 0]))
-g3.add_node(1, coord=np.array([1, 1]))
-g3.add_node(2, coord=np.array([1, 2]))
+g3.add_node(0, coord=np.array([1, 0]), label=0)
+g3.add_node(1, coord=np.array([1, 1]), label=1)
+g3.add_node(2, coord=np.array([1, 2]), label=2)
 g3.add_edge(0, 1)
 g3.add_edge(1, 2)
 
 g4 = nx.Graph()
-g4.add_node(0, coord=np.array([1, 0]))
-g4.add_node(1, coord=np.array([1, 1]))
-g4.add_node(2, coord=np.array([1, 2]))
-g4.add_node(3, coord=np.array([1, 3]))
+g4.add_node(0, coord=np.array([1, 0]), label=0)
+g4.add_node(1, coord=np.array([1, 1]), label=1)
+g4.add_node(2, coord=np.array([1, 2]), label=2)
+g4.add_node(3, coord=np.array([1, 3]), label=3)
 g4.add_edge(0, 1)
 g4.add_edge(1, 2)
 g4.add_edge(2, 3)
 
-g5 = get_graph_from_pickle(os.path.join(project_path, "test/graph_for_test/graph_00000.gpickle"))
-g6 = get_graph_from_pickle(os.path.join(project_path, "test/graph_for_test/graph_00001.gpickle"))
-graph_test_path = os.path.join(project_path, "test/graph_for_test")
+g5 = get_graph_from_pickle(os.path.join(project_path, "resources/graph_for_test/generation/graph_00000.gpickle"))
+g6 = get_graph_from_pickle(os.path.join(project_path, "resources/graph_for_test/generation/graph_00001.gpickle"))
+gref = get_graph_from_pickle(os.path.join(project_path, "resources/graph_for_test/reference.gpickle"))
+
+graph_test_path = os.path.join(project_path, "resources/graph_for_test")
 graphs = []
-for g in os.listdir(graph_test_path):
-    graphs.append(get_graph_from_pickle(os.path.join(graph_test_path, g)))
+for g in os.listdir(os.path.join(graph_test_path, "generation")):
+    graphs.append(get_graph_from_pickle(os.path.join(graph_test_path, "generation", g)))
 
 
 class TestWassersteinBarycenter(TestCase):
+
     def test_compute_g1_g2(self):
         b = Barycenter(
             graphs=[g1, g2],
@@ -120,7 +123,7 @@ class TestWassersteinBarycenter(TestCase):
         self.assertTrue(np.allclose(truth_f, b.F))
         self.assertTrue(np.array_equal(truth_a, b.A))
 
-    def test_compute(self):
+    def test_compute_graph_test(self):
         b = Barycenter(
             graphs=graphs,
             nb_node=30
@@ -128,8 +131,41 @@ class TestWassersteinBarycenter(TestCase):
 
         b.compute()
 
-        v = Visualisation(title="barycenter" ,graph=b.get_graph(), sphere_radius=90)
+        v = Visualisation(title="barycenter", graph=b.get_graph(), sphere_radius=100)
         v.construct_sphere()
 
-        v.plot_graphs(folder_path=graph_test_path, radius=90)
-        #v.save_as_html("./../algorithms/mean/")
+        v.plot_graphs(folder_path=os.path.join(graph_test_path, "generation"), radius=100)
+        v.save_as_html("C:/Users/thorr/OneDrive/Bureau/Stage")
+
+    def test_compare_graph_reference(self):
+        # b = Barycenter(
+        #     graphs=graphs,
+        #     nb_node=30
+        # )
+        #
+        # b.compute()
+        #
+        # v = Visualisation(title="bary_gref", graph=b.get_graph(), sphere_radius=90)
+        # v.construct_sphere()
+        #
+        # v.add_graph_to_plot(second_graph=gref, radius=90)
+        # v.save_as_html(graph_test_path)
+
+        v = Visualisation(title="data_ref", graph=gref, sphere_radius=90)
+        v.construct_sphere()
+        v.plot_graphs(folder_path=os.path.join(graph_test_path, "generation"), radius=90)
+        v.save_as_html(graph_test_path)
+
+    def test_get_distance_between_all_graph(self):
+        b = Barycenter(
+            graphs=graphs,
+            nb_node=30
+        )
+
+        b.compute(fixed_structure=True)
+        bary = b.get_graph()
+
+        distances = get_distance_between_graphs(first_graph=bary, graphs=graphs)
+
+        for d in distances.values():
+            self.assertTrue(d < 5.0)

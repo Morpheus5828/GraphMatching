@@ -33,10 +33,11 @@ class Visualisation:
         self.radius = sphere_radius
         self.fig = go.Figure()
         self.points = None
-        self.all_color =  ['Red', 'Blue', 'Green', 'Yellow', 'Orange', 'Purple', 'Pink', 'Brown', 'Black', 'White',
-                     'Gray', 'Violet', 'Cyan', 'Magenta', 'Lime', 'Maroon', 'Olive', 'Navy', 'Teal', 'Aqua',
-                     'Coral', 'Turquoise', 'Beige', 'Lavender', 'Salmon', 'Gold', 'Silver', 'aliceblue', 'Khaki',
-                     'Indigo']
+        self.labels = None
+        self.all_color = ['Red', 'Blue', 'Green', 'Yellow', 'Orange', 'Purple', 'Pink', 'Brown', 'Black', 'White',
+                          'Gray', 'Violet', 'Cyan', 'Magenta', 'Lime', 'Maroon', 'Olive', 'Navy', 'Teal', 'Aqua',
+                          'Coral', 'Turquoise', 'Beige', 'Lavender', 'Salmon', 'Gold', 'Silver', 'aliceblue', 'Khaki',
+                          'Indigo']
 
     def transform(self) -> None:
         """
@@ -44,13 +45,15 @@ class Visualisation:
         Some graph has to have the correct name to define structure
         """
         points = []
-
+        labels = []
         for i in range(len(self.graph.nodes)):
             if "coord" in self.graph.nodes[i].keys():
                 points.append(self.graph.nodes[i]["coord"])
             elif "sphere_3dcoords" in self.graph.nodes[i].keys():
                 points.append(self.graph.nodes[i]["sphere_3dcoords"])
+            labels.append(self.graph.nodes[i]["label"])
         self.points = np.array(points)
+        self.labels = np.array(labels)
 
     def check_point_on_sphere(self, points: np.ndarray, radius: float) -> bool:
         """
@@ -70,15 +73,17 @@ class Visualisation:
         self.transform()
 
         x, y, z = self.points[:, 0], self.points[:, 1], self.points[:, 2]
+        current_color = [self.all_color[i] if i != -1 else "Crimson" for i in self.labels]
 
         self.fig = go.Figure(data=[go.Scatter3d(
-            x=x, y=y, z=z, mode='markers', marker=dict(size=5, color="black", opacity=0.8)
+            x=x, y=y, z=z, mode='markers', marker=dict(size=5, color=current_color, opacity=0.8)
         )])
 
         u, v = np.mgrid[0:2 * np.pi:20j, 0:np.pi:10j]
         sphere_x = self.radius * np.cos(u) * np.sin(v)
         sphere_y = self.radius * np.sin(u) * np.sin(v)
         sphere_z = self.radius * np.cos(v)
+
 
         self.fig.add_trace(
             go.Surface(
@@ -192,8 +197,8 @@ class Visualisation:
                 y=y1,
                 z=z1,
                 mode='markers',
-                marker=dict(size=5, color = current_color
-                , opacity=0.8),
+                marker=dict(size=5, color=current_color
+                            , opacity=0.8),
                 showlegend=True
             ))
 
@@ -220,4 +225,3 @@ class Visualisation:
             ),
             showlegend=True
         )
-

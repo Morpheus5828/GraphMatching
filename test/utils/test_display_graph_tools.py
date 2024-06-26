@@ -12,7 +12,7 @@ project_path = os.path.abspath(os.path.join(current_dir, '../..'))
 if project_path not in sys.path:
     sys.path.append(project_path)
 
-g0_path = "test/graph_for_test/graph_00000.gpickle"
+g0_path = "resources/graph_for_test/generation/graph_00000.gpickle"
 g0 = get_graph_from_pickle(os.path.join(project_path, g0_path))
 
 
