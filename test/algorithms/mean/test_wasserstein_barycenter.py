@@ -1,11 +1,12 @@
-import os, sys
-
-from graph_matching.utils.display_graph_tools import Visualisation
-from graph_matching.utils.graph_processing import get_graph_from_pickle
-from graph_matching.algorithms.mean.wasserstein_barycenter import Barycenter
-import numpy as np
+import os
+import sys
 import networkx as nx
 from unittest import TestCase
+import numpy as np
+from graph_matching.utils.display_graph_tools import Visualisation
+from graph_matching.algorithms.mean.wasserstein_barycenter import Barycenter
+from graph_matching.utils.graph_processing import get_graph_from_pickle
+
 current_dir = os.path.dirname(os.path.abspath(__file__))
 project_path = os.path.abspath(os.path.join(current_dir, '../../..'))
 if project_path not in sys.path:
@@ -42,11 +43,12 @@ g4.add_edge(0, 1)
 g4.add_edge(1, 2)
 g4.add_edge(2, 3)
 
-g5 = get_graph_from_pickle("test/graph_for_test/graph_00000.gpickle")
-g6 = get_graph_from_pickle("test/graph_for_test/graph_00001.gpickle")
+g5 = get_graph_from_pickle(os.path.join(project_path, "test/graph_for_test/graph_00000.gpickle"))
+g6 = get_graph_from_pickle(os.path.join(project_path, "test/graph_for_test/graph_00001.gpickle"))
+graph_test_path = os.path.join(project_path, "test/graph_for_test")
 graphs = []
-for g in os.listdir("test/graph_for_test/"):
-    graphs.append(get_graph_from_pickle(os.path.join("test/graph_for_test/", g)))
+for g in os.listdir(graph_test_path):
+    graphs.append(get_graph_from_pickle(os.path.join(graph_test_path, g)))
 
 
 class TestWassersteinBarycenter(TestCase):
@@ -129,5 +131,5 @@ class TestWassersteinBarycenter(TestCase):
         v = Visualisation(title="barycenter" ,graph=b.get_graph(), sphere_radius=90)
         v.construct_sphere()
 
-        v.plot_graphs(folder_path="test/graph_for_test/", radius=90)
+        v.plot_graphs(folder_path=graph_test_path, radius=90)
         #v.save_as_html("./../algorithms/mean/")
