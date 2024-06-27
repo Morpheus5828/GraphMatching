@@ -15,6 +15,7 @@ from ot.utils import list_to_array, unif, check_random_state, UndefinedParameter
 from ot.backend import get_backend
 from ot.gromov._utils import update_feature_matrix, update_square_loss, update_kl_loss
 import graph_matching.algorithms.pairwise.fgw as fgw
+from sklearn.neighbors import KNeighborsClassifier
 
 
 class Barycenter:
@@ -38,13 +39,16 @@ class Barycenter:
     def compute(self, fixed_structure=False) -> None:
         adj_matrices = []
         nodes_positions = []
+        nodes_label = []
         for graph in self.graphs:
             adj_matrices.append(nx.adjacency_matrix(graph).todense())
             nodes = []
+            label = []
             for index in range(len(graph.nodes)):
                 nodes.append(graph.nodes[index]["coord"])
-
+                label.append(graph.nodes[index]["label"])
             nodes_positions.append(np.array(nodes))
+            nodes_label.append(np.array(label))
         if fixed_structure:
             self.F, self.A = ot.gromov.fgw_barycenters(
                 N=self.nb_node,
@@ -59,15 +63,31 @@ class Barycenter:
                 N=self.nb_node,
                 Ys=nodes_positions,
                 Cs=adj_matrices,
-                alpha=0.5
+                alpha=0.5,
+                fixed_structure=True,
+                init_C=adj_matrices[0]
             )
 
-
     def get_graph(self) -> nx.Graph:
+        all_node_coord = []
+        all_node_label = []
+
+        for graph in self.graphs:
+            for index in range(len(graph.nodes)):
+                all_node_coord.append(graph.nodes[index]["coord"])
+                all_node_label.append(graph.nodes[index]["label"])
+
+        all_node_coord = np.array(all_node_coord)
+        all_node_label = np.array(all_node_label).reshape(-1, 1)
+
+        clf = KNeighborsClassifier(n_neighbors=20)
+        clf.fit(all_node_coord, all_node_label)
+
         G = nx.from_numpy_array(self.A)
         tmp = nx.Graph()
+
         for node, i in enumerate(G.nodes):
-            tmp.add_node(node, coord=self.F[i], label=node)
+            tmp.add_node(node, coord=self.F[i], label=int(clf.predict(self.F[i].reshape(1, -1))))
         return tmp
 
     # def fwg_barycenter(self, N, Ys, Cs, alpha):

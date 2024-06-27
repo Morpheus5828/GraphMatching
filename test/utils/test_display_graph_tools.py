@@ -12,14 +12,14 @@ project_path = os.path.abspath(os.path.join(current_dir, '../..'))
 if project_path not in sys.path:
     sys.path.append(project_path)
 
-g0_path = "test/graph_for_test/graph_00000.gpickle"
+g0_path = "resources/graph_for_test/generation/graph_00000.gpickle"
 g0 = get_graph_from_pickle(os.path.join(project_path, g0_path))
 
 
 class Test(TestCase):
     def test_transform(self):
         v = Visualisation(graph=g0)
-        v.transform()
+        v.extract_coord_label()
         truth = np.array([[63.26873894, -63.23596257, 44.702122],
                           [-85.2485662, -45.18006945, 26.2953092],
                           [99.79208327, 5.7780376, 2.85559076],
@@ -54,12 +54,12 @@ class Test(TestCase):
 
     def test_check_point_on_sphere(self):
         v = Visualisation(graph=g0)
-        v.transform()
+        v.extract_coord_label()
         self.assertTrue(v.check_point_on_sphere(v.points, 100))
         self.assertFalse(v.check_point_on_sphere(v.points, 10))
 
     def test_construct_sphere(self):
         v = Visualisation(graph=g0)
-        v.transform()
+        v.extract_coord_label()
         v.construct_sphere()
         self.assertTrue(v.fig is not None)

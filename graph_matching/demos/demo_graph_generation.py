@@ -44,10 +44,4 @@ if __name__ == '__main__':
         generation_folder_path=generation_folder_path
     )
 
-    v = Visualisation(title="noise10").plot_graphs(
-        folder_path="graph_generated/pickle/noise_10_outliers_varied",
-        path_to_save=os.curdir)
 
-    v = Visualisation(title="noise1810").plot_graphs(
-        folder_path="graph_generated/pickle/noise_1810_outliers_varied",
-        path_to_save=os.curdir)
