@@ -5,12 +5,12 @@ setup(
     version="0.1.0",
     packages=find_packages(),
     install_requires=[
-        "numpy~=1.26.4"
+        "numpy==1.26.4"
         "matplotlib>=3.8.4",
         "networkx>=3.3",
         "pandas>=2.2.2",
         "pillow>=10.3.0",
-        "scipy~=1.13.1",
+        "scipy==1.13.1",
         "seaborn>=0.13.2",
         "tqdm>=4.66.4",
         "trimesh>=4.3.2",
