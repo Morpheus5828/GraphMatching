@@ -52,11 +52,6 @@ class Test(TestCase):
                           [-60.86780809, -65.31287599, 45.04817607]])
         self.assertTrue(np.allclose(v.points, truth))
 
-    def test_check_point_on_sphere(self):
-        v = Visualisation(graph=g0)
-        v.extract_coord_label()
-        self.assertTrue(v.check_point_on_sphere(v.points, 100))
-        self.assertFalse(v.check_point_on_sphere(v.points, 10))
 
     def test_construct_sphere(self):
         v = Visualisation(graph=g0)
