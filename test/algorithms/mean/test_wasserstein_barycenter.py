@@ -135,7 +135,7 @@ class TestWassersteinBarycenter(TestCase):
         v.construct_sphere()
 
         v.plot_graphs(folder_path=os.path.join(graph_test_path, "generation"), radius=100)
-        v.save_as_html("C:/Users/thorr/OneDrive/Bureau/Stage")
+
 
     def test_compare_graph_reference(self):
         # b = Barycenter(
