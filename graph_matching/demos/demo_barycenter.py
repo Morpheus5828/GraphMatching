@@ -13,32 +13,33 @@ from graph_matching.utils.display_graph_tools import Visualisation
 from graph_matching.algorithms.mean.wasserstein_barycenter import Barycenter
 from graph_matching.utils.graph_processing import get_graph_from_pickle
 
-script_dir = os.path.dirname(os.path.abspath(__file__))
-graph_folder = os.path.join(script_dir, "graph_generated", "pickle")
-
+graph_test_path = os.path.join(project_path, "resources/graph_for_test")
 graphs = []
+for g in os.listdir(os.path.join(graph_test_path, "generation")):
+    graphs.append(get_graph_from_pickle(os.path.join(graph_test_path, "generation", g)))
+
 path = "graph_generated/pickle/noise_1810_outliers_varied"
 
-for graph in os.listdir(path):
-    g = get_graph_from_pickle(os.path.join(path, graph))
-    graphs.append(g)
 
 
-barycenter = Barycenter(
+b = Barycenter(
     graphs=graphs,
-    nb_node=25
+    nb_node=30
 )
-barycenter.compute()
+b.compute(fixed_structure=True)
+bary = b.get_graph()
 
 v = Visualisation(
-    graph= barycenter.get_graph(),
+    graph=bary,
     sphere_radius=90,
     title="barycenter"
 )
 
 v.construct_sphere()
 v.plot_graphs(folder_path=path)
-v.save_as_html("graph_generated")
+
+v.save_as_pickle("graph_generated")
+#v.save_as_html("graph_generated")
 
 
 

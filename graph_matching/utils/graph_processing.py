@@ -18,6 +18,18 @@ def get_distance_between_graphs(first_graph: nx.Graph, graphs: list):
     return node_distances
 
 
+def check_point_on_sphere(points: np.ndarray, radius: float) -> bool:
+    """
+    Check if a point is on the sphere.
+    :param points: array of all sphere coordinates
+    :param radius: radius of the sphere
+    :return: if all points are on the sphere
+    """
+    distances = np.linalg.norm(points, axis=1)
+
+    return np.allclose(distances, radius)
+
+
 def get_graph_from_pickle(path: str) -> nx.Graph:
     with open(path, "rb") as f:
         graph = pickle.load(f)
@@ -250,51 +262,4 @@ def preprocess_graph(graph):
     nx.set_node_attributes(graph, values=False, name="is_dummy")
 
 
-def read_modify_and_write_graphs(path_to_folder):
-    """
-    Read a list of graph in a folder, add dummy nodes where it's
-    necessary in order to have an equal number of nodes between all graphs
-    and finally write the modified graphs in a new folder with a
-    dictionnary to allow the correspondences.
-    """
 
-    # Initialise correspondence dictionary
-    correspondence_dict = {}
-
-    # initialise list of graphs
-    graph_list = []
-
-    # load all the graphs one after the other
-    for graph_i, graph_file in enumerate([file_name for file_name in os.listdir(path_to_folder) if
-                                          not os.path.isdir(os.path.join(path_to_folder, file_name))]):
-        # load this graph
-        graph = get_graph_from_pickle(os.path.join(path_to_folder, graph_file))
-        preprocess_graph(graph)
-        graph_list.append(graph)  # add it to the list of graph
-        correspondence_dict[graph_i] = {"name": graph_file}  # add the information about the name.
-
-    # add the number of nodes information to the dict and find the max number of nodes
-    max_nb_nodes = 0
-    for i, graph in enumerate(graph_list):
-        correspondence_dict[i]["nb_nodes"] = graph.number_of_nodes()
-        if graph.number_of_nodes() > max_nb_nodes:
-            max_nb_nodes = graph.number_of_nodes()
-
-    # add the dummy nodes
-    for graph in graph_list:
-        add_dummy_nodes(graph, max_nb_nodes)
-
-    # Create the new folder for the graphs
-    new_folder_path = os.path.join(path_to_folder, "modified_graphs")
-    if not os.path.isdir(new_folder_path):
-        os.mkdir(new_folder_path)
-
-    # Save the graphs in the new folder
-    for i, graph in enumerate(graph_list):
-        graph_path = os.path.join(new_folder_path, "graph_" + str(i) + ".gpickle")
-        nx.write_gpickle(graph, graph_path)
-
-    # Save the correspondence_dict
-    pickle_out = open(os.path.join(path_to_folder, "correspondence_dict.pickle"), "wb")
-    pickle.dump(correspondence_dict, pickle_out)
-    pickle_out.close()

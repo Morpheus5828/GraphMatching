@@ -68,7 +68,6 @@ class Barycenter:
                 init_C=adj_matrices[0]
             )
 
-
     def get_graph(self) -> nx.Graph:
         all_node_coord = []
         all_node_label = []
@@ -90,7 +89,6 @@ class Barycenter:
         for node, i in enumerate(G.nodes):
             tmp.add_node(node, coord=self.F[i], label=int(clf.predict(self.F[i].reshape(1, -1))))
         return tmp
-
 
     # def fwg_barycenter(self, N, Ys, Cs, alpha):
     #     Cs = list_to_array(*Cs)
