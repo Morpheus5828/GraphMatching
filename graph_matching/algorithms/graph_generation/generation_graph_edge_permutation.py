@@ -3,6 +3,7 @@
 """
 
 import os, sys
+import shutil
 import numpy as np
 import networkx as nx
 from tqdm.auto import tqdm
@@ -65,6 +66,13 @@ class EdgePermutation:
         self.nb_neighbors_to_consider_outliers = nb_neighbors_to_consider_outliers
         self.html_folder_title = html_folder_title
         self.path_to_write = generation_folder_path
+
+        if os.path.exists(self.path_to_write):
+            if len(os.listdir(self.path_to_write)) != 0:
+                shutil.rmtree(self.path_to_write)
+                os.mkdir(self.path_to_write)
+        else:
+            os.mkdir(self.path_to_write)
 
         trial_path, reference_graph_max = self._generate_families_graph()
         self._generate_noise_graph(

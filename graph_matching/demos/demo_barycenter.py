@@ -15,11 +15,8 @@ from graph_matching.utils.graph_processing import get_graph_from_pickle
 
 graph_test_path = os.path.join(project_path, "resources/graph_for_test")
 graphs = []
-for g in os.listdir(os.path.join(graph_test_path, "generation")):
+for g in os.listdir(os.path.join(graph_test_path, "generation", "noise_1810_outliers_varied")):
     graphs.append(get_graph_from_pickle(os.path.join(graph_test_path, "generation", g)))
-
-path = "graph_generated/pickle/noise_1810_outliers_varied"
-
 
 
 b = Barycenter(
@@ -31,15 +28,12 @@ bary = b.get_graph()
 
 v = Visualisation(
     graph=bary,
-    sphere_radius=90,
+    sphere_radius=100,
     title="barycenter"
 )
 
-v.construct_sphere()
-v.plot_graphs(folder_path=path)
 
-v.save_as_pickle("graph_generated")
-#v.save_as_html("graph_generated")
+v.save_as_pickle("C:/Users/thorr/OneDrive/Bureau/Stage")
 
 
 

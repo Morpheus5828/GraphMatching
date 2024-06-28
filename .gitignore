@@ -133,4 +133,4 @@ dmypy.json
 .pyre/
 
 # HTML
-.html
+*.html

@@ -46,6 +46,7 @@ class Visualisation:
 
         if self.graph is not None:
             self.extract_coord_label()
+            self.construct_sphere()
 
     def extract_coord_label(self) -> None:
         """
@@ -55,11 +56,12 @@ class Visualisation:
         points = []
         labels = []
         for i in range(len(self.graph.nodes)):
-            if "coord" in self.graph.nodes[i].keys():
-                points.append(self.graph.nodes[i]["coord"])
-            elif "sphere_3dcoords" in self.graph.nodes[i].keys():
-                points.append(self.graph.nodes[i]["sphere_3dcoords"])
-            labels.append(self.graph.nodes[i]["label"])
+            if len(self.graph.nodes[i]) != 0:
+                if "coord" in self.graph.nodes[i].keys():
+                    points.append(self.graph.nodes[i]["coord"])
+                elif "sphere_3dcoords" in self.graph.nodes[i].keys():
+                    points.append(self.graph.nodes[i]["sphere_3dcoords"])
+                labels.append(self.graph.nodes[i]["label"])
         self.points = np.array(points)
         self.labels = np.array(labels)
 
@@ -255,10 +257,15 @@ class Visualisation:
 
     def plot_all_graph_on_mesh(
             self,
-            graphs: list,
+            folder_path: str,
             cortext_mesh_path: str,
             sphere_mesh_path: str,
     ) -> None:
+        graphs = []
+        for graph in os.listdir(folder_path):
+            graphs.append(get_graph_from_pickle(os.path.join(folder_path, graph)))
+
+
         sphere_mesh = nib.load(sphere_mesh_path)
         sphere_vertices = sphere_mesh.darrays[0].data.astype(float)
 
@@ -272,11 +279,12 @@ class Visualisation:
             points = []
             label = []
             for i in range(len(g.nodes)):
-                if "coord" in g.nodes[i].keys():
-                    points.append(g.nodes[i]["coord"])
-                elif "sphere_3dcoords" in g.nodes[i].keys():
-                    points.append(g.nodes[i]["sphere_3dcoords"])
-                label.append(g.nodes[i]["label"])
+                if len(g.nodes[i]) != 0:
+                    if "coord" in g.nodes[i].keys():
+                        points.append(g.nodes[i]["coord"])
+                    elif "sphere_3dcoords" in g.nodes[i].keys():
+                        points.append(g.nodes[i]["sphere_3dcoords"])
+                    label.append(g.nodes[i]["label"])
             points = np.array(points)
             coord_to_plot = []
             for i in range(len(points)):
@@ -334,7 +342,7 @@ class Visualisation:
                 zaxis=dict(visible=False)
             ),
             showlegend=True,
-            title="Cortex Mesh"
+            title=self.title
         )
 
         scatters.append(mesh)
@@ -397,3 +405,5 @@ class Visualisation:
             ),
             showlegend=True
         )
+
+        self.fig.show()

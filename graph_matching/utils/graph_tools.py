@@ -96,7 +96,7 @@ def von_mises_sampling(
                                            kappa=sigma_noise_nodes).sample[0]
 
         noisy_coordinate = noisy_coordinate * np.linalg.norm(original_coord)  # rescale to original size
-        noisy_coord[index] = {"coord": noisy_coordinate, "label": index, "is_outlier": False}
+        noisy_coord[index] = {"coord": noisy_coordinate, "label": index+1, "is_outlier": False}
     return noisy_coord
 
 
