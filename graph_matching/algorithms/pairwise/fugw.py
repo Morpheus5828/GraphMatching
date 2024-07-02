@@ -23,7 +23,7 @@ def _cost(
     print(c.shape)
     c += (1 - alpha) / 2 * C
     print(c.shape)
-    #c += rho * (np.log(P.sum(axis=1) / w_s) * P.sum(axis=1)).sum()
+    c += rho * (np.log(P.sum(axis=1) / w_s) * P.sum(axis=1)).sum()
     #c += rho * (np.log(P.sum(axis=0) / w_t) * P.sum(axis=0)).sum()
     #c += epsilon * (np.log(P / np.kron(w_s, w_t)) * P).sum()
 

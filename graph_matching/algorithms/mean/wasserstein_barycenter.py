@@ -20,7 +20,6 @@ import graph_matching.algorithms.pairwise.fgw as fgw
 from sklearn.neighbors import KNeighborsClassifier
 from geopy.distance import geodesic
 
-
 class Barycenter:
     def __init__(
             self,
@@ -40,6 +39,7 @@ class Barycenter:
         self.F, self.A, self.T = None, None, None
 
     def compute(self, fixed_structure=False) -> None:
+        self._check_node()
         adj_matrices = []
         nodes_positions = []
         nodes_label = []
@@ -48,8 +48,9 @@ class Barycenter:
             nodes = []
             label = []
             for index in range(len(graph.nodes)):
-                nodes.append(graph.nodes[index]["coord"])
-                label.append(graph.nodes[index]["label"])
+                if len(graph.nodes[index]) > 0:
+                    nodes.append(graph.nodes[index]["coord"])
+                    label.append(graph.nodes[index]["label"])
             nodes_positions.append(np.array(nodes))
             nodes_label.append(np.array(label))
         if fixed_structure:
@@ -75,6 +76,7 @@ class Barycenter:
             self.T = log["T"][-1]
 
     def get_graph(self) -> nx.Graph:
+
         all_node_coord = []
         all_node_label = []
 
@@ -87,7 +89,7 @@ class Barycenter:
         tmp = nx.Graph()
 
         for node, i in enumerate(G.nodes):
-            tmp.add_node(node, coord=self.F[i], label=np.argmax(self.T[i]))
+            tmp.add_node(node, coord=self.F[i], label=np.argmax(self.T[i])+1)
         return tmp
 
     def get_label(self):
@@ -104,32 +106,30 @@ class Barycenter:
         #         if len(occurrence) > 3
 
     def _check_node(self):
-        print()
+        max_node = max([len(graph.nodes) for graph in self.graphs])
         for graph in self.graphs:
-            for node in range(len(graph.nodes)):
-                print(graph.nodes[node])
-            print()
+            nb_node_to_add = max_node - len(graph.nodes)
+            for i in range(nb_node_to_add):
+                graph.add_node(max(graph.nodes) + i + 1, coord=np.array([0, 0]), label=-1)
 
-        # max_node = max([len(graph.nodes) for graph in self.graphs])
-        # for graph in self.graphs:
-        #     nb_node_to_add = max_node - len(graph.nodes)
-        #     for i in range(nb_node_to_add):
-        #         graph.add_node(max(graph.nodes) + i + 1, coord=np.array([0, 0]), label=-1)
-        # for graph in self.graphs:
-        #     for node in range(len(graph.nodes)):
-        #         print(graph.nodes[node])
-        #     print()
+
 
     def get_distance_diff(self):
         dist = {}
         bary = self.get_graph()
-        for node in range(len(bary)):
+
+        for bary_node in range(len(bary.nodes)):
             current_dist = []
             for graph in self.graphs:
                 for g_node in range(len(graph.nodes)):
-                    if graph.nodes[g_node]["label"] == bary.nodes[node]["label"]:
-                        current_dist.append(np.linalg.norm(graph.nodes[g_node]["coord"] - bary.nodes[node]["coord"]))
-            dist[bary.nodes[node]["label"]] = np.mean(current_dist)
+                    if bary.nodes[bary_node]["label"] == graph.nodes[g_node]["label"]:
+                        current_dist.append(
+                            np.linalg.norm(
+                                bary.nodes[bary_node]["coord"] - graph.nodes[g_node]["coord"]
+                            )
+                        )
+
+            dist[bary.nodes[bary_node]["label"]] = np.mean(current_dist)
         print(dist)
 
     def fgw_barycenters(self,

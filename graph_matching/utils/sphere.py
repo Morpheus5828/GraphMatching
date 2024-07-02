@@ -3,7 +3,6 @@
 """
 
 import sys
-
 sys.path.append("/graph_matching/utils")
 import numpy as np
 from matplotlib import pyplot as plt
@@ -181,3 +180,5 @@ class Coord3D:
         self.x = x
         self.y = y
         self.z = z
+
+
