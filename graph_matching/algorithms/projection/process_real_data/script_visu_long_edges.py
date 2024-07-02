@@ -16,10 +16,10 @@ if __name__ == "__main__":
     geo_length_threshold = 80
 
     print('nb graphs to show : ', len(list_graphs))
-    # load and reorient the template mesh
+    # load and reorient the template_mesh mesh
     template_mesh = gv.reg_mesh(sio.load_mesh(file_template_mesh))
-    # plot the template mesh
-    vb_sc = gv.visbrain_plot(template_mesh, caption='Visu on template mesh of edges longer than ' + str(geo_length_threshold))
+    # plot the template_mesh mesh
+    vb_sc = gv.visbrain_plot(template_mesh, caption='Visu on template_mesh mesh of edges longer than ' + str(geo_length_threshold))
 
     for graph in list_graphs:
         gp.remove_dummy_nodes(graph)

@@ -1,4 +1,4 @@
-""" This module contains a other matching algoritm between pair of graph
+""" This module contains a other matching algoritm between a pair of graph
 Implementation of Vayer.T, Chapel.L, Flammary.R, Tavenard.R, Courty.N
     Optimal Transport for Structured data with application on graphs
     In International Conference on Machine Learning (pp. 6275-6284). PMLR.

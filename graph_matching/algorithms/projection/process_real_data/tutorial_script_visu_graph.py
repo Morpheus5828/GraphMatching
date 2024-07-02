@@ -65,12 +65,12 @@ if __name__ == "__main__":
     vb_sc2.preview()
 
 
-    # TUTO 3 :: plot the graph on the template mesh
-    # load and reorient the template mesh
+    # TUTO 3 :: plot the graph on the template_mesh mesh
+    # load and reorient the template_mesh mesh
     template_mesh = gv.reg_mesh(sio.load_mesh(file_template_mesh))
 
     # plot the mesh with basin texture
-    vb_sc3 = gv.visbrain_plot(template_mesh, caption='Visu on template mesh')
+    vb_sc3 = gv.visbrain_plot(template_mesh, caption='Visu on template_mesh mesh')
     # process the graph
     # 1 remove potential dummy nodes (which are not connected by any edge and have no coordinate)
     gp.remove_dummy_nodes(graph)

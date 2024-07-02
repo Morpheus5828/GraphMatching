@@ -41,9 +41,8 @@ class Visualisation:
             'Red', 'Blue', 'Green', 'Yellow', 'Orange', 'Purple', 'Pink', 'Brown', 'Black', 'White',
             'Gray', 'Violet', 'Cyan', 'Magenta', 'Lime', 'Maroon', 'Olive', 'Navy', 'Teal', 'Aqua',
             'Coral', 'Turquoise', 'Beige', 'Lavender', 'Salmon', 'Gold', 'Silver', 'aliceblue', 'Khaki',
-            'Indigo'
+            'Indigo', 'Plum'
         ]
-
         if self.graph is not None:
             self.extract_coord_label()
             self.construct_sphere()
@@ -69,7 +68,6 @@ class Visualisation:
         """
         Construct sphere using all information in inputs
         """
-
         x, y, z = self.points[:, 0], self.points[:, 1], self.points[:, 2]
         current_color = [self.all_color[i] if i != -1 else "Crimson" for i in self.labels]
 
@@ -212,16 +210,15 @@ class Visualisation:
 
         current_color = [self.all_color[i] if i != -1 else "Crimson" for i in self.labels]
         scatter = go.Scatter3d(
-                x=coord_to_plot[:, 0],
-                y=coord_to_plot[:, 1],
-                z=coord_to_plot[:, 2],
-                mode='markers',
-                marker=dict(
-                    size=5,
-                    color=current_color,
-                    opacity=0.8)
-            )
-
+            x=coord_to_plot[:, 0],
+            y=coord_to_plot[:, 1],
+            z=coord_to_plot[:, 2],
+            mode='markers',
+            marker=dict(
+                size=5,
+                color=current_color,
+                opacity=0.8)
+        )
 
         vertices = cortex_mesh.darrays[0].data.astype(float)
         faces = cortex_mesh.darrays[1].data.astype(int)
@@ -247,8 +244,6 @@ class Visualisation:
             title="Cortex Mesh"
         )
 
-
-
         fig = go.Figure(data=[scatter, mesh], layout=layout)
 
         fig.update_layout(scene=dict(aspectmode='data'))
@@ -264,7 +259,6 @@ class Visualisation:
         graphs = []
         for graph in os.listdir(folder_path):
             graphs.append(get_graph_from_pickle(os.path.join(folder_path, graph)))
-
 
         sphere_mesh = nib.load(sphere_mesh_path)
         sphere_vertices = sphere_mesh.darrays[0].data.astype(float)
@@ -377,7 +371,7 @@ class Visualisation:
                 y=y1,
                 z=z1,
                 mode='markers',
-                marker=dict(size=5, color=current_color
+                marker=dict(size=5, color=self.all_color
                             , opacity=0.8),
                 showlegend=True
             ))

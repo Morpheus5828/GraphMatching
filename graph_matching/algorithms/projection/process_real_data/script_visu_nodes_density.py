@@ -37,7 +37,7 @@ if __name__ == "__main__":
     print('std=', np.std(graphs_nodes_number))
     print('sum across subjects=', np.sum(graphs_nodes_number))
 
-    # using an average mesh as template
+    # using an average mesh as template_mesh
     template_mesh = '../data/template_mesh/ico100_7.gii'
     mesh = gv.reg_mesh(sio.load_mesh(template_mesh))
 
@@ -88,7 +88,7 @@ if __name__ == "__main__":
     #
     # vb_sc.preview()
     #
-    # # using a sphere mesh as template
+    # # using a sphere mesh as template_mesh
     # template_mesh = '/mnt/data/work/python_sandBox/Graph_matching/data/template_mesh/ico100_7.gii'
     # mesh = sio.load_mesh(template_mesh)
     #

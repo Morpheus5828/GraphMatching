@@ -15,11 +15,11 @@ if project_path not in sys.path:
 
 if __name__ == '__main__':
     generation_folder_path = os.path.join(current_dir, "graph_generated")
-    nb_sample_graphs = 50
+    nb_sample_graphs = 20
     nb_vertices = 30
-    min_noise = 10
-    max_noise = 2000
-    step_noise = 300
+    min_noise = 1
+    max_noise = 200
+    step_noise = 20
     max_outliers = 10
     step_outliers = 10
     save_reference = 1
