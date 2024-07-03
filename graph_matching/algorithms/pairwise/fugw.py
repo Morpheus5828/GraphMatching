@@ -9,6 +9,33 @@ Advances in neural information processing systems, 35, 21792-21804
 import numpy as np
 
 
+def _geometry_cost(D_s, D_t):
+    n = D_s.shape[0]
+    p = D_t.shape[0]
+
+    result = []
+    for i in range(n):
+        for j in range(p):
+            for k in range(n):
+                for l in range(p):
+                    result.append(np.abs(D_s[i, k] - D_t[j, l]))
+
+    return np.array(result).reshape(n, p, n, p)
+
+
+def _kron(G, P):
+    K = G.shape[2]
+    L = G.shape[3]
+
+    result = []
+    for k in range(K):
+        for l in range(L):
+            result.append(
+                np.sum(G, axis=(2, 3))[k, l] * np.sum(P)
+            )
+    return np.array(result).reshape(K, L)
+
+
 def _cost(
         P: np.ndarray,
         G: np.ndarray,
@@ -19,17 +46,14 @@ def _cost(
         alpha: float,
         epsilon: float
 ) -> np.ndarray:
-    c = alpha * np.kron(G, P)
-    print(c.shape)
+    c = alpha * _kron(G, P)
     c += (1 - alpha) / 2 * C
-    print(c.shape)
+    c += rho * (np.log(P.sum(axis=0) / w_s) * P.sum(axis=0)).sum()
     c += rho * (np.log(P.sum(axis=1) / w_s) * P.sum(axis=1)).sum()
-    #c += rho * (np.log(P.sum(axis=0) / w_t) * P.sum(axis=0)).sum()
-    #c += epsilon * (np.log(P / np.kron(w_s, w_t)) * P).sum()
-
+    c += epsilon * (np.log(P / np.kron(w_s, w_t)) * P).sum()
     return c
 
-
+# TODO add convergence parameter
 def _scaling(
         C: np.ndarray,
         w_s: np.ndarray,
@@ -37,11 +61,11 @@ def _scaling(
         rho: float,
         epsilon: float,
         tolerance: float = 1e-4,
-        max_iteration=1e2
+        max_iteration=10
 ) -> np.ndarray:
-    # TODO add convergence parameter
-    f = 0
-    g = 0
+
+    f = np.zeros(shape=w_s.shape)
+    g = np.zeros(shape=w_t.shape)
     i = 0
     while i < max_iteration:
         f_next = -(rho / rho + epsilon)
@@ -64,8 +88,8 @@ def _scaling(
 
         i += 1
 
-    P = np.kron(w_s, w_t) @ np.exp(f + g - C / epsilon)
-
+    g = g.reshape(1, -1)
+    P = np.kron(w_s, w_t) * np.exp(f + g - C / epsilon)
     return P
 
 
@@ -77,10 +101,15 @@ def LB_FUGW(
         rho: float,
         alpha: float,
         epsilon: float,
-        max_iteration: int = 1e4
+        max_iteration: int = 1e3,
+        convergence: float = 1e-2,
+        return_i: bool = False
 ) -> tuple:
-    P, Q = np.kron(w_s, w_t) / np.sqrt(np.sum(w_s) * np.sum(w_t))
+    Q = np.kron(w_s, w_t) / np.sqrt(np.sum(w_s) * np.sum(w_t))
+    P = Q
     i = 0
+    last_P = None
+    last_Q = None
     while i < max_iteration:
         c_p = _cost(
             P=P,
@@ -101,7 +130,7 @@ def LB_FUGW(
             epsilon=epsilon * np.sum(P)
         )
 
-        Q = np.sqrt(np.sum(P)/np.sum(Q)) * Q
+        Q = np.sqrt(np.sum(P) / np.sum(Q)) * Q
 
         c_q = _cost(
             P=Q,
@@ -123,6 +152,12 @@ def LB_FUGW(
         )
 
         P = np.sqrt(np.sum(Q) / np.sum(P)) * P
-        i+=1
+        if i != 0:
+            if np.linalg.norm(P-last_P) < convergence and np.linalg.norm(Q-last_Q) < convergence:
+                return (P, Q, i) if return_i else (P, Q)
 
-    return P, Q
+        last_P = P
+        last_Q = Q
+        i += 1
+
+    return (P, Q, i) if return_i else (P, Q)
