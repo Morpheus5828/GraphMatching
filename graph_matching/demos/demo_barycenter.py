@@ -16,10 +16,17 @@ if project_path not in sys.path:
 from graph_matching.algorithms.mean.wasserstein_barycenter import Barycenter
 from graph_matching.utils.graph_processing import get_graph_from_pickle
 
-graph_test_path = os.path.join(project_path, "resources/graph_for_test")
+graph_test_path = os.path.join(project_path, "resources/graph_for_test/")
 file_cortex_mesh = os.path.join(project_path, "resources", "template_mesh", "lh.OASIS_testGrp_average_inflated.gii")
 file_sphere_mesh = os.path.join(project_path, "resources", "template_mesh", "ico100_7.gii")
-folder_path = os.path.join(project_path, "resources", "graph_for_test", "generation", "noise_1_outliers_varied")
+folder_path = os.path.join(
+    project_path,
+    "resources",
+    "graph_for_test",
+    "generation",
+    "with_outliers",
+    "noise_1_outliers_varied"
+)
 
 graphs = []
 for g in os.listdir(folder_path):
@@ -32,13 +39,14 @@ b = Barycenter(
 
 b.compute()
 
-bary = b.get_graph()
-
-v = Visualisation(
-    graph=bary,
-    sphere_radius=90,
-    title="1 without outliers"
-)
-
-v.plot_graphs(folder_path=folder_path)
+# bary = b.get_graph()
+#
+#
+# v = Visualisation(
+#     graph=bary,
+#     sphere_radius=100,
+#     title="1 without outliers"
+# )
+#
+# v.plot_graphs(folder_path=folder_path)
 

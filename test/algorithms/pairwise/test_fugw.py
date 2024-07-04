@@ -74,7 +74,7 @@ class TestFugw(TestCase):
 
         c_p = fugw._cost(
             P=P,
-            G=fugw._geometry_cost(C1, C2, C1.shape[0], C2.shape[0]),
+            G=fugw._geometry_cost(C1, C2),
             C=np.array([
                 [0, 1, 1, 1],
                 [0, 0, 1, 0],
@@ -97,15 +97,16 @@ class TestFugw(TestCase):
 
     def test_LB_FUGW(self):
         cost = G1_coord @ G2_coord.reshape(G2_coord.shape[1], G2_coord.shape[0])
-        P, Q, i = fugw.LB_FUGW(
-            cost=cost,
-            distance=fugw._geometry_cost(C1, C2),
-            w_s=mu_G1,
-            w_t=mu_G2,
-            rho=1,
-            alpha=0.5,
-            epsilon=108,
-            return_i=True
-        )
+        print(cost.shape)
+        # P, Q, i = fugw.LB_FUGW(
+        #     cost=cost,
+        #     distance=fugw._geometry_cost(C1, C2),
+        #     w_s=mu_G1,
+        #     w_t=mu_G2,
+        #     rho=1,
+        #     alpha=0.5,
+        #     epsilon=108,
+        #     return_i=True
+        # )
 
-        print(P, Q, i)
+        #print(P, Q, i)

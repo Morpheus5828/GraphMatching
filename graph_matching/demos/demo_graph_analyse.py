@@ -67,7 +67,7 @@ if __name__ == '__main__':
         C2=adj_matrix_t,
         distance=distance,
         rho=80,
-        eta=100,
+        eta=50,
         N1=50,
         N2=50,
         ot_method="sns",

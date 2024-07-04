@@ -101,7 +101,7 @@ def LB_FUGW(
         rho: float,
         alpha: float,
         epsilon: float,
-        max_iteration: int = 1e3,
+        max_iteration: int = 10,
         convergence: float = 1e-2,
         return_i: bool = False
 ) -> tuple:

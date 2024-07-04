@@ -112,8 +112,6 @@ class Barycenter:
             for i in range(nb_node_to_add):
                 graph.add_node(max(graph.nodes) + i + 1, coord=np.array([0, 0]), label=-1)
 
-
-
     def get_distance_diff(self):
         dist = {}
         bary = self.get_graph()

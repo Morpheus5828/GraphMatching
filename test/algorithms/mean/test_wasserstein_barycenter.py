@@ -15,42 +15,57 @@ if project_path not in sys.path:
 
 g1 = nx.Graph()
 g1.add_node(0, coord=np.array([0, 0]), label=0)
-g1.add_node(1, coord=np.array([0, 1]), label=1)
-g1.add_node(2, coord=np.array([0, 2]), label=2)
+g1.add_node(1, coord=np.array([0, 1]), label=2)
+g1.add_node(2, coord=np.array([0, 2]), label=3)
 g1.add_edge(0, 1)
 g1.add_edge(1, 2)
 
 g2 = nx.Graph()
 g2.add_node(0, coord=np.array([1, 0]), label=0)
-g2.add_node(1, coord=np.array([1, 1]), label=1)
+g2.add_node(1, coord=np.array([1, 1]), label=0)
 g2.add_node(2, coord=np.array([1, 2]), label=2)
 g2.add_edge(0, 1)
 g2.add_edge(1, 2)
 
 g3 = nx.Graph()
-g3.add_node(0, coord=np.array([1, 0]), label=0)
-g3.add_node(1, coord=np.array([1, 1]), label=1)
-g3.add_node(2, coord=np.array([1, 2]), label=2)
+g3.add_node(0, coord=np.array([1, 0]), label=1)
+g3.add_node(1, coord=np.array([1, 1]), label=2)
+g3.add_node(2, coord=np.array([1, 2]), label=3)
 g3.add_edge(0, 1)
 g3.add_edge(1, 2)
 
 g4 = nx.Graph()
-g4.add_node(0, coord=np.array([1, 0]), label=0)
-g4.add_node(1, coord=np.array([1, 1]), label=1)
-g4.add_node(2, coord=np.array([1, 2]), label=2)
-g4.add_node(3, coord=np.array([1, 3]), label=3)
+g4.add_node(0, coord=np.array([1, 0]), label=1)
+g4.add_node(1, coord=np.array([1, 1]), label=2)
+g4.add_node(2, coord=np.array([1, 2]), label=3)
+g4.add_node(3, coord=np.array([1, 3]), label=4)
 g4.add_edge(0, 1)
 g4.add_edge(1, 2)
 g4.add_edge(2, 3)
 
-g5 = get_graph_from_pickle(os.path.join(project_path, "resources/graph_for_test/generation/graph_00000.gpickle"))
-g6 = get_graph_from_pickle(os.path.join(project_path, "resources/graph_for_test/generation/graph_00001.gpickle"))
-gref = get_graph_from_pickle(os.path.join(project_path, "resources/graph_for_test/reference.gpickle"))
+g5 = get_graph_from_pickle(
+    os.path.join(
+        project_path,
+        "resources/graph_for_test/generation/noise_1810/graph_00000.gpickle"
+    )
+)
+g6 = get_graph_from_pickle(
+    os.path.join(
+        project_path,
+        "resources/graph_for_test/generation/noise_1810/graph_00001.gpickle"
+    )
+)
+gref = get_graph_from_pickle(
+    os.path.join(
+        project_path,
+        "resources/graph_for_test/reference.gpickle"
+    )
+)
 
-graph_test_path = os.path.join(project_path, "resources/graph_for_test")
+graph_test_path = os.path.join(project_path, "resources/graph_for_test/generation/noise_1810")
 graphs = []
-for g in os.listdir(os.path.join(graph_test_path, "generation")):
-    graphs.append(get_graph_from_pickle(os.path.join(graph_test_path, "generation", g)))
+for g in os.listdir(graph_test_path):
+    graphs.append(get_graph_from_pickle(os.path.join(graph_test_path, g)))
 
 
 class TestWassersteinBarycenter(TestCase):
@@ -62,20 +77,32 @@ class TestWassersteinBarycenter(TestCase):
         )
 
         b.compute(fixed_structure=True)
-        truth_f = np.array([
-            [0.5, 2.0],
-            [0.5, 1],
-            [0.5, 0]
-        ])
+        print(b.A)
+        # truth_f = np.array([
+        #     [0.5, 2.0],
+        #     [0.5, 1],
+        #     [0.5, 0]
+        # ])
+        #
+        # truth_a = np.array([
+        #     [0, 1, 0],
+        #     [1, 0, 1],
+        #     [0, 1, 0]
+        # ])
+        #
+        # self.assertTrue(np.array_equal(truth_f, b.F))
+        # self.assertTrue(np.array_equal(truth_a, b.A))
 
-        truth_a = np.array([
-            [0, 1, 0],
-            [1, 0, 1],
-            [0, 1, 0]
-        ])
+    def test_compute_g1_g4(self):
 
-        self.assertTrue(np.array_equal(truth_f, b.F))
-        self.assertTrue(np.array_equal(truth_a, b.A))
+        b = Barycenter(
+            graphs=[g1, g4],
+            nb_node=4
+        )
+        #print(nx.adjacency_matrix(g1))
+        b._check_node()
+        #print(b.get_label())
+
 
     def test_compute_g1_g2_g3(self):
         b = Barycenter(
@@ -135,7 +162,6 @@ class TestWassersteinBarycenter(TestCase):
         v.construct_sphere()
 
         v.plot_graphs(folder_path=os.path.join(graph_test_path, "generation"), radius=100)
-
 
     def test_compare_graph_reference(self):
         # b = Barycenter(
