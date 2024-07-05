@@ -17,9 +17,7 @@ if __name__ == '__main__':
     generation_folder_path = os.path.join(current_dir, "graph_generated")
     nb_sample_graphs = 20
     nb_vertices = 30
-    min_noise = 1
-    max_noise = 200
-    step_noise = 20
+    noise = [1, 1, 61]
     max_outliers = 10
     step_outliers = 10
     save_reference = 1
@@ -32,9 +30,7 @@ if __name__ == '__main__':
         html_folder_title="html",
         nb_sample_graphs=nb_sample_graphs,
         nb_vertices=nb_vertices,
-        min_noise=min_noise,
-        max_noise=max_noise,
-        step_noise=step_noise,
+        noise=noise,
         max_outliers=max_outliers,
         step_outliers=step_outliers,
         save_reference=save_reference,

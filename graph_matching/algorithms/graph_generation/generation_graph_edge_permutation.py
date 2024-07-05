@@ -24,9 +24,7 @@ class EdgePermutation:
             pickle_folder_title: str,
             nb_sample_graphs: int,
             nb_vertices: int,
-            min_noise: int,
-            max_noise: int,
-            step_noise: int,
+            noise: list,
             max_outliers: int,
             step_outliers: int,
             save_reference: int,
@@ -55,9 +53,9 @@ class EdgePermutation:
         self.pickle_folder_title = pickle_folder_title
         self.nb_sample_graphs = nb_sample_graphs
         self.nb_vertices = nb_vertices
-        self.min_noise = min_noise
-        self.max_noise = max_noise
-        self.step_noise = step_noise
+        self.min_noise = noise[0]
+        self.step_noise = noise[1]
+        self.max_noise = noise[2]
         self.max_outliers = max_outliers
         self.step_outliers = step_outliers
         self.save_reference = save_reference
@@ -124,19 +122,12 @@ class EdgePermutation:
         list_noise = np.arange(self.min_noise, self.max_noise, self.step_noise)
 
         for noise in list_noise:
-            folder_name = f"noise_{noise}_outliers_varied"
+
+            folder_name = f"noise_0{noise}" if noise < 10 else f"noise_{noise}"
             path_parameters_folder = os.path.join(trial_path, folder_name)
 
             if not os.path.exists(path_parameters_folder):
                 os.makedirs(path_parameters_folder)
-
-            # list_graphs, ground_truth_perm, ground_truth_perm_to_ref = generate_graph_family.run(
-            #     nb_sample_graphs=self.nb_sample_graphs,
-            #     nb_vertices=self.nb_vertices,
-            #     ref_graph=reference_graph_max,
-            #     noise_node=noise,
-            #     noise_edge=noise,
-            # )
 
             list_graphs = generate_graph_family.run(
                 nb_sample_graphs=self.nb_sample_graphs,

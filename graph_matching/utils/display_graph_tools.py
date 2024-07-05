@@ -402,3 +402,6 @@ class Visualisation:
         )
 
         self.fig.show()
+
+    def show_fig(self):
+        self.fig.show()

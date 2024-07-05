@@ -25,7 +25,7 @@ folder_path = os.path.join(
     "graph_for_test",
     "generation",
     "with_outliers",
-    "noise_1_outliers_varied"
+    "noise_40"
 )
 
 graphs = []
@@ -36,17 +36,21 @@ b = Barycenter(
     graphs=graphs,
     nb_node=30
 )
-
+b._check_node()
 b.compute()
 
-# bary = b.get_graph()
-#
-#
-# v = Visualisation(
-#     graph=bary,
-#     sphere_radius=100,
-#     title="1 without outliers"
-# )
-#
-# v.plot_graphs(folder_path=folder_path)
+bary = b.get_graph()
+
+
+v = Visualisation(
+    graph=bary,
+    sphere_radius=100,
+    title="1 without outliers"
+)
+
+
+v.show_fig()
+
+
+#v.plot_graphs(folder_path=folder_path)
 

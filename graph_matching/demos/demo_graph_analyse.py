@@ -72,19 +72,17 @@ if __name__ == '__main__':
         N2=50,
         ot_method="sns",
     )
-    cost = graph_coord_s @ graph_coord_t.reshape(graph_coord_t.shape[1], graph_coord_t.shape[0])
-    P, Q = fugw.LB_FUGW(
+    cost = graph_coord_s @ graph_coord_t.reshape(graph_coord_t.shape[1], graph_coord_t.shape[0])/100
+    P, _ = fugw.LB_FUGW(
         cost=cost,
         distance=fugw._geometry_cost(adj_matrix_s, adj_matrix_t),
         w_s=mu_s,
         w_t=mu_t,
         rho=1,
-        epsilon=500,
+        epsilon=1e5,
         alpha=0.5
 
     )
-
     end = time.time()
-
     print("Distance euclidienne ", np.linalg.norm(P - transport2))
     print(f"Traning process: {end - start}")

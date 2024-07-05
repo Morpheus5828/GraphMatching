@@ -3,6 +3,7 @@
 
 """
 import os, sys
+import numpy as np
 import matplotlib.pyplot as plt
 from graph_matching.utils.graph_processing import get_graph_from_pickle, get_distance_between_graphs
 from graph_matching.algorithms.mean.wasserstein_barycenter import Barycenter
@@ -12,29 +13,30 @@ project_path = os.path.abspath(os.path.join(current_dir, '../..'))
 if project_path not in sys.path:
     sys.path.append(project_path)
 
-#gref = get_graph_from_pickle(os.path.join(project_path, "GraphMatching/resources/graph_for_test/reference.gpickle"))
+path_folder = os.path.join(project_path, "resources/graph_for_test/generation/without_outliers")
 
-graph_test_path = os.path.join(project_path, "resources/graph_for_test/generation/noise_1_outliers_varied")
-graphs = []
-for g in os.listdir(graph_test_path):
-    graphs.append(get_graph_from_pickle(os.path.join(graph_test_path, g)))
+dist = []
 
-b = Barycenter(
-    graphs=graphs,
-    nb_node=30
-)
+for folder in reversed(os.listdir(path_folder)):
+    graphs = []
+    for graph in os.listdir(os.path.join(path_folder, folder)):
+        graphs.append(get_graph_from_pickle(os.path.join(path_folder, folder, graph)))
+    b = Barycenter(
+        graphs=graphs,
+        nb_node=30
+    )
 
-b.compute()
-bary = b.get_graph()
+    b.compute()
+    bary = b.get_graph()
 
-distances = get_distance_between_graphs(first_graph=bary, graphs=graphs)
-distances = dict(sorted(distances.items()))
+    distances = get_distance_between_graphs(first_graph=bary, graphs=graphs)
+    dist.append(sum(distances.values()) / len(distances.values()))
 
-plt.bar(list(distances.keys()), list(distances.values()))
-plt.ylim(0, 140)
-plt.xlabel("Node label")
+
+plt.plot(np.arange(60), dist)
+plt.xlabel("Noise")
 plt.ylabel("Distance")
-plt.title("Distance between \n Barycenter and graph generation from noise 1")
-plt.savefig("C:/Users/thorr/OneDrive/Bureau/Stage/bary_all_graph1_so")
+plt.title("Distance between \n Barycenter and graph generation with outliers")
+plt.savefig("C:/Users/thorr/OneDrive/Bureau/Stage/Distance_between_Barycenter_and_graph_generation_without_outliers")
 
 

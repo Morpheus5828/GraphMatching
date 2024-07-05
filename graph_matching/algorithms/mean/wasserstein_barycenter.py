@@ -40,6 +40,7 @@ class Barycenter:
 
     def compute(self, fixed_structure=False) -> None:
         self._check_node()
+
         adj_matrices = []
         nodes_positions = []
         nodes_label = []
@@ -47,10 +48,9 @@ class Barycenter:
             adj_matrices.append(nx.adjacency_matrix(graph).todense())
             nodes = []
             label = []
-            for index in range(len(graph.nodes)):
-                if len(graph.nodes[index]) > 0:
-                    nodes.append(graph.nodes[index]["coord"])
-                    label.append(graph.nodes[index]["label"])
+            for index in list(graph.nodes):
+                nodes.append(graph.nodes[index]["coord"])
+                label.append(graph.nodes[index]["label"])
             nodes_positions.append(np.array(nodes))
             nodes_label.append(np.array(label))
         if fixed_structure:
@@ -64,7 +64,6 @@ class Barycenter:
             )
 
         else:
-
             self.F, self.A, log = ot.gromov.fgw_barycenters(
                 N=self.nb_node,
                 Ys=nodes_positions,
@@ -72,7 +71,6 @@ class Barycenter:
                 alpha=0.05,
                 log=True
             )
-
             self.T = log["T"][-1]
 
     def get_graph(self) -> nx.Graph:
@@ -92,25 +90,12 @@ class Barycenter:
             tmp.add_node(node, coord=self.F[i], label=np.argmax(self.T[i])+1)
         return tmp
 
-    def get_label(self):
-        pass
-
-        # label = []
-        # max_node = max([len(graph.nodes) for graph in self.graphs])
-        # for i in range(max_node):
-        #     label_i = np.array([graph.nodes[i]["label"] for graph in self.graphs])
-        #     if 0 in label_i:
-        #         label.append(0)
-        #     elif -1 in label_i:
-        #         occurrence = np.unique(label_i)
-        #         if len(occurrence) > 3
-
     def _check_node(self):
         max_node = max([len(graph.nodes) for graph in self.graphs])
         for graph in self.graphs:
-            nb_node_to_add = max_node - len(graph.nodes)
-            for i in range(nb_node_to_add):
-                graph.add_node(max(graph.nodes) + i + 1, coord=np.array([0, 0]), label=-1)
+           nb_node_to_add = max_node - len(graph.nodes)
+           for i in range(nb_node_to_add):
+                 graph.add_node(len(graph.nodes) + i, coord=np.array([0, 0]), label=-1)
 
     def get_distance_diff(self):
         dist = {}

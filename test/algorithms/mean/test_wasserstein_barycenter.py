@@ -43,28 +43,30 @@ g4.add_edge(0, 1)
 g4.add_edge(1, 2)
 g4.add_edge(2, 3)
 
-g5 = get_graph_from_pickle(
-    os.path.join(
-        project_path,
-        "resources/graph_for_test/generation/noise_1810/graph_00000.gpickle"
-    )
-)
-g6 = get_graph_from_pickle(
-    os.path.join(
-        project_path,
-        "resources/graph_for_test/generation/noise_1810/graph_00001.gpickle"
-    )
-)
-gref = get_graph_from_pickle(
-    os.path.join(
-        project_path,
-        "resources/graph_for_test/reference.gpickle"
-    )
-)
+# g5 = get_graph_from_pickle(
+#     os.path.join(
+#         project_path,
+#         "resources/graph_for_test/generation/noise_1810/graph_00000.gpickle"
+#     )
+# )
+# g6 = get_graph_from_pickle(
+#     os.path.join(
+#         project_path,
+#         "resources/graph_for_test/generation/noise_1810/graph_00001.gpickle"
+#     )
+# )
+# gref = get_graph_from_pickle(
+#     os.path.join(
+#         project_path,
+#         "resources/graph_for_test/reference.gpickle"
+#     )
+# )
 
-graph_test_path = os.path.join(project_path, "resources/graph_for_test/generation/noise_1810")
+graph_test_path = os.path.join(project_path, "resources/graph_for_test/generation/with_outliers/noise_1_outliers_varied")
 graphs = []
 for g in os.listdir(graph_test_path):
+    print(os.path.join(graph_test_path, g))
+
     graphs.append(get_graph_from_pickle(os.path.join(graph_test_path, g)))
 
 
@@ -102,7 +104,6 @@ class TestWassersteinBarycenter(TestCase):
         #print(nx.adjacency_matrix(g1))
         b._check_node()
         #print(b.get_label())
-
 
     def test_compute_g1_g2_g3(self):
         b = Barycenter(
