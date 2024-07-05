@@ -60,8 +60,8 @@ def _cost(
     """
     c = alpha * _kron_tensor(G, P)
     c += (1 - alpha) / 2 * C
-    c += rho * (np.log(P.sum(axis=0) / w_s) * P.sum(axis=0)).sum()
     c += rho * (np.log(P.sum(axis=1) / w_s) * P.sum(axis=1)).sum()
+    c += rho * (np.log(P.sum(axis=0) / w_s) * P.sum(axis=0)).sum()
     c += epsilon * (np.log(P / np.kron(w_s, w_t)) * P).sum()
     return c
 
@@ -74,7 +74,7 @@ def _scaling(
         rho: float,
         epsilon: float,
         tolerance: float = 1e-4,
-        max_iteration: int = 10
+        max_iteration: int = 2
 ) -> np.ndarray:
     """
     Algorithm 2 in paper
@@ -87,33 +87,54 @@ def _scaling(
     :param max_iteration: int max algorithm iteration
     :return:
     """
-
-    f = np.zeros(shape=w_s.shape)
-    g = np.zeros(shape=w_t.shape)
+    n = 3
+    p = 4
+    f = np.zeros(shape=(30, 1))
+    g = np.zeros(shape=(30, 1))
     i = 0
+
+    # while i < max_iteration:
+    #     f_next = -(rho / rho + epsilon)
+    #     f_next *= np.log(
+    #         np.sum(
+    #             np.exp(
+    #                 g + np.log(w_t) - C / epsilon
+    #             )
+    #         )
+    #     )
+    #
+    #     g_next = -(rho / rho + epsilon)
+    #     g_next *= np.log(
+    #         np.sum(
+    #             np.exp(
+    #                 f + np.log(w_s) - C / epsilon
+    #             )
+    #         )
+    #     )
+    #
+    #     i += 1
+    #
+    # g = g.reshape(1, -1)
+    # P = np.kron(w_s, w_t) * np.exp(f + g - C / epsilon)
+    # return P
+
     while i < max_iteration:
-        f_next = -(rho / rho + epsilon)
-        f_next *= np.log(
-            np.sum(
-                np.exp(
-                    g + np.log(w_t) - C / epsilon
-                )
+        tmp_f = 0
+        for j in range(p):
+            tmp_f += np.exp(
+                g[j] + np.log(w_t.reshape(-1, 1)[j]) - C[:, j]
             )
-        )
 
-        g_next = -(rho / rho + epsilon)
-        g_next *= np.log(
-            np.sum(
-                np.exp(
-                    f + np.log(w_s) - C / epsilon
-                )
+        f = (-rho/rho+epsilon) * tmp_f
+        tmp_g = 0
+        for i in range(n):
+            tmp_g += np.exp(
+                f[i] + np.log(w_s.reshape(-1, 1)[i]) - C[i, :]
             )
-        )
+        g = (-rho/rho+epsilon) * tmp_g
+        i+=1
+    P = np.kron(w_s, w_t.reshape(1, -1)) * np.exp(f.reshape(-1, 1) + g.reshape(1, -1) - C/epsilon)
 
-        i += 1
-
-    g = g.reshape(1, -1)
-    P = np.kron(w_s, w_t) * np.exp(f + g - C / epsilon)
     return P
 
 
@@ -168,7 +189,6 @@ def LB_FUGW(
             rho=rho * np.sum(P),
             epsilon=epsilon * np.sum(P)
         )
-
         Q = np.sqrt(np.sum(P) / np.sum(Q)) * Q
 
         c_q = _cost(

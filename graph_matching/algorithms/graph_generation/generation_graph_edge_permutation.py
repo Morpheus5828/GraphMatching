@@ -86,16 +86,18 @@ class EdgePermutation:
         for i in tqdm(range(self.nb_ref_graph)):
             reference_graph = generate_reference_graph.run(self.nb_vertices, self.radius)
             all_geo = edge_len(reference_graph)
-            if i == 0:
-                min_geo = min(all_geo)
-            else:
-                if min(all_geo) > min_geo:
-                    min_geo = min(all_geo)
-                    reference_graph_max = reference_graph
-                else:
-                    pass
+            # if i == 0:
+            #     min_geo = min(all_geo)
+            # else:
+            #     if min(all_geo) > min_geo:
+            #         min_geo = min(all_geo)
+            #         reference_graph_max = reference_graph
+            #     else:
+            #         pass
+
+            reference_graph_max = reference_graph
         if self.save_reference:
-            print("Selected reference graph with min_geo: ", min_geo)
+            #print("Selected reference graph with min_geo: ", min_geo)
             trial_path = os.path.join(self.path_to_write, self.pickle_folder_title)
             html_path = os.path.join(self.path_to_write, self.html_folder_title)
             if not os.path.isdir(trial_path):

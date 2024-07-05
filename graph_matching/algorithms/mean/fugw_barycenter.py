@@ -15,7 +15,7 @@ import graph_matching.algorithms.pairwise.fugw as fugw
 
 def compute(
         graphs: list,
-        max_iteration: int = 10,
+        max_iteration: int = 1,
         convergence: float = 1e-2
 ) -> tuple:
     """
@@ -26,7 +26,7 @@ def compute(
     :return: F_b and D_b barycenter
     """
     F_b = _get_init_graph(graphs=graphs)
-    D_b = np.random.randint(0, 2, size=(30, 30))
+    D_b = np.ones(shape=(30, 30))
 
     i = 0
     last_D_b = None
@@ -34,7 +34,7 @@ def compute(
 
     while i < max_iteration:
         with concurrent.futures.ThreadPoolExecutor() as executor:
-            futures = [executor.submit(fugw_pairwise, g, F_b, D_b) for g in graphs]
+            futures = [executor.submit(_fugw_pairwise, g, F_b, D_b) for g in graphs]
             P_list = [future.result() for future in concurrent.futures.as_completed(futures)]
 
         tmp_f_b = np.zeros(shape=(30, 3))
@@ -42,9 +42,12 @@ def compute(
 
         for p in P_list:
             tmp_f_b += np.diag(1 / np.sum(p, axis=0)) @ p.T @ F_b
+
             tmp_d_b += (p.T @ D_b @ p) / (np.sum(p, axis=0) @ np.sum(p, axis=0).T)
-        F_b = (tmp_f_b / len(graphs))
-        D_b = (tmp_d_b / len(graphs))
+        F_b = (1 / len(graphs)) * tmp_f_b
+        D_b = (1 / len(graphs)) * tmp_d_b
+
+
 
         if i != 0:
             if np.linalg.norm(last_D_b - D_b) < convergence and np.linalg.norm(last_F_b - F_b) < convergence:
@@ -53,11 +56,10 @@ def compute(
         last_F_b = F_b
         last_D_b = D_b
         i += 1
-        print(i)
     return F_b, D_b
 
 
-def fugw_pairwise(
+def _fugw_pairwise(
         g: nx.Graph,
         F_b: np.ndarray,
         D_b: np.ndarray
@@ -68,7 +70,7 @@ def fugw_pairwise(
         if len(g.nodes[index]) > 0:
             g_nodes.append(g.nodes[index]["coord"])
     g_nodes = np.array(g_nodes)
-    g_nodes = g_nodes.reshape(g_nodes.shape[1], g_nodes.shape[0]) / 100
+    g_nodes = g_nodes.reshape(g_nodes.shape[1], g_nodes.shape[0])
 
     cost = F_b @ g_nodes
 
@@ -76,7 +78,7 @@ def fugw_pairwise(
     w_s = np.ones(shape=(30, 1))
     w_t = np.ones(shape=(1, 30))
 
-    P, _ = fugw.LB_FUGW(
+    P, Q = fugw.LB_FUGW(
         cost=cost,
         distance=distance,
         w_s=w_s,
@@ -86,7 +88,6 @@ def fugw_pairwise(
         epsilon=500,
         tolerance=1e-1
     )
-
     return P
 
 

@@ -35,8 +35,10 @@ for folder in reversed(os.listdir(path_folder)):
 
 plt.plot(np.arange(60), dist)
 plt.xlabel("Noise")
+#plt.text(10, 100, "Max outliers: 10")
 plt.ylabel("Distance")
-plt.title("Distance between \n Barycenter and graph generation with outliers")
-plt.savefig("C:/Users/thorr/OneDrive/Bureau/Stage/Distance_between_Barycenter_and_graph_generation_without_outliers")
+plt.title("Distance between \n Barycenter and graph generation without outliers")
+#plt.show()
+plt.savefig("C:/Users/thorr/OneDrive/Bureau/Stage/Distance_between_Barycenter_and_graph_generation_without_outliers_fibo")
 
 

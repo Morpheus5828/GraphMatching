@@ -41,7 +41,8 @@ python graph_matching/demos/demo_graph_analyse.py
 ```
 
 ## Authors
-- Guillaume Auzias (INT)
-- François-Xavier Dupé (LIS)
-- Marius Thorre (INT, LIS)
-- Rohit Yadav (INT, LIS)
+- Guillaume AUZIAS (INT)
+- François-Xavier DUPE (LIS)
+- Marius THORRE (INT, LIS)
+- Rohit YADAV (INT, LIS)
+- Sylvain TAKERKART (INT)

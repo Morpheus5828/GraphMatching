@@ -6,7 +6,6 @@ import os
 import sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 from graph_matching.algorithms.graph_generation.generation_graph_edge_permutation import EdgePermutation
-from graph_matching.utils.display_graph_tools import Visualisation
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 project_path = os.path.abspath(os.path.join(current_dir, '../../..'))

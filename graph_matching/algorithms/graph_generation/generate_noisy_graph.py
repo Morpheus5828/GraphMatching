@@ -37,10 +37,10 @@ def run(
 
     random_keys = []
 
-    # outliers = generate_sphere_random_sampling.run(vertex_number=nb_outliers, radius=radius)
-    # for outlier in outliers:
-    #     random_key = random.choice(list(sample_nodes.items()))[0]
-    #     sample_nodes[random_key] = {"coord": outlier, 'is_outlier': True, "label": 0}
+    outliers = generate_sphere_random_sampling.run(vertex_number=nb_outliers, radius=radius)
+    for outlier in outliers:
+        random_key = random.choice(list(sample_nodes.items()))[0]
+        sample_nodes[random_key] = {"coord": outlier, 'is_outlier': True, "label": 0}
 
     sample_nodes = dict(sorted(sample_nodes.items(), key=lambda item: (item[1]['label'] >= 0, item[1]['label'])))
 
