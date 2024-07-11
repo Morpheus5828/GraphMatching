@@ -15,8 +15,8 @@ import graph_matching.algorithms.pairwise.fugw as fugw
 
 def compute(
         graphs: list,
-        max_iteration: int = 1,
-        convergence: float = 1e-2
+        max_iteration: int = 100,
+        convergence: float = 1e-3
 ) -> tuple:
     """
     Compute FUGW Barycenter
@@ -26,8 +26,7 @@ def compute(
     :return: F_b and D_b barycenter
     """
     F_b = _get_init_graph(graphs=graphs)
-    D_b = np.ones(shape=(30, 30))
-
+    D_b = np.ones(shape=(30, 30)) / len(graphs)
     i = 0
     last_D_b = None
     last_F_b = None
@@ -41,13 +40,11 @@ def compute(
         tmp_d_b = np.zeros(shape=(30, 30))
 
         for p in P_list:
-            tmp_f_b += np.diag(1 / np.sum(p, axis=0)) @ p.T @ F_b
+            tmp_f_b += np.diag(1 / np.sum(p, axis=0)) * p.T @ F_b
+            tmp_d_b += (p.T @ D_b @ p) / ((np.sum(p, axis=0) @ np.sum(p, axis=0).T))
 
-            tmp_d_b += (p.T @ D_b @ p) / (np.sum(p, axis=0) @ np.sum(p, axis=0).T)
         F_b = (1 / len(graphs)) * tmp_f_b
         D_b = (1 / len(graphs)) * tmp_d_b
-
-
 
         if i != 0:
             if np.linalg.norm(last_D_b - D_b) < convergence and np.linalg.norm(last_F_b - F_b) < convergence:
@@ -55,7 +52,9 @@ def compute(
 
         last_F_b = F_b
         last_D_b = D_b
+
         i += 1
+
     return F_b, D_b
 
 
@@ -75,20 +74,19 @@ def _fugw_pairwise(
     cost = F_b @ g_nodes
 
     distance = fugw._geometry_cost(g_adj, D_b)
-    w_s = np.ones(shape=(30, 1))
-    w_t = np.ones(shape=(1, 30))
+    w_s = np.ones(shape=(30, 1)) / 30
+    w_t = np.ones(shape=(1, 30)) / 30
 
     P, Q = fugw.LB_FUGW(
         cost=cost,
         distance=distance,
         w_s=w_s,
         w_t=w_t,
-        rho=1,
-        alpha=0.5,
-        epsilon=500,
-        tolerance=1e-1
+        rho=1e-2,
+        alpha=1,
+        epsilon=1e-2,
     )
-    return P
+    return Q
 
 
 def _get_init_graph(

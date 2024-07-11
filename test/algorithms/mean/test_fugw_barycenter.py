@@ -40,9 +40,9 @@ G2_coord = np.array([
     [10, 0]
 ])
 mu_G1 = np.array([1, 1, 1])
-mu_G1 = mu_G1.reshape((-1, 1))
+mu_G1 = mu_G1.reshape((-1, 1)) / 0.5
 mu_G2 = np.array([1, 1, 1, 1])
-mu_G2 = mu_G2.reshape((1, -1))
+mu_G2 = mu_G2.reshape((1, -1)) / 0.5
 
 G0 = get_graph_from_pickle(
     os.path.join(
@@ -51,7 +51,7 @@ G0 = get_graph_from_pickle(
         "graph_for_test",
         "generation",
         "without_outliers",
-        "noise_1_outliers_varied",
+        "noise_01",
         "graph_00000.gpickle"
     )
 )
@@ -63,7 +63,7 @@ G10 = get_graph_from_pickle(
         "graph_for_test",
         "generation",
         "without_outliers",
-        "noise_1_outliers_varied",
+        "noise_01",
         "graph_00010.gpickle"
     )
 )
@@ -75,14 +75,14 @@ G19 = get_graph_from_pickle(
         "graph_for_test",
         "generation",
         "without_outliers",
-        "noise_1_outliers_varied",
+        "noise_01",
         "graph_00019.gpickle"
     )
 )
 
 graph_test_path = os.path.join(
     project_root,
-    "resources/graph_for_test/generation/without_outliers/noise_181_outliers_varied"
+    "resources/graph_for_test/generation/without_outliers/noise_60"
 )
 graphs = []
 for g in os.listdir(graph_test_path):
@@ -91,20 +91,17 @@ for g in os.listdir(graph_test_path):
 
 class TestFUGW_barycenter(TestCase):
     def test_compute(self):
-        F_b, D_b = fugw_barycenter.compute(graphs=[G0])
-        print(D_b)
-
-        # tmp = nx.Graph()
-        # for node, i in enumerate(F_b):
-        #     tmp.add_node(node, coord=i, label=0)
-            #print(node, i)
-        #print(D_b)
-        # v = Visualisation(
-        #     graph=tmp,
-        #     sphere_radius=100,
-        #     title="181 without outliers"
-        # )
-        # v.plot_graphs(folder_path=graph_test_path)
+        F_b, D_b = fugw_barycenter.compute(graphs=graphs)
+        tmp = nx.Graph()
+        for node, i in enumerate(F_b):
+            tmp.add_node(node, coord=i*1e7, label=0)
+            print(node, i)
+        v = Visualisation(
+            graph=tmp,
+            sphere_radius=100,
+            title="181 without outliers"
+        )
+        v.plot_graphs(folder_path=graph_test_path)
 
     def test_get_init_graph(self):
         result = fugw_barycenter._get_init_graph(graphs)

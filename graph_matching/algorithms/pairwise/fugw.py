@@ -30,9 +30,7 @@ def _kron_tensor(G: np.ndarray, P: np.ndarray) -> np.ndarray:
     result = []
     for k in range(K):
         for l in range(L):
-            result.append(
-                np.sum(G, axis=(2, 3))[k, l] * np.sum(P)
-            )
+            result.append(np.sum(G[:, :, k, l] * P[:, :]))
     return np.array(result).reshape(K, L)
 
 
@@ -59,22 +57,21 @@ def _cost(
     :return: a cost matrix
     """
     c = alpha * _kron_tensor(G, P)
-    c += (1 - alpha) / 2 * C
+    c += ((1 - alpha) / 2) * C
     c += rho * (np.log(P.sum(axis=1) / w_s) * P.sum(axis=1)).sum()
-    c += rho * (np.log(P.sum(axis=0) / w_s) * P.sum(axis=0)).sum()
+    c += rho * (np.log(P.sum(axis=0) / w_t) * P.sum(axis=0)).sum()
     c += epsilon * (np.log(P / np.kron(w_s, w_t)) * P).sum()
     return c
 
 
-# TODO add convergence parameter
 def _scaling(
         C: np.ndarray,
         w_s: np.ndarray,
         w_t: np.ndarray,
         rho: float,
         epsilon: float,
-        tolerance: float = 1e-4,
-        max_iteration: int = 2
+        tolerance: float = 1e-3,
+        max_iteration: int = 100
 ) -> np.ndarray:
     """
     Algorithm 2 in paper
@@ -87,53 +84,43 @@ def _scaling(
     :param max_iteration: int max algorithm iteration
     :return:
     """
-    n = 3
-    p = 4
-    f = np.zeros(shape=(30, 1))
-    g = np.zeros(shape=(30, 1))
-    i = 0
 
-    # while i < max_iteration:
-    #     f_next = -(rho / rho + epsilon)
-    #     f_next *= np.log(
-    #         np.sum(
-    #             np.exp(
-    #                 g + np.log(w_t) - C / epsilon
-    #             )
-    #         )
-    #     )
-    #
-    #     g_next = -(rho / rho + epsilon)
-    #     g_next *= np.log(
-    #         np.sum(
-    #             np.exp(
-    #                 f + np.log(w_s) - C / epsilon
-    #             )
-    #         )
-    #     )
-    #
-    #     i += 1
-    #
-    # g = g.reshape(1, -1)
-    # P = np.kron(w_s, w_t) * np.exp(f + g - C / epsilon)
-    # return P
+    n = w_s.shape[0]
+    p = w_t.shape[1]
 
-    while i < max_iteration:
+    f = np.zeros(n)
+    g = np.zeros(p)
+    index = 0
+    last_f = None
+    last_g = None
+
+    while index < max_iteration:
         tmp_f = 0
         for j in range(p):
             tmp_f += np.exp(
-                g[j] + np.log(w_t.reshape(-1, 1)[j]) - C[:, j]
+                g[j] + np.log(w_t.reshape(-1, 1)[j]) - C[:, j] / epsilon
             )
 
-        f = (-rho/rho+epsilon) * tmp_f
+        f = -(rho/rho+epsilon) * np.log(tmp_f)
         tmp_g = 0
+
         for i in range(n):
             tmp_g += np.exp(
-                f[i] + np.log(w_s.reshape(-1, 1)[i]) - C[i, :]
+                f[i] + np.log(w_s[i]) - C[i, :] / epsilon
             )
-        g = (-rho/rho+epsilon) * tmp_g
-        i+=1
-    P = np.kron(w_s, w_t.reshape(1, -1)) * np.exp(f.reshape(-1, 1) + g.reshape(1, -1) - C/epsilon)
+        g = -(rho/rho+epsilon) * np.log(tmp_g)
+        if index != 0:
+            if np.linalg.norm(last_f - f) < tolerance and np.linalg.norm(last_g - g) < tolerance:
+
+
+                P = (np.kron(w_s, w_t.reshape(1, -1)) * np.exp(np.add.outer(f, g) - C/epsilon))
+                return P
+        index += 1
+
+        last_f = f
+        last_g = g
+
+    P = (np.kron(w_s, w_t.reshape(1, -1)) * np.exp(np.add.outer(f, g) - C/epsilon))
 
     return P
 
@@ -146,8 +133,8 @@ def LB_FUGW(
         rho: float,
         alpha: float,
         epsilon: float,
-        max_iteration: int = 10,
-        tolerance: float = 1e-2,
+        max_iteration: int = 100,
+        tolerance: float = 1e-3,
         return_i: bool = False
 ) -> tuple:
     """
@@ -189,6 +176,7 @@ def LB_FUGW(
             rho=rho * np.sum(P),
             epsilon=epsilon * np.sum(P)
         )
+
         Q = np.sqrt(np.sum(P) / np.sum(Q)) * Q
 
         c_q = _cost(
@@ -202,7 +190,7 @@ def LB_FUGW(
             epsilon=epsilon
         )
 
-        Q = _scaling(
+        P = _scaling(
             C=c_q,
             w_s=w_s,
             w_t=w_t,
@@ -211,6 +199,7 @@ def LB_FUGW(
         )
 
         P = np.sqrt(np.sum(Q) / np.sum(P)) * P
+
         if i != 0:
             if np.linalg.norm(P - last_P) < tolerance and np.linalg.norm(Q - last_Q) < tolerance:
                 return (P, Q, i) if return_i else (P, Q)
