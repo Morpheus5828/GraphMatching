@@ -40,7 +40,7 @@ def compute(
         tmp_d_b = np.zeros(shape=(30, 30))
 
         for p in P_list:
-            tmp_f_b += np.diag(1 / np.sum(p, axis=0)) * p.T @ F_b
+            tmp_f_b += np.diag(np.squeeze(1 / np.sum(p, axis=0))) @ p.T @ F_b
             tmp_d_b += (p.T @ D_b @ p) / ((np.sum(p, axis=0) @ np.sum(p, axis=0).T))
 
         F_b = (1 / len(graphs)) * tmp_f_b
@@ -82,11 +82,11 @@ def _fugw_pairwise(
         distance=distance,
         w_s=w_s,
         w_t=w_t,
-        rho=1e-2,
+        rho=1e-1,
         alpha=1,
-        epsilon=1e-2,
+        epsilon=1e-1,
     )
-    return Q
+    return P
 
 
 def _get_init_graph(

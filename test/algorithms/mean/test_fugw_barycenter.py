@@ -92,9 +92,11 @@ for g in os.listdir(graph_test_path):
 class TestFUGW_barycenter(TestCase):
     def test_compute(self):
         F_b, D_b = fugw_barycenter.compute(graphs=graphs)
+        print(F_b)
+
         tmp = nx.Graph()
         for node, i in enumerate(F_b):
-            tmp.add_node(node, coord=i*1e7, label=0)
+            tmp.add_node(node, coord=i*10e7, label=0)
             print(node, i)
         v = Visualisation(
             graph=tmp,
