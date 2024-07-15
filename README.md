@@ -2,7 +2,7 @@
 
 This toolbox contains scripts to generate Graph from real human cortex graph generated. <br>
 Code has been rehabilited and tested by Marius Thorre using Rohit Yadav code. <br>
-Demos is available in graph_matching/demos folder.
+Demos are available in graph_matching/demos folder.
 Test and enjoy :-) <br>
 If any questions, please contact me at marius.thorre13@gmail.com
 

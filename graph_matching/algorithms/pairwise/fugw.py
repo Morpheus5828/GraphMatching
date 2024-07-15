@@ -70,8 +70,8 @@ def _scaling(
         w_t: np.ndarray,
         rho: float,
         epsilon: float,
-        tolerance: float = 1e-3,
-        max_iteration: int = 100
+        tolerance: float = 1e-1,
+        max_iteration: int = 10
 ) -> np.ndarray:
     """
     Algorithm 2 in paper
@@ -98,7 +98,7 @@ def _scaling(
         tmp_f = 0
         for j in range(p):
             tmp_f += np.exp(
-                g[j] + np.log(w_t.reshape(-1, 1)[j]) - C[:, j] / epsilon
+                g[j] + np.log(w_t.reshape(-1, 1)[j]) - (C[:, j] / epsilon)
             )
 
         f = -(rho/rho+epsilon) * np.log(tmp_f)
@@ -106,13 +106,11 @@ def _scaling(
 
         for i in range(n):
             tmp_g += np.exp(
-                f[i] + np.log(w_s[i]) - C[i, :] / epsilon
+                f[i] + np.log(w_s[i]) - (C[i, :] / epsilon)
             )
         g = -(rho/rho+epsilon) * np.log(tmp_g)
         if index != 0:
             if np.linalg.norm(last_f - f) < tolerance and np.linalg.norm(last_g - g) < tolerance:
-
-
                 P = (np.kron(w_s, w_t.reshape(1, -1)) * np.exp(np.add.outer(f, g) - C/epsilon))
                 return P
         index += 1
@@ -120,8 +118,7 @@ def _scaling(
         last_f = f
         last_g = g
 
-    P = (np.kron(w_s, w_t.reshape(1, -1)) * np.exp(np.add.outer(f, g) - C/epsilon))
-
+    P = (np.kron(w_s, w_t.reshape(1, -1)) * np.exp(np.add.outer(f, g) - C / epsilon))
     return P
 
 
@@ -133,8 +130,8 @@ def LB_FUGW(
         rho: float,
         alpha: float,
         epsilon: float,
-        max_iteration: int = 100,
-        tolerance: float = 1e-3,
+        max_iteration: int = 10,
+        tolerance: float = 1e-1,
         return_i: bool = False
 ) -> tuple:
     """

@@ -97,7 +97,6 @@ mu_G8 = mu_G8.reshape((-1, 1))
 distance_G7_G8 = fgw._M(G5_coord, G6_coord)
 
 
-
 class Testfgw(TestCase):
     def test_get_M(self):
         M_G1_G2 = np.array([
