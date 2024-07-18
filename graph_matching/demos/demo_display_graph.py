@@ -13,7 +13,7 @@ if project_root not in sys.path:
 
 file_cortex_mesh = os.path.join(project_root, "resources", "template_mesh", "lh.OASIS_testGrp_average_inflated.gii")
 file_sphere_mesh = os.path.join(project_root, "resources", "template_mesh", "ico100_7.gii")
-folder_path = os.path.join(project_root, "resources", "graph_for_test", "generation", "noise_181_outliers_varied")
+folder_path = os.path.join(project_root, "resources", "graph_for_test", "generation", "without_outliers", "noise_01")
 
 v = Visualisation(title="noise_181", sphere_radius=100)
 

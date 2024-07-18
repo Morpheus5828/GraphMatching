@@ -24,8 +24,8 @@ folder_path = os.path.join(
     "resources",
     "graph_for_test",
     "generation",
-    "with_outliers",
-    "noise_40"
+    "without_outliers",
+    "noise_01"
 )
 
 graphs = []
@@ -49,8 +49,8 @@ v = Visualisation(
 )
 
 
+v.plot_graphs(folder_path=folder_path)
 v.show_fig()
 
 
-#v.plot_graphs(folder_path=folder_path)
 
