@@ -4,6 +4,7 @@
 """
 
 import os, sys
+
 script_dir = os.path.dirname(os.path.abspath(__file__))
 project_root = os.path.abspath(os.path.join(script_dir, "../../../"))
 if project_root not in sys.path:
@@ -12,10 +13,10 @@ if project_root not in sys.path:
 from unittest import TestCase
 import numpy as np
 import networkx as nx
-from graph_matching.utils.graph_processing import get_graph_from_pickle
-from graph_matching.utils.graph_processing import get_graph_coord
+from graph_matching.utils.graph_processing import get_graph_from_pickle, _compute_distance
+from graph_matching.algorithms.pairwise.pairwise_tools import _get_gradient, _get_constant
 import graph_matching.algorithms.pairwise.fugw as fugw
-import graph_matching.algorithms.pairwise.fgw as fgw
+
 
 C1 = np.array([
     [0, 1, 0],
@@ -43,7 +44,7 @@ mu_G1 = np.array([1, 1, 1]) / 3
 mu_G1 = mu_G1.reshape((-1, 1))
 mu_G2 = np.array([1, 1, 1, 1]) / 4
 mu_G2 = mu_G2.reshape((1, -1))
-distance_G1_G2 = fgw._M(G1_coord, G2_coord)
+distance_G1_G2 = _compute_distance(G1_coord, G2_coord)
 
 G0 = get_graph_from_pickle(
     os.path.join(
@@ -52,7 +53,7 @@ G0 = get_graph_from_pickle(
         "graph_for_test",
         "generation",
         "without_outliers",
-        "noise_01",
+        "noise_60",
         "graph_00000.gpickle"
     )
 )
@@ -64,7 +65,7 @@ G10 = get_graph_from_pickle(
         "graph_for_test",
         "generation",
         "without_outliers",
-        "noise_01",
+        "noise_60",
         "graph_00010.gpickle"
     )
 )
@@ -87,9 +88,9 @@ class TestFugw(TestCase):
     def test_cost(self):
         P = np.kron(mu_G1, mu_G2) / np.sqrt(np.sum(mu_G1) * np.sum(mu_G2))
         cost = np.array([
-                [0, 1, 1, 1],
-                [0, 0, 1, 0],
-                [0, 0, 1, 0]
+            [0, 1, 1, 1],
+            [0, 0, 1, 0],
+            [0, 0, 1, 0]
         ])
         result = fugw._cost(
             P=P,
@@ -106,19 +107,19 @@ class TestFugw(TestCase):
             [-3.16308707, -2.71308707, -2.71308707, -2.71308707],
             [-3.16308707, -3.16308707, -2.71308707, -3.16308707],
             [-3.16308707, -3.16308707, -2.71308707, -3.16308707]]
-         )
+        )
         print(result)
         self.assertTrue(np.allclose(result, truth))
 
     def test_scaling(self):
         P = np.kron(mu_G1, mu_G2) / np.sqrt(np.sum(mu_G1) * np.sum(mu_G2))
-        c_C1_C2 = fgw._get_constant(
+        c_C1_C2 = _get_constant(
             C1=C1,
             C2=C2,
             distance=distance_G1_G2,
             transport=mu_G1 @ mu_G2
         )
-        cost = fgw._get_gradient(
+        cost = _get_gradient(
             c_C1_C2=c_C1_C2,
             C1=C1, C2=C2,
             distance=distance_G1_G2,
@@ -156,22 +157,22 @@ class TestFugw(TestCase):
         # self.assertTrue(np.allclose(result, truth))
 
     def test_LB_FUGW(self):
-        c_C1_C2 = fgw._get_constant(
+        c_C1_C2 = _get_constant(
             C1=C1,
             C2=C2,
             distance=distance_G1_G2,
             transport=mu_G1 @ mu_G2
         )
-        cost = fgw._get_gradient(
+        cost = _get_gradient(
             c_C1_C2=c_C1_C2,
             C1=C1, C2=C2,
             distance=distance_G1_G2,
             transport=mu_G1 @ mu_G2
         )
 
-        rho = 1e-5
+        rho = 50
         alpha = 0.9
-        epsilon = 1e-2
+        epsilon = 1
 
         P, Q, i = fugw.LB_FUGW(
             cost=cost,
@@ -185,48 +186,6 @@ class TestFugw(TestCase):
         )
 
         print(P)
-
-        # for rho in rho_values:
-        #     for alpha in alpha_values:
-        #         for epsilon in epsilon_values:
-        #             try:
-        #                 P, Q, i = fugw.LB_FUGW(
-        #                     cost=cost,
-        #                     distance=fugw._geometry_cost(C1, C2),
-        #                     w_s=mu_G1,
-        #                     w_t=mu_G2,
-        #                     rho=rho,
-        #                     alpha=alpha,
-        #                     epsilon=epsilon,
-        #                     return_i=True
-        #                 )
-        #
-        #                 if not np.isnan(P).any() and not np.isnan(Q).any():
-        #                     print(f"Valid parameters found: rho={rho}, alpha={alpha}, epsilon={epsilon}")
-        #                     print("P:", P)
-        #                     print("Q:", Q)
-        #                     print("Iterations:", i)
-        #                     return
-        #             except Exception as e:
-        #                 print(f"Exception for parameters rho={rho}, alpha={alpha}, epsilon={epsilon}: {e}")
-
-
-
-
-        # truth_p = np.array([
-        #     [0.95276443, 0.95276443, 0.95276443, 0.95276443],
-        #     [0.95276443, 0.95276443, 0.95276443, 0.95276443],
-        #     [0.95276443, 0.95276443, 0.95276443, 0.95276443]
-        # ])
-        # self.assertTrue(np.allclose(truth_p, P))
-        # truth_q = np.array([
-        #     [0.9544022,  0.95652338, 0.95459484, 0.95652338],
-        #     [0.95247794, 0.95633035, 0.95247794, 0.95633035],
-        #     [0.95652338, 0.95652338, 0.95652338, 0.95652338]
-        # ])
-        # self.assertTrue(np.allclose(truth_q, Q))
-        #
-        # self.assertEquals(i, 8)
 
     def test_LB_FUGW_graph(self):
         g_src_nodes = []
@@ -244,6 +203,9 @@ class TestFugw(TestCase):
         g_target_nodes = np.array(g_target_nodes)
         g_target_nodes = g_target_nodes.reshape(g_target_nodes.shape[1], g_target_nodes.shape[0])
 
+        g_src_nodes /= 100
+        g_target_nodes /= 100
+
         distance = []
         for i in g_src_nodes:
             for j in g_target_nodes.T:
@@ -258,14 +220,13 @@ class TestFugw(TestCase):
         w_s = np.ones(shape=(30, 1)) / 30
         w_t = np.ones(shape=(1, 30)) / 30
 
-
-        c_src_dest = fgw._get_constant(
+        c_src_dest = _get_constant(
             C1=g_src_adj,
             C2=g_target_adj,
             distance=distance,
             transport=w_s @ w_t
         )
-        cost = fgw._get_gradient(
+        cost = _get_gradient(
             c_C1_C2=c_src_dest,
             C1=g_src_adj,
             C2=g_target_adj,
@@ -273,13 +234,11 @@ class TestFugw(TestCase):
             transport=w_s @ w_t
         )
 
-        cost /= 100
-
         distance = fugw._geometry_cost(g_src_adj, g_target_adj)
 
-        # rho = 1e-4
-        # alpha = 0.9
-        # epsilon = 1e-2
+        # rho = 0.1
+        # alpha = 0.25
+        # epsilon = 1e-05
         #
         # P, Q = fugw.LB_FUGW(
         #     cost=cost,
@@ -290,10 +249,12 @@ class TestFugw(TestCase):
         #     alpha=alpha,
         #     epsilon=epsilon
         # )
+        #
+        # print(P)
 
-        rho_values = [1e-5, 1e-4, 1e-3, 1e-2, 1e-1, 1, 1e1, 1e2, 1e3, 1e4, 1e6]
-        alpha_values = [0.1, 0.3, 0.5, 0.7, 0.9]
-        epsilon_values = [1e-2, 1e-1, 1, 1e1, 1e2, 1e3, 1e4]
+        rho_values = [0.1, 1, 10, 100]
+        alpha_values = [0.25, 0.5, 0.75]
+        epsilon_values = [1e-02, 1e-03, 1e-04, 1e-05]
 
         for rho in rho_values:
             for alpha in alpha_values:
@@ -311,13 +272,6 @@ class TestFugw(TestCase):
 
                         if not np.isnan(P).any() and not np.isnan(Q).any():
                             print(f"Valid parameters found: rho={rho}, alpha={alpha}, epsilon={epsilon}")
-                            print("P:", P)
-                            print("Q:", Q)
 
-                            return
                     except Exception as e:
                         print(f"Exception for parameters rho={rho}, alpha={alpha}, epsilon={epsilon}: {e}")
-
-
-
-

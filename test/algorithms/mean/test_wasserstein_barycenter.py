@@ -62,7 +62,31 @@ g4.add_edge(2, 3)
 #     )
 # )
 
-graph_test_path = os.path.join(project_path, "resources/graph_for_test/generation/with_outliers/noise_1_outliers_varied")
+G0 = get_graph_from_pickle(
+    os.path.join(
+        project_path,
+        "resources",
+        "graph_for_test",
+        "generation",
+        "without_outliers",
+        "noise_01",
+        "graph_00000.gpickle"
+    )
+)
+
+G10 = get_graph_from_pickle(
+    os.path.join(
+        project_path,
+        "resources",
+        "graph_for_test",
+        "generation",
+        "without_outliers",
+        "noise_01",
+        "graph_00010.gpickle"
+    )
+)
+
+graph_test_path = os.path.join(project_path, "resources/graph_for_test/generation/without_outliers/noise_60")
 graphs = []
 for g in os.listdir(graph_test_path):
     print(os.path.join(graph_test_path, g))
@@ -153,18 +177,20 @@ class TestWassersteinBarycenter(TestCase):
 
     def test_compute_graph_test(self):
         b = Barycenter(
-            graphs=graphs,
+            graphs=[G0, G10],
             nb_node=30
         )
 
         b.compute()
-
-        v = Visualisation(title="barycenter", graph=b.get_graph(), sphere_radius=100)
-        v.construct_sphere()
-
-        v.plot_graphs(folder_path=os.path.join(graph_test_path, "generation"), radius=100)
+        for node in range(len(G0.nodes)):
+            print(G0.nodes[node]["coord"])
+        # v = Visualisation(title="barycenter", graph=b.get_graph(), sphere_radius=100)
+        # v.construct_sphere()
+        #
+        # v.plot_graphs(folder_path=os.path.join(graph_test_path, "generation"), radius=100)
 
     def test_compare_graph_reference(self):
+        pass
         # b = Barycenter(
         #     graphs=graphs,
         #     nb_node=30
@@ -178,10 +204,10 @@ class TestWassersteinBarycenter(TestCase):
         # v.add_graph_to_plot(second_graph=gref, radius=90)
         # v.save_as_html(graph_test_path)
 
-        v = Visualisation(title="data_ref", graph=gref, sphere_radius=90)
-        v.construct_sphere()
-        v.plot_graphs(folder_path=os.path.join(graph_test_path, "generation"), radius=90)
-        v.save_as_html(graph_test_path)
+        # v = Visualisation(title="data_ref", graph=gref, sphere_radius=90)
+        # v.construct_sphere()
+        # v.plot_graphs(folder_path=os.path.join(graph_test_path, "generation"), radius=90)
+        # v.save_as_html(graph_test_path)
 
     def test_get_distance_between_all_graph(self):
         b = Barycenter(

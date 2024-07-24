@@ -3,7 +3,7 @@ Implementation of Thual, A., Tran, Q. H., Zemskova, T., Courty, N., Flamary, R. 
 Aligning individual brains with fused unbalanced Gromov Wasserstein
 Advances in neural information processing systems, 35, 21792-21804
 
-.. moduleauthor:: Marius Thorre
+.moduleauthor:: Marius Thorre
 """
 
 import numpy as np
@@ -101,24 +101,24 @@ def _scaling(
                 g[j] + np.log(w_t.reshape(-1, 1)[j]) - (C[:, j] / epsilon)
             )
 
-        f = -(rho/rho+epsilon) * np.log(tmp_f)
+        f = -(rho/(rho+epsilon)) * np.log(tmp_f)
         tmp_g = 0
 
         for i in range(n):
             tmp_g += np.exp(
                 f[i] + np.log(w_s[i]) - (C[i, :] / epsilon)
             )
-        g = -(rho/rho+epsilon) * np.log(tmp_g)
+        g = -(rho/(rho+epsilon)) * np.log(tmp_g)
         if index != 0:
             if np.linalg.norm(last_f - f) < tolerance and np.linalg.norm(last_g - g) < tolerance:
-                P = (np.kron(w_s, w_t.reshape(1, -1)) * np.exp(np.add.outer(f, g) - C/epsilon))
+                P = (np.kron(w_s, w_t.reshape(1, -1)) * np.exp((np.add.outer(f, g) - C / epsilon)))
                 return P
         index += 1
 
         last_f = f
         last_g = g
 
-    P = (np.kron(w_s, w_t.reshape(1, -1)) * np.exp(np.add.outer(f, g) - C / epsilon))
+    P = (np.kron(w_s, w_t.reshape(1, -1)) * np.exp((np.add.outer(f, g) - C / epsilon)))
     return P
 
 
@@ -130,7 +130,7 @@ def LB_FUGW(
         rho: float,
         alpha: float,
         epsilon: float,
-        max_iteration: int = 10,
+        max_iteration: int = 50,
         tolerance: float = 1e-1,
         return_i: bool = False
 ) -> tuple:
@@ -199,10 +199,11 @@ def LB_FUGW(
 
         if i != 0:
             if np.linalg.norm(P - last_P) < tolerance and np.linalg.norm(Q - last_Q) < tolerance:
+                print(i)
                 return (P, Q, i) if return_i else (P, Q)
 
         last_P = P
         last_Q = Q
         i += 1
-
+    print(i)
     return (P, Q, i) if return_i else (P, Q)

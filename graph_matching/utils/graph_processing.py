@@ -2,6 +2,20 @@ import os
 import numpy as np
 import networkx as nx
 import pickle
+import math
+
+
+def _compute_distance(adj_s, adj_t):
+    """Compute euclidian distance between A and B adjacency matrix.
+    :param np.ndarray A: adjacency matrix from source_graph
+    :param np.ndarray B: adjacency matrix from target_graph
+    :return: distance matrix
+    """
+    dist = np.zeros((adj_s.shape[0], adj_t.shape[0]))
+    for a, i in zip(adj_s, range(len(adj_s))):
+        for b, j in zip(adj_t, range(len(adj_t))):
+            dist[i, j] = math.sqrt((b[0] - a[0]) ** 2 + (b[1] - a[1]) ** 2)
+    return dist
 
 
 def get_distance_between_graphs(first_graph: nx.Graph, graphs: list):
