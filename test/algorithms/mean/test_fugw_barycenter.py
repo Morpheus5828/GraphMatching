@@ -4,6 +4,8 @@
 """
 
 import os, sys
+import concurrent.futures
+import matplotlib.pyplot as plt
 
 script_dir = os.path.dirname(os.path.abspath(__file__))
 project_root = os.path.abspath(os.path.join(script_dir, "../../../"))
@@ -16,6 +18,9 @@ import networkx as nx
 import graph_matching.algorithms.mean.fugw_barycenter as fugw_barycenter
 from graph_matching.utils.graph_processing import get_graph_coord, get_graph_from_pickle
 from graph_matching.utils.display_graph_tools import Visualisation
+
+from numba import vectorize
+
 
 g1 = nx.Graph()
 g1.add_node(0, coord=np.array([25, -12, 15]), label=0)
@@ -130,7 +135,7 @@ G19 = get_graph_from_pickle(
 
 graph_test_path = os.path.join(
     project_root,
-    "resources/graph_for_test/generation/without_outliers/noise_60"
+    "resources/graph_for_test/generation/without_outliers/noise_01"
 )
 graphs = []
 for g in os.listdir(graph_test_path):
@@ -138,52 +143,25 @@ for g in os.listdir(graph_test_path):
 
 
 class TestFUGW_barycenter(TestCase):
-    def test_compute(self):
-        ref = np.array([[27.02545743, -96.15696259, 4.84388233],
-                        [-34.80607622, -87.40297297, 33.90069872],
-                        [-8.62674197, -93.54577754, -34.27487166],
-                        [21.81598043, -85.40192331, 47.22895819],
-                        [-67.038979, -73.83046696, -7.40523071],
-                        [66.09292777, -67.10636595, -33.59256686],
-                        [-33.80812468, -56.5852361, 75.20054362],
-                        [-38.15003206, -57.85861432, -72.08991471],
-                        [89.35082027, -36.44076775, 26.23930951],
-                        [-88.00904932, -22.8121901, 41.64146037],
-                        [35.22752572, -18.08221777, -91.82622083],
-                        [20.16174255, -15.02308706, 96.78745266],
-                        [-68.81571439, -26.02998032, -67.72619565],
-                        [99.01363249, -9.49484619, -10.30283834],
-                        [-56.76721154, -24.11269461, 78.71506624],
-                        [-15.10621202, -0.17980351, -98.85226365],
-                        [74.97215436, -8.09819117, 65.67796716],
-                        [-95.60414461, 28.00876304, -8.68082524],
-                        [64.47298002, 19.00291157, -74.04136816],
-                        [6.27464211, 39.77670992, 91.53383098],
-                        [-47.82885966, 42.9313184, -76.61137047],
-                        [86.52953757, 49.02432873, -10.45247911],
-                        [-65.20074533, 51.04175325, 56.067836],
-                        [23.02375053, 64.51636736, -72.85290148],
-                        [60.89560812, 62.55368369, 48.77254933],
-                        [-73.44386201, 65.98676111, -15.86652111],
-                        [53.40582545, 73.79405745, -41.2583918],
-                        [-19.16262371, 83.16697612, 52.11571678],
-                        [-9.67947247, 92.18869503, -37.51736025],
-                        [29.39696235, 95.25801292, 7.85681732]])
-        rho_values = [0.1, 1, 10]
-        alpha_values = [0.15, 0.35, 0.50, 0.75]
-        epsilon_values = [0.01, 0.001]
 
-        for rho in rho_values:
-            for alpha in alpha_values:
-                for epsilon in epsilon_values:
-                    F_b, D_b = fugw_barycenter.compute(
-                        graphs=[G0],
-                        rho=rho,
-                        epsilon=epsilon,
-                        alpha=alpha
-                    )
-                    F_b *= 100
-                    print(rho, alpha, epsilon, np.linalg.norm(ref - F_b))
+    def test_compute(self):
+
+        rho_values = [0.01, 0.1, 0.5, 1]
+        alpha_values = [0.01, 0.1, 0.15, 0.35, 0.50, 0.75]
+        epsilon_values = [1e-2, 1e-3, 1e-4]
+
+        for epsilon in epsilon_values:
+            for rho in rho_values:
+                for alpha in alpha_values:
+                    F_b = fugw_barycenter.get_graph(graphs, rho, epsilon, alpha)
+                    print(F_b, epsilon, rho, alpha)
+
+        # F_b, _ = fugw_barycenter.compute(
+        #     graphs=graphs,
+        #     rho=0.5,
+        #     epsilon=0.01,
+        #     alpha=0.01
+        # )
 
         # tmp = nx.Graph()
         # for node, i in enumerate(F_b):
@@ -198,5 +176,10 @@ class TestFUGW_barycenter(TestCase):
         # v.plot_graphs(folder_path=graph_test_path)
 
     def test_get_init_graph(self):
-        result = fugw_barycenter._get_init_graph(graphs)
-        self.assertTrue(result.shape == (30, 3))
+        a, b = fugw_barycenter._get_init_graph(graphs[:3])
+        print(b)
+        # print(nodes)
+        # g = nx.from_numpy_array(fugw_barycenter._add_neighbors_edge(coords=nodes, nb_neighbors=4))
+        # nx.draw(g)
+        # plt.plot()
+        # plt.show()

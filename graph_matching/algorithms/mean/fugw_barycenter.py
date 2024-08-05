@@ -6,6 +6,7 @@ Advances in neural information processing systems, 35, 21792-21804
 .. moduleauthor:: Marius Thorre
 """
 
+import random
 import numpy as np
 import networkx as nx
 import concurrent.futures
@@ -14,11 +15,10 @@ import graph_matching.algorithms.pairwise.fugw as fugw
 import graph_matching.algorithms.pairwise.fgw as fgw
 from graph_matching.utils.graph_processing import _compute_distance
 
-
 def compute(
         graphs: list,
         alpha: float, epsilon: float, rho: float,
-        max_iteration: int = 100,
+        max_iteration: int = 50,
         convergence: float = 1e-1,
 ) -> tuple:
     """
@@ -31,25 +31,31 @@ def compute(
     :param convergence: parameter to stop algorithm
     :return: F_b and D_b barycenter
     """
-    F_b = _get_init_graph(graphs=graphs) / 100
-    #D_b = np.zeros((30, 30))
-    D_b = _add_neighbors_edge(coords=F_b, nb_neighbors=4)
+
+    F_b, sample_graphe = _get_init_graph(graphs=graphs)
+    F_b /= 100
+    D_b = np.zeros((30, 30))
+
     i = 0
     last_F_b = None
     last_D_b = None
 
     while i < max_iteration:
         p_list = []
-        for g in graphs:
-            p_list.append(_fugw_pairwise(g, F_b, D_b, alpha, epsilon, rho))
+        # for g in sample_graphe:
+        #     p_list.append(_fugw_pairwise(g, F_b, D_b, alpha, epsilon, rho))
+
+        with concurrent.futures.ThreadPoolExecutor() as executor:
+            futures = [executor.submit(_fugw_pairwise, g, F_b, D_b, alpha, epsilon, rho) for g in sample_graphe]
+            p_list = [future.result() for future in futures]
 
         tmp_F_b = np.zeros((30, 3))
         for p in p_list:
             tmp_F_b += np.diag(1 / (np.sum(p, axis=0))) @ p.T @ F_b
-        F_b = (1 / (len(graphs))) * tmp_F_b
+
+        F_b = (1 / len(sample_graphe)) * tmp_F_b
 
         if i != 0:
-            #print(i, np.linalg.norm(last_F_b - F_b))
             if np.linalg.norm(last_F_b - F_b) < convergence:
                 return F_b, D_b
 
@@ -71,7 +77,7 @@ def _fugw_pairwise(
         if len(g.nodes[index]) > 0:
             g_nodes.append(g.nodes[index]["coord"])
     g_nodes = np.array(g_nodes) / 100
-    #print(g_nodes*100)
+
     distance = []
     for i in g_nodes:
         for j in F_b:
@@ -110,31 +116,21 @@ def _fugw_pairwise(
         epsilon=epsilon
     )
 
-    # P = fgw.conditional_gradient(
-    #     mu_s=w_s,
-    #     mu_t=w_t,
-    #     C1=g_adj,
-    #     C2=D_b,
-    #     distance=_compute_distance(g_nodes, F_b),
-    #     gamma=50,
-    #     ot_method="sinkhorn"
-    # )
-
     return P
 
 
 def _get_init_graph(
         graphs: list,
-        nb_cluster: int = 30
 ):
-    coords = [g.nodes[i]["coord"] for g in graphs for i in range(len(g.nodes))]
-    kmeans = KMeans(n_clusters=nb_cluster).fit(coords)
-    return kmeans.cluster_centers_
+    index = random.randint(0, len(graphs) - 1)
+    coord = [graphs[index].nodes[i]["coord"] for i in range(len(graphs[index].nodes))]
+    sample_graph = [g for i, g in enumerate(graphs) if i != index]
+    return np.array(coord), sample_graph
 
 
 def _add_neighbors_edge(
         coords: np.ndarray,
-        nb_neighbors: int = 3
+        nb_neighbors: int = 4
 ):
     all_nodes = dict(enumerate(coords, 0))
     edges = np.zeros((coords.shape[0], coords.shape[0]))
@@ -149,3 +145,14 @@ def _add_neighbors_edge(
             edges[distance[d], node] = 1
 
     return edges
+
+
+def get_graph(graphs: list, rho: float, epsilon: float, alpha: float):
+    F_b, _ = compute(
+        graphs=graphs,
+        rho=rho,
+        epsilon=epsilon,
+        alpha=alpha
+    )
+    F_b *= 100
+    return F_b[:4]

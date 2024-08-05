@@ -199,11 +199,9 @@ def LB_FUGW(
 
         if i != 0:
             if np.linalg.norm(P - last_P) < tolerance and np.linalg.norm(Q - last_Q) < tolerance:
-                print(i)
                 return (P, Q, i) if return_i else (P, Q)
 
         last_P = P
         last_Q = Q
         i += 1
-    print(i)
     return (P, Q, i) if return_i else (P, Q)
