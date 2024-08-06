@@ -4,12 +4,14 @@
 
 import os
 import sys
-from graph_matching.utils.display_graph_tools import Visualisation
 
 script_dir = os.path.dirname(os.path.abspath(__file__))
 project_root = os.path.abspath(os.path.join(script_dir, '../../'))
 if project_root not in sys.path:
     sys.path.append(project_root)
+
+from graph_matching.utils.display_graph_tools import Visualisation
+
 
 file_cortex_mesh = os.path.join(project_root, "resources", "template_mesh", "lh.OASIS_testGrp_average_inflated.gii")
 file_sphere_mesh = os.path.join(project_root, "resources", "template_mesh", "ico100_7.gii")

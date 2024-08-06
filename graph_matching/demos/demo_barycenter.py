@@ -3,16 +3,13 @@
 """
 import os
 import sys
-import networkx as nx
-import matplotlib.pyplot as plt
-
-from graph_matching.utils.display_graph_tools import Visualisation
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 project_path = os.path.abspath(os.path.join(current_dir, '../../'))
 if project_path not in sys.path:
     sys.path.append(project_path)
 
+from graph_matching.utils.display_graph_tools import Visualisation
 from graph_matching.algorithms.mean.wasserstein_barycenter import Barycenter
 from graph_matching.utils.graph_processing import get_graph_from_pickle
 

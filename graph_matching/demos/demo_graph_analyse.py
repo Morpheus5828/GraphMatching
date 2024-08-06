@@ -92,5 +92,5 @@ if __name__ == '__main__':
     end = time.time()
     print(P)
     print(transport2)
-    print("Distance euclidienne ", np.linalg.norm(P - transport2))
+    print("Distance euclidienne between transport matrix", np.linalg.norm(P - transport2))
     print(f"Traning process: {end - start}")

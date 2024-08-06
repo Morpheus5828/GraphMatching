@@ -7,18 +7,19 @@ https://pythonot.github.io/auto_examples/gromov/plot_barycenter_fgw.html
 import numpy as np
 import networkx as nx
 import ot.gromov
-from tqdm import tqdm
-from scipy.sparse.csgraph import shortest_path
-from matplotlib import cm
-import matplotlib.colors as mcol
-from geopy.distance import geodesic
-from ot.gromov._gw import fused_gromov_wasserstein
 from ot.utils import list_to_array, unif, check_random_state, UndefinedParameter, dist
 from ot.backend import get_backend
 from ot.gromov._utils import update_feature_matrix, update_square_loss, update_kl_loss
+
+import os
+import sys
+
+current_dir = os.path.dirname(os.path.abspath(__file__))
+project_path = os.path.abspath(os.path.join(current_dir, '../../'))
+if project_path not in sys.path:
+    sys.path.append(project_path)
+
 import graph_matching.algorithms.pairwise.fgw as fgw
-from sklearn.neighbors import KNeighborsClassifier
-from geopy.distance import geodesic
 
 class Barycenter:
     def __init__(
