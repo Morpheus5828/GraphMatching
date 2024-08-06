@@ -47,7 +47,7 @@ def compute(
 
         with concurrent.futures.ThreadPoolExecutor() as executor:
             futures = [executor.submit(_fugw_pairwise, g, F_b, D_b, alpha, epsilon, rho) for g in sample_graphe]
-            p_list = [future.result() for future in futures]
+            p_list = [future.result() for future in concurrent.futures.as_completed(futures)]
 
         tmp_F_b = np.zeros((30, 3))
         for p in p_list:

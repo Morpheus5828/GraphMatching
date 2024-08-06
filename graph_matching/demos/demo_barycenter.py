@@ -19,13 +19,14 @@ from graph_matching.utils.graph_processing import get_graph_from_pickle
 graph_test_path = os.path.join(project_path, "resources/graph_for_test/")
 file_cortex_mesh = os.path.join(project_path, "resources", "template_mesh", "lh.OASIS_testGrp_average_inflated.gii")
 file_sphere_mesh = os.path.join(project_path, "resources", "template_mesh", "ico100_7.gii")
+
 folder_path = os.path.join(
     project_path,
     "resources",
     "graph_for_test",
     "generation",
     "without_outliers",
-    "noise_01"
+    "noise_60"
 )
 
 graphs = []
@@ -36,7 +37,8 @@ b = Barycenter(
     graphs=graphs,
     nb_node=30
 )
-b._check_node()
+
+
 b.compute()
 
 bary = b.get_graph()
