@@ -16,7 +16,7 @@ class Visualisation:
     def __init__(
             self,
             graph: nx.Graph = None,
-            sphere_radius: float = 90,
+            sphere_radius: float = 100,
             title: str = "Graph",
             window_width: int = 1000,
             window_height: int = 1000,
@@ -41,9 +41,8 @@ class Visualisation:
             'Red', 'Blue', 'Green', 'Yellow', 'Orange', 'Purple', 'Pink', 'Brown', 'Black', 'White',
             'Gray', 'Violet', 'Cyan', 'Magenta', 'Lime', 'Maroon', 'Olive', 'Navy', 'Teal', 'Aqua',
             'Coral', 'Turquoise', 'Beige', 'Lavender', 'Salmon', 'Gold', 'Silver', 'aliceblue', 'Khaki',
-            'Indigo'
+            'Indigo', 'Plum'
         ]
-
         if self.graph is not None:
             self.extract_coord_label()
             self.construct_sphere()
@@ -69,9 +68,8 @@ class Visualisation:
         """
         Construct sphere using all information in inputs
         """
-
         x, y, z = self.points[:, 0], self.points[:, 1], self.points[:, 2]
-        current_color = [self.all_color[i] if i != -1 else "Crimson" for i in self.labels]
+        current_color = [self.all_color[i] if i != 0 and i != -1 else ("Crimson" if i == 0 else "amber") for i in self.labels]
 
         self.fig = go.Figure(data=[go.Scatter3d(
             x=x, y=y, z=z, mode='markers', marker=dict(size=5, color=current_color, opacity=0.8)
@@ -124,7 +122,7 @@ class Visualisation:
     def save_as_pickle(self, path_to_save: str) -> None:
         save_as_gpickle(os.path.join(path_to_save, self.title), self.graph)
 
-    def add_graph_to_plot(self, second_graph: nx.Graph, radius=90):
+    def add_graph_to_plot(self, second_graph: nx.Graph, radius=100):
         coord = []
         label = []
         for i in range(len(second_graph.nodes)):
@@ -132,7 +130,7 @@ class Visualisation:
                 coord.append(second_graph.nodes[i]["coord"])
                 label.append(int(second_graph.nodes[i]["label"]))
 
-        current_color = [self.all_color[i] if i != -1 else "Crimson" for i in label]
+        current_color = [self.all_color[i] if i != 0 and i != -1 else ("Crimson" if i == 0 else "amber") for i in label]
         coord = np.array(coord)
         x1, y1, z1 = coord[:, 0], coord[:, 1], coord[:, 2]
 
@@ -210,18 +208,17 @@ class Visualisation:
 
         coord_to_plot = np.array(coord_to_plot)
 
-        current_color = [self.all_color[i] if i != -1 else "Crimson" for i in self.labels]
+        current_color = [self.all_color[i] if i != 0 and i != -1 else ("Crimson" if i == 0 else "amber") for i in self.labels]
         scatter = go.Scatter3d(
-                x=coord_to_plot[:, 0],
-                y=coord_to_plot[:, 1],
-                z=coord_to_plot[:, 2],
-                mode='markers',
-                marker=dict(
-                    size=5,
-                    color=current_color,
-                    opacity=0.8)
-            )
-
+            x=coord_to_plot[:, 0],
+            y=coord_to_plot[:, 1],
+            z=coord_to_plot[:, 2],
+            mode='markers',
+            marker=dict(
+                size=5,
+                color=current_color,
+                opacity=0.8)
+        )
 
         vertices = cortex_mesh.darrays[0].data.astype(float)
         faces = cortex_mesh.darrays[1].data.astype(int)
@@ -247,8 +244,6 @@ class Visualisation:
             title="Cortex Mesh"
         )
 
-
-
         fig = go.Figure(data=[scatter, mesh], layout=layout)
 
         fig.update_layout(scene=dict(aspectmode='data'))
@@ -264,7 +259,6 @@ class Visualisation:
         graphs = []
         for graph in os.listdir(folder_path):
             graphs.append(get_graph_from_pickle(os.path.join(folder_path, graph)))
-
 
         sphere_mesh = nib.load(sphere_mesh_path)
         sphere_vertices = sphere_mesh.darrays[0].data.astype(float)
@@ -310,7 +304,7 @@ class Visualisation:
 
                 coord_to_plot.append(cortex_vertices[tmp_index])
             coord_to_plot = np.array(coord_to_plot)
-            current_color = [self.all_color[i] if i != -1 else "Crimson" for i in label]
+            current_color = [self.all_color[i] if i != 0 and i != -1 else ("Crimson" if i == 0 else "amber") for i in label]
             scatters.append(
                 go.Scatter3d(
                     x=coord_to_plot[:, 0],
@@ -356,7 +350,7 @@ class Visualisation:
     def plot_graphs(
             self,
             folder_path: str,
-            radius=90
+            radius=100
     ) -> None:
 
         for graph in os.listdir(folder_path):
@@ -368,7 +362,8 @@ class Visualisation:
                     coord.append(graph.nodes[i]["coord"])
                     label.append(graph.nodes[i]["label"])
 
-            current_color = [self.all_color[i] if i != -1 else "Crimson" for i in label]
+            current_color = [self.all_color[i] if i != 0 and i != -1 else ("Crimson" if i == 0 else "amber") for i in label]
+
             coord = np.array(coord)
             x1, y1, z1 = coord[:, 0], coord[:, 1], coord[:, 2]
 
@@ -406,4 +401,6 @@ class Visualisation:
             showlegend=True
         )
 
+
+    def show_fig(self):
         self.fig.show()

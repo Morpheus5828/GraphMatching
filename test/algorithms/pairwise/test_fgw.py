@@ -6,7 +6,8 @@ from unittest import TestCase
 import numpy as np
 
 import graph_matching.algorithms.pairwise.fgw as fgw
-
+from graph_matching.utils.graph_processing import _compute_distance
+from graph_matching.algorithms.pairwise.pairwise_tools import _get_gradient, _get_constant
 
 C1 = np.array([
     [0, 1, 0],
@@ -34,7 +35,7 @@ mu_G1 = np.array([1, 1, 1])
 mu_G1 = mu_G1.reshape((-1, 1))
 mu_G2 = np.array([1, 1, 1, 1])
 mu_G2 = mu_G2.reshape((-1, 1))
-distance_G1_G2 = fgw._M(G1_coord, G2_coord)
+distance_G1_G2 = _compute_distance(G1_coord, G2_coord)
 
 C5 = np.array([
     [0, 1, 0, 1],
@@ -64,7 +65,7 @@ mu_G5 = np.array([1, 1, 1, 1])
 mu_G5 = mu_G5.reshape((-1, 1))
 mu_G6 = np.array([1, 1, 1, 1])
 mu_G6 = mu_G6.reshape((-1, 1))
-distance_G5_G6 = fgw._M(G5_coord, G6_coord)
+distance_G5_G6 = _compute_distance(G5_coord, G6_coord)
 
 C7 = np.array([
     [0, 1, 0, 1],
@@ -94,52 +95,52 @@ mu_G7 = np.array([45, 26, 13, 12])
 mu_G7 = mu_G7.reshape((-1, 1))
 mu_G8 = np.array([45, 16, 18, 32])
 mu_G8 = mu_G8.reshape((-1, 1))
-distance_G7_G8 = fgw._M(G5_coord, G6_coord)
-
+distance_G7_G8 = _compute_distance(G5_coord, G6_coord)
 
 
 class Testfgw(TestCase):
-    def test_get_M(self):
-        M_G1_G2 = np.array([
-            [10., 11., 11.04536102, 10.04987562],
-            [9., 10., 10.04987562, 9.05538514],
-            [10.04987562, 11.04536102, 11., 10.]
-        ])
-        self.assertTrue(np.allclose(fgw._M(G1_coord, G2_coord), M_G1_G2))
-        M_G5_G6 = np.array([
-            [8., 9.48683298, 11.04536102, 11.18033989],
-            [5., 6.70820393, 8.06225775, 8.60232527],
-            [5., 5., 7.28010989, 6.32455532],
-            [8.60232527, 8.24621125, 10.77032961, 9.]
-        ])
-
-        self.assertTrue(np.allclose(fgw._M(G5_coord, G6_coord), M_G5_G6))
-
-    def test_get_constant(self):
-        transport_G1_G2 = mu_G1 @ mu_G2.T
-        self.assertTrue(0 == fgw._get_constant(C1, C2, distance_G1_G2, transport_G1_G2))
-        transport_G5_G6 = mu_G5 @ mu_G6.T
-        self.assertTrue(0 == fgw._get_constant(C5, C6, distance_G5_G6, transport_G5_G6))
-
-    def test_get_gradient(self):
-        c_C1_C2 = fgw._get_constant(C1, C2, distance_G1_G2, mu_G1 @ mu_G2.T)
-        transport_G1_G2 = mu_G1 @ np.transpose(mu_G2)
-        result = np.array([
-            [48., 58.5, 59., 48.5],
-            [38.5, 48., 48.5, 39.],
-            [48.5, 59., 58.5, 48.]
-        ])
-        self.assertTrue(np.allclose(fgw._get_gradient(c_C1_C2, C1, C2, distance_G1_G2, transport_G1_G2), result))
-
-        c_C5_C6 = fgw._get_constant(C5, C6, distance_G5_G6, mu_G5 @ mu_G6.T)
-        transport_G5_G6 = mu_G5 @ np.transpose(mu_G6)
-        result = np.array([
-            [20., 37., 53., 58.5],
-            [0.5, 14.5, 24.5, 33.],
-            [0.5, 4.5, 18.5, 16.],
-            [25., 26., 50., 36.5]
-        ])
-        self.assertTrue(np.allclose(fgw._get_gradient(c_C5_C6, C5, C6, distance_G5_G6, transport_G5_G6), result))
+    # TODO a place dans test pairwise_tools
+    # def test_get_M(self):
+    #     M_G1_G2 = np.array([
+    #         [10., 11., 11.04536102, 10.04987562],
+    #         [9., 10., 10.04987562, 9.05538514],
+    #         [10.04987562, 11.04536102, 11., 10.]
+    #     ])
+    #     self.assertTrue(np.allclose(fgw._M(G1_coord, G2_coord), M_G1_G2))
+    #     M_G5_G6 = np.array([
+    #         [8., 9.48683298, 11.04536102, 11.18033989],
+    #         [5., 6.70820393, 8.06225775, 8.60232527],
+    #         [5., 5., 7.28010989, 6.32455532],
+    #         [8.60232527, 8.24621125, 10.77032961, 9.]
+    #     ])
+    #
+    #     self.assertTrue(np.allclose(fgw._M(G5_coord, G6_coord), M_G5_G6))
+    #
+    # def test_get_constant(self):
+    #     transport_G1_G2 = mu_G1 @ mu_G2.T
+    #     self.assertTrue(0 == fgw._get_constant(C1, C2, distance_G1_G2, transport_G1_G2))
+    #     transport_G5_G6 = mu_G5 @ mu_G6.T
+    #     self.assertTrue(0 == fgw._get_constant(C5, C6, distance_G5_G6, transport_G5_G6))
+    #
+    # def test_get_gradient(self):
+    #     c_C1_C2 = fgw._get_constant(C1, C2, distance_G1_G2, mu_G1 @ mu_G2.T)
+    #     transport_G1_G2 = mu_G1 @ np.transpose(mu_G2)
+    #     result = np.array([
+    #         [48., 58.5, 59., 48.5],
+    #         [38.5, 48., 48.5, 39.],
+    #         [48.5, 59., 58.5, 48.]
+    #     ])
+    #     self.assertTrue(np.allclose(fgw._get_gradient(c_C1_C2, C1, C2, distance_G1_G2, transport_G1_G2), result))
+    #
+    #     c_C5_C6 = fgw._get_constant(C5, C6, distance_G5_G6, mu_G5 @ mu_G6.T)
+    #     transport_G5_G6 = mu_G5 @ np.transpose(mu_G6)
+    #     result = np.array([
+    #         [20., 37., 53., 58.5],
+    #         [0.5, 14.5, 24.5, 33.],
+    #         [0.5, 4.5, 18.5, 16.],
+    #         [25., 26., 50., 36.5]
+    #     ])
+    #     self.assertTrue(np.allclose(fgw._get_gradient(c_C5_C6, C5, C6, distance_G5_G6, transport_G5_G6), result))
 
     def test_solve_OT(self):
         transport_G1_G2 = mu_G1 @ mu_G2.T
@@ -272,7 +273,6 @@ class Testfgw(TestCase):
         for i in range(transport.shape[0]):
             match[i] = np.argmax(transport[i, :])
         permut = np.array([0., 2., 3., 3.])
-        print(match)
         self.assertTrue(np.linalg.norm(match - permut) < 1e-7)
 
         transport = fgw.conditional_gradient(
@@ -292,7 +292,6 @@ class Testfgw(TestCase):
         for i in range(transport.shape[0]):
             match[i] = np.argmax(transport[i, :])
         permut = np.array([0, 0., 0, 0.])
-        print(match)
         self.assertTrue(np.linalg.norm(match - permut) < 1e-7)
 
 

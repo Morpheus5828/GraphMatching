@@ -2,7 +2,7 @@
 
 This toolbox contains scripts to generate Graph from real human cortex graph generated. <br>
 Code has been rehabilited and tested by Marius Thorre using Rohit Yadav code. <br>
-Demos is available in graph_matching/demos folder.
+Demos are available in graph_matching/demos folder.
 Test and enjoy :-) <br>
 If any questions, please contact me at marius.thorre13@gmail.com
 
@@ -41,7 +41,8 @@ python graph_matching/demos/demo_graph_analyse.py
 ```
 
 ## Authors
-- Guillaume Auzias (INT)
-- François-Xavier Dupé (LIS)
-- Marius Thorre (INT, LIS)
-- Rohit Yadav (INT, LIS)
+- Guillaume AUZIAS (INT)
+- François-Xavier DUPE (LIS)
+- Marius THORRE (INT, LIS)
+- Rohit YADAV (INT, LIS)
+- Sylvain TAKERKART (INT)

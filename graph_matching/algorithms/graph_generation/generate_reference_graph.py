@@ -1,10 +1,11 @@
 """This module contains code to generate reference graph
-.. moduleauthor:: Marius Thorre, Rohit Yadav
+.. moduleauthor:: Marius Thorre
 """
 
 import numpy as np
 from resources.slam import topology as stop
 from graph_matching.utils.graph_tools import *
+import graph_matching.algorithms.graph_generation.sphere_sampling as sphere_sampling
 import graph_matching.algorithms.graph_generation.generate_sphere_random_sampling as generate_sphere_random_sampling
 import graph_matching.utils.graph_processing as graph_processing
 
@@ -19,20 +20,27 @@ def run(
     :return nx.Graph :
     :rtype: np.ndarray
     """
-    sphere_random_sampling = generate_sphere_random_sampling.run(vertex_number=nb_vertices, radius=radius)
+    x, y, z = sphere_sampling.fibonacci(nb_point=nb_vertices, radius=radius)
+
+    #sphere_random_sampling = generate_sphere_random_sampling.run(vertex_number=nb_vertices, radius=radius)
+
+    sphere_random_sampling = np.vstack((x, y, z)).T
+
     sphere_random_sampling = tri_from_hull(sphere_random_sampling)  # Computing convex hull (adding edges)
+
+
 
     adja = stop.adjacency_matrix(sphere_random_sampling)
     graph = nx.from_numpy_array(adja.todense())
-    # Create dictionnary that will hold the attributes of each node
+
     node_attribute_dict = {}
     for node, label in enumerate(graph.nodes()):
         # we set the label of nodes in the same order as in graph
         node_attribute_dict[node] = {"coord": np.array(sphere_random_sampling.vertices[node]), "label": label}
     # add the node attributes to the graph
     nx.set_node_attributes(graph, node_attribute_dict)
-
-    # We add a default weight on each edge of 1
+    #
+    # # We add a default weight on each edge of 1
     nx.set_edge_attributes(graph, 1.0, name="weight")
 
     # We add a geodesic distance between the two ends of an edge

@@ -3,48 +3,47 @@
 
 """
 import os, sys
+import numpy as np
+import networkx as nx
 import matplotlib.pyplot as plt
-from graph_matching.utils.graph_processing import get_graph_from_pickle, get_distance_between_graphs
-from graph_matching.algorithms.mean.wasserstein_barycenter import Barycenter
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 project_path = os.path.abspath(os.path.join(current_dir, '../..'))
 if project_path not in sys.path:
     sys.path.append(project_path)
 
-gref = get_graph_from_pickle(os.path.join(project_path, "GraphMatching/resources/graph_for_test/reference.gpickle"))
+from graph_matching.utils.graph_processing import get_graph_from_pickle, get_distance_between_graphs
+import graph_matching.algorithms.mean.fugw_barycenter as fugw_barycenter
 
-graph_test_path = os.path.join(project_path, "resources/graph_for_test")
-graphs = []
-for g in os.listdir(os.path.join(graph_test_path, "generation")):
-    graphs.append(get_graph_from_pickle(os.path.join(graph_test_path, "generation", g)))
+path_folder = os.path.join(project_path, "resources/graph_for_test/generation/without_outliers")
 
-b = Barycenter(
-    graphs=graphs,
-    nb_node=30  # because graphs has 30 nodes
-)
+dist = []
+for folder in reversed(os.listdir(path_folder)):
+    graphs = []
+    for graph in os.listdir(os.path.join(path_folder, folder)):
+        graphs.append(get_graph_from_pickle(os.path.join(path_folder, folder, graph)))
+    b = Barycenter(
+        graphs=graphs,
+        nb_node=30
+    )
+    b.compute()
+    bary = b.get_graph()
 
-b.compute(fixed_structure=True)
-bary = b.get_graph()
+    g2 = nx.Graph()
 
-distances = get_distance_between_graphs(first_graph=bary, graphs=graphs)
-distances = dict(sorted(distances.items()))
+    for i, coord in enumerate(bary):
+        g2.add_node(i, coord=coord, label=i)
 
-plt.bar(list(distances.keys()), list(distances.values()))
+    distances = get_distance_between_graphs(first_graph=g2, graphs=graphs)
+    dist.append(sum(distances.values()) / len(distances.values()))
 
-plt.xlabel("Node label")
+print(dist)
+plt.plot(np.arange(2), dist)
+plt.xlabel("Noise")
+#plt.text(10, 100, "Max outliers: 10")
 plt.ylabel("Distance")
-plt.title("Distance between \n Barycenter and graph generation")
-plt.savefig("C:/Users/thorr/OneDrive/Bureau/Stage/bary_all_graph")
+plt.title("Distance between \n Barycenter and graph generation without outliers")
+plt.show()
+#plt.savefig("C:/Users/thorr/OneDrive/Bureau/Stage/Distance_between_Barycenter_and_graph_generation_without_outliers_fibo")
 
-plt.clf()
-
-distances = get_distance_between_graphs(first_graph=gref, graphs=graphs)
-distances = dict(sorted(distances.items()))
-
-plt.bar(list(distances.keys()), list(distances.values()))
-plt.xlabel("Node label")
-plt.ylabel("Distance")
-plt.title("Distance between \n Reference and graph generation")
-plt.savefig("C:/Users/thorr/OneDrive/Bureau/Stage/gref_all_graph")
 
