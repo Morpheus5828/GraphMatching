@@ -41,22 +41,21 @@ def compute(
     last_D_b = None
 
     while i < max_iteration:
-        p_list = []
-        # for g in sample_graphe:
-        #     p_list.append(_fugw_pairwise(g, F_b, D_b, alpha, epsilon, rho))
-
         with concurrent.futures.ThreadPoolExecutor() as executor:
             futures = [executor.submit(_fugw_pairwise, g, F_b, D_b, alpha, epsilon, rho) for g in sample_graphe]
-            p_list = [future.result() for future in futures]
+            p_list = [future.result() for future in concurrent.futures.as_completed(futures)]
 
         tmp_F_b = np.zeros((30, 3))
+        tmp_d_b = np.zeros((30, 30))
         for p in p_list:
             tmp_F_b += np.diag(1 / (np.sum(p, axis=0))) @ p.T @ F_b
+            tmp_d_b += (p.T @ D_b @ p) / (np.sum(p, axis=0) @ np.sum(p, axis=0).T)
 
         F_b = (1 / len(sample_graphe)) * tmp_F_b
+        D_b = (tmp_d_b / len(graphs))
 
         if i != 0:
-            if np.linalg.norm(last_F_b - F_b) < convergence:
+            if np.linalg.norm(last_F_b - F_b) < convergence and np.linalg.norm(last_D_b - D_b) < convergence:
                 return F_b, D_b
 
         last_F_b = F_b

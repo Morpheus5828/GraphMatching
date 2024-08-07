@@ -18,34 +18,25 @@ if project_path not in sys.path:
 path_folder = os.path.join(project_path, "resources/graph_for_test/generation/without_outliers")
 
 dist = []
-a = 0
 for folder in reversed(os.listdir(path_folder)):
-    if a <= 2:
-        graphs = []
-        for graph in os.listdir(os.path.join(path_folder, folder)):
-            graphs.append(get_graph_from_pickle(os.path.join(path_folder, folder, graph)))
-        # b = Barycenter(
-        #     graphs=graphs,
-        #     nb_node=30
-        # )
-        # b.compute()
-        # bary = b.get_graph()
+    graphs = []
+    for graph in os.listdir(os.path.join(path_folder, folder)):
+        graphs.append(get_graph_from_pickle(os.path.join(path_folder, folder, graph)))
+    b = Barycenter(
+        graphs=graphs,
+        nb_node=30
+    )
+    b.compute()
+    bary = b.get_graph()
 
-        F_b, _ = fugw_barycenter.compute(
-            graphs=graphs,
-            rho=1,
-            epsilon=0.01,
-            alpha=0.15
-        )
+    g2 = nx.Graph()
 
-        g2 = nx.Graph()
+    for i, coord in enumerate(bary):
+        g2.add_node(i, coord=coord, label=i)
 
-        for i, coord in enumerate(F_b):
-            g2.add_node(i, coord=coord, label=i)
+    distances = get_distance_between_graphs(first_graph=g2, graphs=graphs)
+    dist.append(sum(distances.values()) / len(distances.values()))
 
-        distances = get_distance_between_graphs(first_graph=g2, graphs=graphs)
-        dist.append(sum(distances.values()) / len(distances.values()))
-        a += 1
 print(dist)
 plt.plot(np.arange(2), dist)
 plt.xlabel("Noise")

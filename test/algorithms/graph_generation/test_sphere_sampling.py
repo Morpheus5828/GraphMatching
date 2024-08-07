@@ -2,6 +2,12 @@
 ..moduleauthor:: Marius THORRE
 """
 
+import os, sys
+
+script_dir = os.path.dirname(os.path.abspath(__file__))
+project_root = os.path.abspath(os.path.join(script_dir, "../../../"))
+if project_root not in sys.path:
+    sys.path.append(project_root)
 import graph_matching.algorithms.graph_generation.sphere_sampling as sphere_sampling
 from unittest import TestCase
 import numpy as np
@@ -21,10 +27,6 @@ class TestSphereSampling(TestCase):
         self.assertTrue(np.allclose(y, y_truth))
         self.assertTrue(np.allclose(z, z_truth))
 
-        # G = nx.Graph()
-        # for i in range(6):
-        #     G.add_node(i, coord=np.array([x[i], y[i], z[i]]), label=0)
-        #
-        # Visualisation(graph=G).show_fig()
+
 
 
