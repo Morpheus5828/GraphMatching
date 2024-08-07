@@ -78,12 +78,12 @@ class TestFugw(TestCase):
         D_s = np.random.randint(0, 1, size=(n, n))
         D_t = np.random.randint(0, 1, size=(p, p))
 
-        self.assertEquals(fugw._geometry_cost(D_s, D_t).shape, (2, 3, 2, 3))
+        self.assertEqual(fugw._geometry_cost(D_s, D_t).shape, (2, 3, 2, 3))
 
     def test_kron(self):
         G = np.random.randint(0, 1, size=(2, 3, 2, 3))
         P = np.random.randint(0, 1, size=(2, 3))
-        self.assertEquals(fugw._kron_tensor(G, P).shape, (2, 3))
+        self.assertEqual(fugw._kron_tensor(G, P).shape, (2, 3))
 
     def test_cost(self):
         P = np.kron(mu_G1, mu_G2) / np.sqrt(np.sum(mu_G1) * np.sum(mu_G2))
