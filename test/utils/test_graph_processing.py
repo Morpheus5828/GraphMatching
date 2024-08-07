@@ -14,7 +14,7 @@ if project_path not in sys.path:
 
 class Test(TestCase):
     def test_get_graph_from_picle(self):
-        g0_path = "resources/graph_for_test/generation/graph_00000.gpickle"
+        g0_path = "resources/graph_for_test/generation/without_outliers/noise_01/graph_00000.gpickle"
         g0 = get_graph_from_pickle(os.path.join(project_path, g0_path))
 
         self.assertTrue(len(g0.nodes) == 30)
