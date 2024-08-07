@@ -12,7 +12,7 @@ project_path = os.path.abspath(os.path.join(current_dir, '../../'))
 if project_path not in sys.path:
     sys.path.append(project_path)
 
-from graph_matching.algorithms.mean.wasserstein_barycenter import Barycenter
+from graph_matching.algorithms.mean.fgw_barycenter import Barycenter
 from graph_matching.utils.graph_processing import get_graph_from_pickle
 from graph_matching.utils.display_graph_tools import Visualisation
 

@@ -10,7 +10,7 @@ if project_path not in sys.path:
     sys.path.append(project_path)
 
 from graph_matching.utils.display_graph_tools import Visualisation
-from graph_matching.algorithms.mean.wasserstein_barycenter import Barycenter
+from graph_matching.algorithms.mean.fgw_barycenter import Barycenter
 from graph_matching.utils.graph_processing import get_graph_from_pickle
 
 graph_test_path = os.path.join(project_path, "resources/graph_for_test/")
