@@ -7,6 +7,8 @@ project_root = os.path.abspath(os.path.join(script_dir, "../../"))
 if project_root not in sys.path:
     sys.path.append(project_root)
 
+from unittest import TestCase
+
 import numpy as np
 import networkx as nx
 import graph_matching.algorithms.mean.fugw_barycenter as fugw_barycenter
@@ -15,11 +17,12 @@ from graph_matching.utils.display_graph_tools import Visualisation
 
 graph_test_path = os.path.join(
     project_root,
-    "resources/graph_for_test/generation/without_outliers/noise_01"
-)
+    "resources/graph_for_test/generation/without_outliers/noise_60")
+
 graphs = []
 for g in os.listdir(graph_test_path):
     graphs.append(get_graph_from_pickle(os.path.join(graph_test_path, g)))
+
 
 
 rho_values = [0.9, 1]

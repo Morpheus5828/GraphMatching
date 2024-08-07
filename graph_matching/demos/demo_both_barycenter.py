@@ -6,7 +6,6 @@ import sys
 import networkx as nx
 import matplotlib.pyplot as plt
 import numpy as np
-from graph_matching.utils.display_graph_tools import Visualisation
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 project_path = os.path.abspath(os.path.join(current_dir, '../../'))
@@ -15,6 +14,7 @@ if project_path not in sys.path:
 
 from graph_matching.algorithms.mean.wasserstein_barycenter import Barycenter
 from graph_matching.utils.graph_processing import get_graph_from_pickle
+from graph_matching.utils.display_graph_tools import Visualisation
 
 graph_test_path = os.path.join(project_path, "resources/graph_for_test/generation/without_outliers/noise_60")
 file_cortex_mesh = os.path.join(project_path, "resources", "template_mesh", "lh.OASIS_testGrp_average_inflated.gii")

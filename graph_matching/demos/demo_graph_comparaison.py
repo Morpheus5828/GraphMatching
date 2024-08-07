@@ -6,14 +6,14 @@ import os, sys
 import numpy as np
 import networkx as nx
 import matplotlib.pyplot as plt
-from graph_matching.utils.graph_processing import get_graph_from_pickle, get_distance_between_graphs
-from graph_matching.algorithms.mean.wasserstein_barycenter import Barycenter
-import graph_matching.algorithms.mean.fugw_barycenter as fugw_barycenter
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 project_path = os.path.abspath(os.path.join(current_dir, '../..'))
 if project_path not in sys.path:
     sys.path.append(project_path)
+
+from graph_matching.utils.graph_processing import get_graph_from_pickle, get_distance_between_graphs
+import graph_matching.algorithms.mean.fugw_barycenter as fugw_barycenter
 
 path_folder = os.path.join(project_path, "resources/graph_for_test/generation/without_outliers")
 
