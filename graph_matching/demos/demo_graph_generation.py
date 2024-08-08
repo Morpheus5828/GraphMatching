@@ -5,7 +5,7 @@
 import os
 import sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
-from graph_matching.algorithms.graph_generation.generation_graph_edge_permutation import EdgePermutation
+from graph_matching.algorithms.graph_generation.generation_graph_edge_permutation import Graph_Generation
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 project_path = os.path.abspath(os.path.join(current_dir, '../../..'))
@@ -23,8 +23,9 @@ if __name__ == '__main__':
     nb_ref_graph = 1000
     radius = 100
     nb_neighbors_to_consider_outliers = 10
+    print("Starting generation ... ")
 
-    ep = EdgePermutation(
+    ep = Graph_Generation(
         pickle_folder_title="pickle",
         html_folder_title="html",
         nb_sample_graphs=nb_sample_graphs,
@@ -38,5 +39,7 @@ if __name__ == '__main__':
         nb_neighbors_to_consider_outliers=nb_neighbors_to_consider_outliers,
         generation_folder_path=generation_folder_path
     )
+
+    print(f"Graphs save in {generation_folder_path}")
 
 

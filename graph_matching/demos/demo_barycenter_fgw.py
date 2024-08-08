@@ -25,10 +25,8 @@ folder_path = os.path.join(
     "without_outliers",
     "noise_60"
 )
-
-graphs = []
-for g in os.listdir(folder_path):
-    graphs.append(get_graph_from_pickle(os.path.join(folder_path, g)))
+# extract pickle graph file in networkx graph
+graphs = [get_graph_from_pickle(os.path.join(folder_path, g)) for g in os.listdir(folder_path)]
 
 b = Barycenter(
     graphs=graphs,

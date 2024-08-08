@@ -12,7 +12,6 @@ if project_root not in sys.path:
 
 from graph_matching.utils.display_graph_tools import Visualisation
 
-
 file_cortex_mesh = os.path.join(project_root, "resources", "template_mesh", "lh.OASIS_testGrp_average_inflated.gii")
 file_sphere_mesh = os.path.join(project_root, "resources", "template_mesh", "ico100_7.gii")
 folder_path = os.path.join(project_root, "resources", "graph_for_test", "generation", "without_outliers", "noise_01")
