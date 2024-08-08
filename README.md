@@ -37,7 +37,7 @@ python graph_matching/demos/demo_display_graph.py
 
 ## Graph comparaison
 ```shell
-python -m streamlit run graph_matching/demos/demo_graph_comparaison.py
+python -m streamlit run graph_matching/demos/demo_graph_comparaison_stApp.py
 ```
 
 ## Compare pairwise methods
