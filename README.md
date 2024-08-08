@@ -1,9 +1,11 @@
 # GraphMatching
 
 
-<img src="resources/readme_pictures/qarma_logo.png" width="150" height="150">
-<img src="resources/readme_pictures/int_logo.png" width="150" height="150">
-<img src="resources/readme_pictures/amu_logo.png" width="150" height="150">
+<div>
+    <img src="resources/readme_pictures/qarma_logo.png" width="150" height="150">
+    <img src="resources/readme_pictures/int_logo.png" width="150" height="150">
+    <img src="resources/readme_pictures/amu_logo.png" width="150" height="150">
+</div>
 
 This toolbox contains scripts to generate Graph from real human cortex graph generated. <br>
 Code has been rehabilited and tested by Marius Thorre using Rohit Yadav code. <br>
@@ -14,7 +16,7 @@ If any questions, please contact me at marius.thorre13@gmail.com
 
 ## Installation
 ```shell
-pip install -e 
+pip install -e .
 ```
 
 ## Graph generation
@@ -26,7 +28,7 @@ python graph_matching/demos/demo_graph_generation.py
 ## Compute graph barycenter
 From list of graphs, compute barycenter graph.
 ```shell
-python graph_matching/demos/demo_barycenter.py
+python graph_matching/demos/demo_barycenter_fgw.py
 ```
 
 ## Display graph

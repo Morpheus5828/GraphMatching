@@ -17,7 +17,7 @@ from graph_matching.utils.display_graph_tools import Visualisation
 
 graph_test_path = os.path.join(
     project_root,
-    "resources/graph_for_test/generation/without_outliers/noise_60")
+    "resources/graph_for_test/generation/without_outliers/noise_55")
 
 graphs = []
 for g in os.listdir(graph_test_path):
@@ -25,14 +25,14 @@ for g in os.listdir(graph_test_path):
 
 
 
-rho_values = [0.9, 1]
-alpha_values = [0.60, 0.65, 0.75]
-epsilon_values = [1e-2, 5e-2, 1e-3]
+rho_values = [1, 1.2, 1.4]
+alpha_values = [0.15, 0.25, 0.35, 0.45, 0.55]
+epsilon_values = [1e-2, 1e-3]
 
 for epsilon in epsilon_values:
     for rho in rho_values:
         for alpha in alpha_values:
             print(rho, alpha, epsilon)
             F_b = fugw_barycenter.get_graph(graphs, rho, epsilon, alpha)
-            print(F_b)
+            print(F_b[:4])
             print("####")

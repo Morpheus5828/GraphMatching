@@ -154,4 +154,4 @@ def get_graph(graphs: list, rho: float, epsilon: float, alpha: float):
         alpha=alpha
     )
     F_b *= 100
-    return F_b[:4]
+    return F_b
