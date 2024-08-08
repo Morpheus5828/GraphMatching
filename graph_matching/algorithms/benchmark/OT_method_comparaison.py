@@ -42,7 +42,7 @@ def display_iteration_by_regularization_parameter(
         #         alpha=alpha
         #     )
         #     benchmark.get_perf()
-        #     sns_iteration.append(np.mean(benchmark.sinkhorn_iterations))
+        #     sns_iteration.append(np.barycenter(benchmark.sinkhorn_iterations))
         benchmark = OTBenchmark(
             class_one=class_one,
             class_two=class_two,

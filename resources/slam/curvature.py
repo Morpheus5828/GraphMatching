@@ -232,7 +232,7 @@ def compute_curvature(FV, VertexNormals, FaceNormals, Avertex, Acorner, up, vp):
             ]
         )
 
-        "Resolving by least mean square method because "
+        "Resolving by least barycenter square method because "
         "A is not a square matrix"
 
         x = np.linalg.lstsq(A, b, None)

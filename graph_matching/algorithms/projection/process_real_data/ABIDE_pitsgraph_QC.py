@@ -100,7 +100,7 @@ if __name__ == "__main__":
         hist_cent_nb_pits.append(np.array(subjects_nb_pits)[inds_ce])
         hist_cent_mean_depth.append(np.array(subjects_mean_depth)[inds_ce])
         leg.append(f"{np.sum(inds_ce)}  {ce}")
-        print(f"{np.sum(inds_ce)}  {ce} mean age =  {np.mean(age[inds_ce])}")
+        print(f"{np.sum(inds_ce)}  {ce} barycenter age =  {np.mean(age[inds_ce])}")
 
     fig, axes = plt.subplots(3, 2)
     axes[0, 0].hist(subjects_nb_pits)

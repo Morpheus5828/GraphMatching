@@ -4,7 +4,7 @@ import networkx as nx
 from unittest import TestCase
 import numpy as np
 from graph_matching.utils.display_graph_tools import Visualisation
-from graph_matching.algorithms.mean.fgw_barycenter import Barycenter
+from graph_matching.algorithms.barycenter.fgw_barycenter import Barycenter
 from graph_matching.utils.graph_processing import get_graph_from_pickle, get_distance_between_graphs
 
 current_dir = os.path.dirname(os.path.abspath(__file__))

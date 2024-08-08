@@ -16,6 +16,7 @@ file_cortex_mesh = os.path.join(project_root, "resources", "template_mesh", "lh.
 file_sphere_mesh = os.path.join(project_root, "resources", "template_mesh", "ico100_7.gii")
 folder_path = os.path.join(project_root, "resources", "graph_for_test", "generation", "without_outliers", "noise_01")
 
+# display a simple graph on a sphere mesh
 v = Visualisation(title="noise_181", sphere_radius=100)
 
 v.plot_graphs(folder_path=folder_path, radius=100)

@@ -10,13 +10,14 @@ if project_path not in sys.path:
     sys.path.append(project_path)
 
 from graph_matching.utils.display_graph_tools import Visualisation
-from graph_matching.algorithms.mean.fgw_barycenter import Barycenter
+from graph_matching.algorithms.barycenter.fgw_barycenter import Barycenter
 from graph_matching.utils.graph_processing import get_graph_from_pickle
 
 graph_test_path = os.path.join(project_path, "resources/graph_for_test/")
 file_cortex_mesh = os.path.join(project_path, "resources", "template_mesh", "lh.OASIS_testGrp_average_inflated.gii")
 file_sphere_mesh = os.path.join(project_path, "resources", "template_mesh", "ico100_7.gii")
 
+# generation graph path with a little noise
 folder_path = os.path.join(
     project_path,
     "resources",
@@ -28,26 +29,29 @@ folder_path = os.path.join(
 # extract pickle graph file in networkx graph
 graphs = [get_graph_from_pickle(os.path.join(folder_path, g)) for g in os.listdir(folder_path)]
 
+# compute barycenter graph
 b = Barycenter(
     graphs=graphs,
     nb_node=30
 )
 
-
 b.compute()
 
 bary = b.get_graph()
 
-
+# visualise barycenter graph in an html web page
 v = Visualisation(
     graph=bary,
     sphere_radius=100,
     title="1 without outliers"
 )
 
-
+# add all graphs used for barycenter generation on web page
 v.plot_graphs(folder_path=folder_path)
+# Barycenter is going to be 'Trace 0', you can click on it to see where is it
 v.show_fig()
+
+
 
 
 

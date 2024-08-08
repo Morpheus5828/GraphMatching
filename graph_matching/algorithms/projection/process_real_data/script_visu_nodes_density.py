@@ -33,7 +33,7 @@ if __name__ == "__main__":
         gp.sphere_nearest_neighbor_interpolation(graph, sphere_mesh)
 
     print('nodes numbers : ')
-    print('mean=', np.mean(graphs_nodes_number))
+    print('barycenter=', np.mean(graphs_nodes_number))
     print('std=', np.std(graphs_nodes_number))
     print('sum across subjects=', np.sum(graphs_nodes_number))
 
@@ -52,7 +52,7 @@ if __name__ == "__main__":
     #                         caption='density map',
     #                         cmap="jet",
     #                         #clim=(0, 0.03),
-    #                         cblabel='mean curvature')
+    #                         cblabel='barycenter curvature')
 
     visb_sc = splt.visbrain_plot(
         mesh=mesh, tex=density_map,

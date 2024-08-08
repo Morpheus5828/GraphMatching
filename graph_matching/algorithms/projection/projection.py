@@ -9,7 +9,7 @@ if project_path not in sys.path:
     sys.path.append(project_path)
 
 from graph_matching.utils.display_graph_tools import Visualisation
-from graph_matching.algorithms.mean.fgw_barycenter import Barycenter
+from graph_matching.algorithms.barycenter.fgw_barycenter import Barycenter
 from graph_matching.utils.graph_processing import get_graph_from_pickle
 
 mesh_cortex_path = 'C:/Users/thorr/OneDrive/Bureau/Stage/lh.OASIS_testGrp_average_inflated(1).gii'

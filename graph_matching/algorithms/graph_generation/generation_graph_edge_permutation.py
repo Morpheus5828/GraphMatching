@@ -18,7 +18,7 @@ if project_path not in sys.path:
     sys.path.append(project_path)
 
 
-class EdgePermutation:
+class Graph_Generation:
     def __init__(
             self,
             pickle_folder_title: str,
@@ -71,8 +71,9 @@ class EdgePermutation:
                 os.mkdir(self.path_to_write)
         else:
             os.mkdir(self.path_to_write)
-
+        # generate reference graph
         trial_path, reference_graph_max = self._generate_families_graph()
+        # generate graphs
         self._generate_noise_graph(
             trial_path=trial_path,
             reference_graph_max=reference_graph_max,
@@ -83,21 +84,10 @@ class EdgePermutation:
             os.mkdir(self.path_to_write)
 
         print("Generating reference_graph..")
-        for i in tqdm(range(self.nb_ref_graph)):
+        for _ in tqdm(range(self.nb_ref_graph)):
             reference_graph = generate_reference_graph.run(self.nb_vertices, self.radius)
-            all_geo = edge_len(reference_graph)
-            # if i == 0:
-            #     min_geo = min(all_geo)
-            # else:
-            #     if min(all_geo) > min_geo:
-            #         min_geo = min(all_geo)
-            #         reference_graph_max = reference_graph
-            #     else:
-            #         pass
-
             reference_graph_max = reference_graph
         if self.save_reference:
-            #print("Selected reference graph with min_geo: ", min_geo)
             trial_path = os.path.join(self.path_to_write, self.pickle_folder_title)
             html_path = os.path.join(self.path_to_write, self.html_folder_title)
             if not os.path.isdir(trial_path):

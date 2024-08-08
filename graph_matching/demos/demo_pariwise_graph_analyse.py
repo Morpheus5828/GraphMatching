@@ -1,3 +1,7 @@
+"""Example of graph pairwcise transport matrix analyse
+.. moduleauthor:: Marius Thorre
+"""
+
 import os
 import sys
 
@@ -50,7 +54,7 @@ if __name__ == '__main__':
     graph_coord_t = get_graph_coord(G_dest, nb_dimension=3)
 
     distance = _compute_distance(graph_coord_s, graph_coord_t)
-
+    # compute transport pairwise matrix using Fused Gromov Wasserstein algorithm
     transport2 = fgw.conditional_gradient(
         mu_s=mu_s,
         mu_t=mu_t,
@@ -80,6 +84,7 @@ if __name__ == '__main__':
         transport=mu_s @ mu_t.T
     )
     mu_t = mu_t.reshape((1, -1))
+    # compute transport pairwise matrix using Fused Unbalanced Gromov Wasserstein algorithm
     P, _ = fugw.LB_FUGW(
         cost=cost,
         distance=fugw._geometry_cost(adj_matrix_s, adj_matrix_t),
@@ -89,8 +94,9 @@ if __name__ == '__main__':
         alpha=alpha,
         epsilon=epsilon
     )
+    # Compute euclidian distance between both matrices
     end = time.time()
     print(P)
     print(transport2)
-    print("Distance euclidienne between transport matrix", np.linalg.norm(P - transport2))
+    print("Euclidian distance: ", np.linalg.norm(P - transport2))
     print(f"Traning process: {end - start}")

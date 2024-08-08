@@ -543,7 +543,7 @@ def gradient(mesh, texture_array):
     Gradient is computed on each triangle by the function described in
     http://dgd.service.tu-berlin.de/wordpress/vismathws10/2012/10/
     17/gradient-of-scalar-functions/.
-    On each vertex, compute the mean gradient of all triangle with the vertex.
+    On each vertex, compute the barycenter gradient of all triangle with the vertex.
     first version author: Guillaume Vicaigne (Internship 2018)
     :param mesh: Triangular mesh
     :param texture_array: Scalar function on Vertices, numpy array

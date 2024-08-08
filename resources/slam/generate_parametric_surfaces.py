@@ -92,7 +92,7 @@ def quadric_curv_gauss(K):
 
 def quadric_curv_mean(K):
     """
-    analytical mean curvature of a quadric
+    analytical barycenter curvature of a quadric
     :param K1:
     :param K2:
     :return:
@@ -264,10 +264,10 @@ older, outdated version
 #         nb_vert = len(x) * len(y)
 #         if random_distribution_type == 'gamma':
 #             theta = np.random.rand(nb_vert, ) * np.pi * 2
-#             mean = sigma
+#             barycenter = sigma
 #             variance = sigma ** 2
 #             radius = \
-#               np.random.gamma(mean ** 2 / variance, variance / mean, nb_vert)
+#               np.random.gamma(barycenter ** 2 / variance, variance / barycenter, nb_vert)
 #             X = X + radius * np.cos(theta)
 #             Y = Y + radius * np.sin(theta)
 #         elif random_distribution_type == 'uniform':

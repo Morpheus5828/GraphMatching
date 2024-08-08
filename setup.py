@@ -25,5 +25,5 @@ setup(
         "plotly>=5.22.0",
         "POT>=0.9.3"
     ],
-    python_requires=">=3.12",
+    python_requires=">=3.10.0",
 )

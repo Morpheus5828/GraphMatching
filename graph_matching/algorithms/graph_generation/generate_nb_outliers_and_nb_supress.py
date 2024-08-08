@@ -9,7 +9,7 @@ def run(
     :return: Tuple which contains nb outliers and nb supress
     :rtype: (int, int)
     """
-    # mean_real_data = 40         # mean real data
+    # mean_real_data = 40         # barycenter real data
     std_real_data = 4  # std real data
 
     mu = 10  # mu_A = mu_B = mu

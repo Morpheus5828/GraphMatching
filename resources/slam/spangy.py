@@ -7,7 +7,7 @@ applied in [2]_. Hence this module:
 1. Perform spectral decomposition of a mesh (eigenvalues and eigenfunctions
    of the laplace-beltrami operator defined on the mesh), i.e. obtaining a
    functional basis
-2. Decompose a scalar function living on the mesh (e.g. mean
+2. Decompose a scalar function living on the mesh (e.g. barycenter
    curvature) in this functional basis
 3. Compute the power spectrum associated to the obtained spectral decomposition
 4. Group power spectrum into frequency bands of interest
@@ -59,7 +59,7 @@ def spectrum(f2analyse, MassMatrix, eigVec, eValues):
     Parameters
     ----------
     f2analyse : Array of floats
-        function to analyze (mean curvature).
+        function to analyze (barycenter curvature).
     MassMatrix : Array of floats
         Used in the discretization of the eigenvalue problem.
     eigVec : Array of floats
@@ -109,7 +109,7 @@ def local_dominance_map(
     coefficients : Array of floats
         Fourier coefficients of the input function f2analyse
     f2analyse : Array of floats
-        function to analyze (mean curvature)
+        function to analyze (barycenter curvature)
     nlevels : Array of ints
         number of spectral bands
     group_indices : Array of ints
