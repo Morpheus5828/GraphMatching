@@ -6,9 +6,10 @@ Demos are available in graph_matching/demos folder.
 Test and enjoy :-) <br>
 If any questions, please contact me at marius.thorre13@gmail.com
 
+
 ## Installation
 ```shell
-pip install -e .
+pip install -e 
 ```
 
 ## Graph generation
