@@ -1,5 +1,10 @@
 # GraphMatching
 
+
+<img src="resources/readme_pictures/qarma_logo.png" width="150" height="150">
+<img src="resources/readme_pictures/int_logo.png" width="150" height="150">
+<img src="resources/readme_pictures/amu_logo.png" width="150" height="150">
+
 This toolbox contains scripts to generate Graph from real human cortex graph generated. <br>
 Code has been rehabilited and tested by Marius Thorre using Rohit Yadav code. <br>
 Demos are available in graph_matching/demos folder.
