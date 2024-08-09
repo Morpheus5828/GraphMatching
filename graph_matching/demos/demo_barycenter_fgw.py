@@ -18,7 +18,7 @@ file_cortex_mesh = os.path.join(project_path, "resources", "template_mesh", "lh.
 file_sphere_mesh = os.path.join(project_path, "resources", "template_mesh", "ico100_7.gii")
 
 # generation graph path with a little noise
-folder_path = os.path.join(
+graph_test_path = os.path.join(
     project_path,
     "resources",
     "graph_for_test",

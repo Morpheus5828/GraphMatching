@@ -20,9 +20,9 @@ graph_test_path = os.path.join(
     "resources/graph_for_test/generation/without_outliers/noise_55")
 
 # extract pickle graph file in networkx graph
-graphs = [get_graph_from_pickle(os.path.join(folder_path, g)) for g in os.listdir(folder_path)]
+graphs = [get_graph_from_pickle(os.path.join(graph_test_path, g)) for g in os.listdir(graph_test_path)]
 
-# list which contains different hyper-parameter values
+# list which contains different hyperparameter values
 rho_values = [1, 1.2]
 alpha_values = [0.05, 0.15, 0.25, 0.35, 0.45, 0.55]
 epsilon_values = [1e-2, 1e-3, 1e-4]
