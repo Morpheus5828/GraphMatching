@@ -27,7 +27,7 @@ graphs = []
 for g in os.listdir(graph_test_path):
     graphs.append(get_graph_from_pickle(os.path.join(graph_test_path, g)))
 
-# TODO Not finished yet
+
 class TestFUGW_barycenter(TestCase):
 
     def test_compute(self):
@@ -49,4 +49,3 @@ class TestFUGW_barycenter(TestCase):
         #     title="181 without outliers"
         # )
         # v.plot_graphs(folder_path=graph_test_path)
-
