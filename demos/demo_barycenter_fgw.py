@@ -5,7 +5,7 @@ import os
 import sys
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
-project_path = os.path.abspath(os.path.join(current_dir, '../../'))
+project_path = os.path.abspath(os.path.join(current_dir, '../'))
 if project_path not in sys.path:
     sys.path.append(project_path)
 
@@ -27,14 +27,14 @@ graph_test_path = os.path.join(
     "noise_60"
 )
 # extract pickle graph file in networkx graph
-graphs = [get_graph_from_pickle(os.path.join(folder_path, g)) for g in os.listdir(folder_path)]
+graphs = [get_graph_from_pickle(os.path.join(graph_test_path, g)) for g in os.listdir(graph_test_path)]
 
 # compute barycenter graph
 b = Barycenter(
     graphs=graphs,
     nb_node=30
 )
-
+print("Starting barycenter computation, please hold on ...")
 b.compute()
 
 bary = b.get_graph()

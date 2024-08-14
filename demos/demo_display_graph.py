@@ -6,7 +6,7 @@ import os
 import sys
 
 script_dir = os.path.dirname(os.path.abspath(__file__))
-project_root = os.path.abspath(os.path.join(script_dir, '../../'))
+project_root = os.path.abspath(os.path.join(script_dir, '../'))
 if project_root not in sys.path:
     sys.path.append(project_root)
 
@@ -21,4 +21,4 @@ v = Visualisation(title="noise_181", sphere_radius=100)
 
 v.plot_graphs(folder_path=folder_path, radius=100)
 
-
+v.show_fig()

@@ -6,7 +6,7 @@ import os
 import sys
 
 script_dir = os.path.dirname(os.path.abspath(__file__))
-project_root = os.path.abspath(os.path.join(script_dir, '..', '..'))
+project_root = os.path.abspath(os.path.join(script_dir, '../graph_matching', '..'))
 if project_root not in sys.path:
     sys.path.append(project_root)
 
@@ -96,7 +96,5 @@ if __name__ == '__main__':
     )
     # Compute euclidian distance between both matrices
     end = time.time()
-    print(P)
-    print(transport2)
     print("Euclidian distance: ", np.linalg.norm(P - transport2))
     print(f"Traning process: {end - start}")

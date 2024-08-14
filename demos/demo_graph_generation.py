@@ -6,10 +6,10 @@ import os
 import sys
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
-from graph_matching.algorithms.graph_generation.generation_graph_edge_permutation import Graph_Generation
+from graph_matching.algorithms.graph_generation.generation_graph_edge_permutation import Graph_generation
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
-project_path = os.path.abspath(os.path.join(current_dir, '../../..'))
+project_path = os.path.abspath(os.path.join(current_dir, '../..'))
 if project_path not in sys.path:
     sys.path.append(project_path)
 
@@ -26,7 +26,7 @@ if __name__ == '__main__':
     nb_neighbors_to_consider_outliers = 10
     print("Starting generation ... ")
 
-    ep = Graph_Generation(
+    ep = Graph_generation(
         pickle_folder_title="pickle",  # format to save graph
         html_folder_title="html",  # format to see graph
         nb_sample_graphs=nb_sample_graphs,

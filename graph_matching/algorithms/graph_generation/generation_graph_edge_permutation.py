@@ -18,7 +18,7 @@ if project_path not in sys.path:
     sys.path.append(project_path)
 
 
-class Graph_Generation:
+class Graph_generation:
     def __init__(
             self,
             pickle_folder_title: str,
