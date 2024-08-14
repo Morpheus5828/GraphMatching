@@ -47,7 +47,7 @@ v = Visualisation(
 )
 
 # add all graphs used for barycenter generation on web page
-v.plot_graphs(folder_path=folder_path)
+v.plot_graphs(folder_path=graph_test_path)
 # Barycenter is going to be 'Trace 0', you can click on it to see where is it
 v.show_fig()
 
