@@ -8,7 +8,8 @@ The report explores various graph-matching methods using optimal transport, part
 cortical folds in neuroscience. It focuses on the Fused-Gromov-Wasserstein (FGW) approach, the Sinkhorn algorithm, <br>
 the more advanced Sinkhorn-Newton-Stage (SNS) method, and the Fused-Unbalanced-Gromov-Wasserstein (FUGW) method. <br>
 Test and enjoy :-) <br>
-If any questions, please contact me at marius.thorre13@gmail.com
+If any questions, please contact me at marius.thorre13@gmail.com <br>
+For more detail have a look here: <a href="https://drive.google.com/file/d/1jGiuU9rUM_jvXeX_3qfwAkVScPohnsIl/view?usp=sharing" target="_blanck">Master Degree's 1 Internship Repport</a>
 
 ## Installation
 Before compiling the report, you need to set up a Python environment and install the necessary dependencies.
